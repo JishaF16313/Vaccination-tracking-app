@@ -1,0 +1,1 @@
+//for common application function
