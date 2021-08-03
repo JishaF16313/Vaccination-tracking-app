@@ -1,4 +1,4 @@
 //for common application function
-export const isLogin = () =>{
+export const isAuthenticated = () =>{
     return false;
 }
