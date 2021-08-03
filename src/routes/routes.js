@@ -2,7 +2,7 @@ import { Router, Route, Switch } from "react-router-dom";
 import history from './history';
 import PrivateRoute from "./privateRoute";
 import AddUpdateHospital from '../components/hospitals/addUpdateHospital';
-import VaccinationDashboard from "../components/vaccinationDashboard";
+import VaccinationDashboard from "../components/dashboard/vaccination";
 import SignIn from "../components/signIn/signIn";
 import HospitalAdmin from '../components/dashboard/hospitalAdminDashboard'
 
