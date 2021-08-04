@@ -5,7 +5,7 @@ import AddUpdateHospital from '../components/hospitals/addUpdateHospital';
 import VaccinationDashboard from "../components/dashboard/vaccination";
 import SignIn from "../components/signIn/signIn";
 import HospitalAdmin from '../components/dashboard/hospitalAdminDashboard'
-
+import AddUpdateUser from '../components/users/addupdateuser';
 
 function Routes() {
     return (
@@ -16,6 +16,7 @@ function Routes() {
                   <Route component={VaccinationDashboard} path="/vaccination"/>
                   <Route component={SignIn} path="/signIn" />
                   <Route component={HospitalAdmin} path="/hospitaladmin" />
+                  <Route component={AddUpdateUser} path="/addupdateuser" />
                   {/* Add Private Router  */}
                   {/* <PrivateRoute component={AddUpdateHospital} path="/addupdatehospital" /> */}
                 </Switch>
