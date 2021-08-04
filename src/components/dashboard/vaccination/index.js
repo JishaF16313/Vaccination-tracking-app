@@ -1,7 +1,11 @@
-import React, {useCallback, useMemo} from 'react'
+import React, {useState, useCallback, useMemo, useEffect} from 'react'
 import { Typography  } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {makeStyles} from '@material-ui/core/styles'
 import Table from "../../table"
+import EditVaccinationDetail from './editVaccinationDetail'
+import {useSelector, useDispatch} from "react-redux"
+import {getVaccinationList} from "../../../store/actions/vaccination"
 
 const useStyles = makeStyles({
     root: {
@@ -14,16 +18,37 @@ const useStyles = makeStyles({
     tableContainer: {
         margin: "10px 0px",
         padding: "2px"
+    },
+    loader: {
+        width: "100%",
+        textAlign: "center",
+        padding: "10px"
     }
 })
 
 function VaccinationDashboard() {
     const classes = useStyles()
+    const dispatch = useDispatch()
+    const {vaccinationList, loading, error} = useSelector(store => store.vaccination)
+
+    // Getting list of vaccination appointments
+    useEffect(() => {
+        dispatch(getVaccinationList())
+    }, [dispatch])
+
+    // State to show/hide modals
+    const [modal, setmodal] = useState({
+        type: null,
+        data: null
+    })
+
+    // Closing the modal
+    const handleModalClose = useCallback(() => setmodal({type: null, data: null}),[])
 
     // Vaccination detail edit handler
-    const handleVaccinationEdit = useCallback( (details) => console.log("Edit", details), [])
+    const handleVaccinationEdit = useCallback( (details) => setmodal({type: "edit", data: details}), [])
 
-    // Vaccination detail delete handle
+    // Vaccination detail delete handler
     const handleVaccinationDelete = useCallback( details => console.log("Delete", details), [])
 
     // Column title mappings for vaccination details
@@ -44,45 +69,20 @@ function VaccinationDashboard() {
         field: "dose2.status"
     }], [])
 
-    // Vaccination data - to be called from API
-    const rows = data
 
     return (
         <div className={classes.root}>
-            <Typography component="h4" variant="h5" className={classes.title}> Vaccination Details:</Typography>
+            <Typography component="h4" variant="h5" className={classes.title}> Vaccination Appointments</Typography>
             <div className={classes.tableContainer}>
-            <Table columnMap={columnMap} rows={rows} onEdit={handleVaccinationEdit} onDelete={handleVaccinationDelete} />
+            <Table columnMap={columnMap} rows={vaccinationList} onEdit={handleVaccinationEdit} onDelete={handleVaccinationDelete} loading={loading}/>
             </div>
+            {loading && <div className={classes.loader}><CircularProgress/></div>}
+            <EditVaccinationDetail open={modal.type === "edit"} details={modal.data} onClose={handleModalClose} />
         </div>
     )
 }
 
-const data = [{
-    id: 123,
-    name: "Name1",
-    address: "Banglore",
-    dose1: {
-        status: "done",
-        date: "",
-        vaccine: "covishield"        
-    },
-    dose2: {
-        status: "pending",
-        date: "",
-        vaccine: ""},
-},{
-    id: 456,
-    name: "Name2",
-    address: "Delhi",
-    dose1: {
-        status: "done",
-        date: "",
-        vaccine: "covishield"},
-    dose2: {
-        status: "done",
-        date: "",
-        vaccine: "covishield"},
-},]
+
 
 export default VaccinationDashboard
 
