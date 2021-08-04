@@ -141,3 +141,4 @@ EditVaccinationDetail.propTypes = {
 }
 
 export default EditVaccinationDetail
+

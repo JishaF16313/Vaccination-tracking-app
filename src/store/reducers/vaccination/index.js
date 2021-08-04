@@ -38,3 +38,4 @@ const vaccinationReducer = ( state= initialState, {type, payload}) => {
 }
 
 export default vaccinationReducer
+
