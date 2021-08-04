@@ -1,11 +1,12 @@
-import { Formik, Form, useField, ErrorMessage } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { TextField, Button } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import { hospitalNameLabelText, hospitalAddressLabelText, hospitalZipLabelText, hospitalCityLabelText, hospitalStateLabelText,
     addHospitalText, cancelText } from '../../utility/commonTexts';
 import { zipValidationRegExp, hospitalNameValidationText, hospitalAddressValidationText, zipValidationText,
     cityValidationText, stateValidationText, invalidZipValidationText } from '../../utility/validationMessages';
+import InputField from '../inputfield/index';
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
@@ -42,21 +43,6 @@ const AddUpdateHospital = () => {
         state: Yup.string().max(50).required(stateValidationText)
     });
 
-    const TextInputField = ({ label, ...props }) => {
-        const [field, meta] = useField(props);
-        return (
-            <div>
-                {props.type === 'text' && (
-                    <TextField label={label} className={`form-control ${meta.touched && meta.error && 'is-valid'}`} {...field} {...props} autoComplete="off" />
-                )}
-                {props.type === 'textarea' && (
-                    <TextField label={label} multiline maxRows={3} className={`form-control ${classes.addressField} ${meta.touched && meta.error && 'is-valid'}`} {...field} {...props} autoComplete="off" />
-                )}
-                <ErrorMessage component="div" name={field.name} className={classes.errorField} />
-            </div>
-        )
-    }
-
     const submitForm = (values) => {
 
     }
@@ -67,20 +53,20 @@ const AddUpdateHospital = () => {
             <Formik initialValues={{ name: '', address: '', zip: '', city: '', state: '' }} validationSchema={validate} onSubmit={values => submitForm(values)}>
                 {formik => (
                     <Form>
-                        <div class={classes.field}>
-                            <TextInputField label={hospitalNameLabelText} name="name" type="text" />
+                        <div className={classes.field}>
+                            <InputField onChange={(e) => formik.setFieldValue('name', e.target.value)} label={hospitalNameLabelText} name="name" type="text" classes={classes} />
                         </div>
-                        <div class={classes.field}>
-                            <TextInputField label={hospitalAddressLabelText} name="address" type="textarea" />
+                        <div className={classes.field}>
+                            <InputField label={hospitalAddressLabelText} name="address" onChange={(e) => formik.setFieldValue('address', e.target.value)} type="textarea" classes={classes} />
                         </div>
-                        <div class={classes.field}>
-                            <TextInputField label={hospitalZipLabelText} name="zip" type="text" />
+                        <div className={classes.field}>
+                            <InputField label={hospitalZipLabelText} name="zip" onChange={(e) => formik.setFieldValue('zip', e.target.value)} type="text" classes={classes} />
                         </div>
-                        <div class={classes.field}>
-                            <TextInputField label={hospitalCityLabelText} name="city" type="text" />
+                        <div className={classes.field}>
+                            <InputField label={hospitalCityLabelText} name="city" onChange={(e) => formik.setFieldValue('city', e.target.value)} type="text" classes={classes} />
                         </div>
-                        <div class={classes.field}>
-                            <TextInputField label={hospitalStateLabelText} name="state" type="text" />
+                        <div className={classes.field}>
+                            <InputField label={hospitalStateLabelText} name="state" onChange={(e) => formik.setFieldValue('state', e.target.value)} type="text" classes={classes} />
                         </div>
                         <div className={classes.btnDiv}>
                             <Button variant="contained" color="primary" size="medium" type="submit">{addHospitalText}</Button>
