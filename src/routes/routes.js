@@ -1,6 +1,7 @@
 import { Router, Route, Switch } from "react-router-dom";
 import history from './history';
 import PrivateRoute from "./privateRoute";
+import Role from "../lib/roles";
 import AddUpdateHospital from '../components/hospitals/addUpdateHospital';
 import VaccinationDashboard from "../components/dashboard/vaccination";
 import SignIn from "../components/signIn/signIn";
@@ -15,10 +16,10 @@ function Routes() {
                   <Route component={AddUpdateHospital} path="/addupdatehospital" />
                   <Route component={VaccinationDashboard} path="/vaccination"/>
                   <Route component={SignIn} path="/signIn" />
-                  <Route component={HospitalAdmin} path="/hospitaladmin" />
+                  {/* <Route component={HospitalAdmin} path="/hospitaladmin" /> */}
                   <Route component={AddUpdateUser} path="/addupdateuser" />
                   {/* Add Private Router  */}
-                  {/* <PrivateRoute component={AddUpdateHospital} path="/addupdatehospital" /> */}
+                  <PrivateRoute component={HospitalAdmin} roles={[Role.HoAdmin]} path="/hospitaladmin" />
                 </Switch>
             </Router>
         </div>
