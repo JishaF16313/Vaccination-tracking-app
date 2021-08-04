@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,8 +12,23 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
+  },
+  editIcon: {
+    color: "#2196f3"
+  },
+  deleteIcon: {
+    color: "#f44336"
+  }
+});
+
+
 function ActionableTable(props) {
     const {columnMap, rows, onEdit, onDelete } = props
+
+    const classes = useStyles()
 
     // Flag to show/hide the actions column
     const haveActions = onEdit || onDelete
@@ -26,7 +42,7 @@ function ActionableTable(props) {
 
     return (
       <TableContainer component={Paper} elevation={3}>
-      <Table>
+      <Table className={classes.table}>
         <TableHead>
           <TableRow>
               {
@@ -46,8 +62,8 @@ function ActionableTable(props) {
               {
                   haveActions && <TableCell component="th" scope="row">
                     <span style={{display: "flex", justifyContent: "space-evenly"}}>
-                      {onEdit && <IconButton size="small" onClick={handleRowEdit(row)} > <EditIcon fontSize="small" /></IconButton>}
-                      {onDelete && <IconButton size="small" onClick={handleRowDelete(row)} > <DeleteIcon fontSize="small"/></IconButton>}
+                      {onEdit && <IconButton size="small" onClick={handleRowEdit(row)} > <EditIcon fontSize="small" className={classes.editIcon} /></IconButton>}
+                      {onDelete && <IconButton size="small" onClick={handleRowDelete(row)} > <DeleteIcon fontSize="small" className={classes.deleteIcon}/></IconButton>}
                     </span>
                   </TableCell>
               }

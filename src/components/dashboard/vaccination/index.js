@@ -1,8 +1,25 @@
 import React, {useCallback, useMemo} from 'react'
-import { Typography, Grid  } from '@material-ui/core'
-import Table from "../table"
+import { Typography  } from '@material-ui/core'
+import {makeStyles} from '@material-ui/core/styles'
+import Table from "../../table"
+
+const useStyles = makeStyles({
+    root: {
+        padding: "2%",
+        flexGrow: 1,
+    },
+    title: {
+        margin: "10px 0px"
+    },
+    tableContainer: {
+        margin: "10px 0px",
+        padding: "2px"
+    }
+})
 
 function VaccinationDashboard() {
+    const classes = useStyles()
+
     // Vaccination detail edit handler
     const handleVaccinationEdit = useCallback( (details) => console.log("Edit", details), [])
 
@@ -31,9 +48,11 @@ function VaccinationDashboard() {
     const rows = data
 
     return (
-        <div>
-            <Typography component="h4" variant="h5" > Vaccination Details:</Typography>
+        <div className={classes.root}>
+            <Typography component="h4" variant="h5" className={classes.title}> Vaccination Details:</Typography>
+            <div className={classes.tableContainer}>
             <Table columnMap={columnMap} rows={rows} onEdit={handleVaccinationEdit} onDelete={handleVaccinationDelete} />
+            </div>
         </div>
     )
 }
