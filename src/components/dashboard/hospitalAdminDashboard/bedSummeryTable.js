@@ -30,22 +30,17 @@ const useStyles = makeStyles((theme) => ({
 export default function BedForm() {
   const classes = useStyles();
 
-  // State to show/hide modals
   const [modal, setmodal] = useState({
       type: null,
       data: null
   })
 
-// Vaccination detail edit handler
 const handleBedEdit = useCallback( (details) => setmodal({type: "edit", data: details}), [])
 
-// Vaccination detail delete handler
 const handleBedDelete = useCallback( details => console.log("Delete", details), [])
 
-// Closing the modal
 const handleModalClose = useCallback(() => setmodal({type: null, data: null}),[])
 
-  // Column title mappings for Bed details
       const columnMap = useMemo(  () => [{
         title: "Hospital ID",
         field: "id"
@@ -67,7 +62,7 @@ const handleModalClose = useCallback(() => setmodal({type: null, data: null}),[]
     }], [])
 
   
-  //to be called from API
+
   const rows = data
 
 

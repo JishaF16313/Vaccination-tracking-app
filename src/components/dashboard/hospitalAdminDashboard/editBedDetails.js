@@ -65,14 +65,35 @@ function EditBedDetail(props) {
 const BedDetails = ({details}) => {
   const {name, address, normalBed, oxygenBed, ventilatorBed} = details;
   const classes = useStyles()
+  const [bedData, setBedData] = useState({
+    normalBed,
+    oxygenBed,
+    ventilatorBed
+  });
+
+  const handleBedValueChange = (event) => {
+    if(event.target.name === "normal") {
+     setBedData({...bedData, normalBed : event.target.value});
+    }
+    else if(event.target.name === "oxygen") {
+      setBedData({...bedData, oxygenBed : event.target.value});
+    }
+    else if(event.target.name === "ventilator") {
+      setBedData({...bedData, ventilatorBed : event.target.value});
+    }
+    else return null;
+  };
+
+  console.log("bedData", bedData);
+
   return (
     <>
       <form noValidate autoComplete="off">
         <TextField disabled value={name} className={classes.inputField} id="standard-basic" label="Hospital Name" />
         <TextField disabled value={address} className={classes.inputField} id="standard-basic" label="Address" />
-        <TextField value={normalBed} className={classes.inputField} id="standard-basic" label="Normal Bed" />
-        <TextField value={oxygenBed} className={classes.inputField} id="standard-basic" label="Oxygen Bed" />
-        <TextField value={ventilatorBed} className={classes.inputField} id="standard-basic" label="Ventilator Bed" />
+        <TextField type="number" onChange={(event) => handleBedValueChange(event)} name="normal" value={bedData.normalBed} className={classes.inputField} id="standard-basic" label="Normal Bed" />
+        <TextField type="number" onChange={(event) => handleBedValueChange(event)} name="oxygen" value={bedData.oxygenBed} className={classes.inputField} id="standard-basic" label="Oxygen Bed" />
+        <TextField type="number" onChange={(event) => handleBedValueChange(event)} name="ventilator" value={bedData.ventilatorBed} className={classes.inputField} id="standard-basic" label="Ventilator Bed" />
       </form>
     </>
   )
