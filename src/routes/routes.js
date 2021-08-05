@@ -1,11 +1,14 @@
 import { Router, Route, Switch } from "react-router-dom";
 import history from './history';
 import PrivateRoute from "./privateRoute";
+import Role from "../lib/roles";
 import AddUpdateHospital from '../components/hospitals/addUpdateHospital';
 import VaccinationDashboard from "../components/dashboard/vaccination";
 import SignIn from "../components/signIn/signIn";
 import HospitalAdmin from '../components/dashboard/hospitalAdminDashboard'
 import UserDashboard from "../components/userDashboard";
+import AddUpdateUser from '../components/users/addupdateuser';
+
 
 function Routes() {
     return (
@@ -20,6 +23,10 @@ function Routes() {
                   {/* Add Private Router  */}
                   {/* <PrivateRoute component={AddUpdateHospital} path="/addupdatehospital" /> */}
                   {/* <Route component={UserDashboard} path="/userDashboard"/> */}
+                  {/* <Route component={HospitalAdmin} path="/hospitaladmin" /> */}
+                  <Route component={AddUpdateUser} path="/addupdateuser" />
+                  {/* Add Private Router  */}
+                  <PrivateRoute component={HospitalAdmin} roles={[Role.HoAdmin]} path="/hospitaladmin" />
                 </Switch>
             </Router>
         </div>
