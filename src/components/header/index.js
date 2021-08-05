@@ -16,7 +16,7 @@ import { Button } from '@material-ui/core';
 import RegisterIcon from '@material-ui/icons/PersonAdd';
 import LoginIcon from '@material-ui/icons/ExitToApp';
 import {useHistory} from "react-router-dom"
-import {logout} from "../../store/actions/users"
+import {logout} from "../../store/actions/auth"
 
 const useStyles = makeStyles((theme) => ({
   grow: {

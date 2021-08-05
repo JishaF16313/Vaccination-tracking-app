@@ -4,7 +4,7 @@ import Footer from "../components/footer";
 import Route from '../routes/routes';
 import {makeStyles} from "@material-ui/core/styles"
 import {useDispatch} from "react-redux"
-import {checkAuth} from "../store/actions/users"
+import {checkAuth} from "../store/actions/auth"
 
 const useStyles = makeStyles({
   app: {

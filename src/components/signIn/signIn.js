@@ -9,7 +9,7 @@ import Container from '@material-ui/core/Container';
 import { passwordMinLengthValidationText, passwordValidationText, hospitalUserUserNameValidationText} from '../../utility/validationMessages';
 import InputField from '../inputfield/index';
 import {useSelector, useDispatch} from "react-redux"
-import {authenticate} from "../../store/actions/users"
+import {authenticate} from "../../store/actions/auth"
 import {useHistory} from "react-router-dom"
 
 
