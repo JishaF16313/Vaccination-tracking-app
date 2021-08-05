@@ -9,6 +9,9 @@ import {
     passwordValidationText, confirmPasswordValidationText, passwordMatchValidationText, addressValidationText,
     userTypeValidationText
 } from '../../utility/validationMessages';
+import history from '../../routes/history';
+import { useDispatch, useSelector } from 'react-redux';
+import { addUser } from '../../store/actions/users/index';
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
@@ -40,6 +43,14 @@ const AddUpdateUser = () => {
 
     const title = addUserText;
 
+    const storeData = useSelector((store) => {
+        return {
+            data: store.users
+        }
+    });
+
+    const dispatch = useDispatch();
+
     const validate = Yup.object({
         name: Yup.string().max(100).required(hospitalUserNameValidationText),
         userName: Yup.string().max(100).required(hospitalUserUserNameValidationText),
@@ -51,7 +62,26 @@ const AddUpdateUser = () => {
     });
 
     const submitForm = (values) => {
+        let hospitalName = hospitalDdlList.filter((item) => {
+            return item.value === values.hospitalName
+        });
+        let userType = hospitalUserTypes.filter((item) => {
+            return item.value === values.userType
+        });
+        let obj = {
+            id: Number(storeData.data.userList.length) + 1,
+            name: values.name,
+            userName: values.userName,
+            address: values.address,
+            hospitalName: hospitalName[0].label,
+            userType: userType[0].label
+        }
+        dispatch(addUser(obj));
+        history.push('/users');
+    }
 
+    const onCancelClicked = (e) => {
+        history.push('/users');
     }
 
     return (
@@ -83,7 +113,7 @@ const AddUpdateUser = () => {
                         </div>
                         <div className={classes.btnDiv}>
                             <Button variant="contained" color="primary" size="medium" type="submit">{addUserText}</Button>
-                            <Button className={classes.cancelBtn} variant="contained" size="medium">{cancelText}</Button>
+                            <Button onClick={(e) => onCancelClicked(e)} className={classes.cancelBtn} variant="contained" size="medium">{cancelText}</Button>
                         </div>
                     </Form>
                 )}

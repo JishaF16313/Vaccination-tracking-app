@@ -8,7 +8,8 @@ import SignIn from "../components/signIn/signIn";
 import HospitalAdmin from '../components/dashboard/hospitalAdminDashboard'
 import UserDashboard from "../components/userDashboard";
 import AddUpdateUser from '../components/users/addupdateuser';
-
+import HospitalDashboard from '../components/hospitals/index';
+import HospitalUserDashboard from '../components/users/index';
 
 function Routes() {
     return (
@@ -20,6 +21,8 @@ function Routes() {
                   <Route component={SignIn} path="/signIn" />
                   <Route component={HospitalAdmin} path="/hospitaladmin" />
                   <Route component={UserDashboard} path="/userDashboard"/>
+                  <Route component={HospitalDashboard} path="/hospitals" />
+                  <Route component={HospitalUserDashboard} path="/users" />
                   {/* Add Private Router  */}
                   {/* <PrivateRoute component={AddUpdateHospital} path="/addupdatehospital" /> */}
                   {/* <Route component={UserDashboard} path="/userDashboard"/> */}
