@@ -9,7 +9,7 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => (
        
         if (!currentUser) {
             // not logged in so redirect to login page with the return url
-            return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+            return <Redirect to={{ pathname: '/signin', state: { from: props.location } }} />
         }
 
         // check if route is restricted by role

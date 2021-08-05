@@ -51,7 +51,7 @@ function EditVaccinationDetail(props) {
     ) =>{ 
         const doseKey = dose === 1 ? "dose1" : "dose2" 
         setlocalDetails({...localDetails, [doseKey] : {...data}})
-    })
+    },[localDetails])
 
     // Handle vaccination update
     const handleSubmit = () => {

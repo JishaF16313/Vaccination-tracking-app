@@ -11,6 +11,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import {useSelector, useDispatch} from "react-redux"
+import { Button } from '@material-ui/core';
+import RegisterIcon from '@material-ui/icons/PersonAdd';
+import LoginIcon from '@material-ui/icons/ExitToApp';
+import {useHistory} from "react-router-dom"
+import {logout} from "../../store/actions/users"
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -74,10 +80,18 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
+  button: {
+    color: "white",
+    margin: "0px 5px",
+    borderColor: "white"
+  }
 }));
 
 export default function Header() {
   const classes = useStyles();
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const {isAuthenticated} = useSelector(store => store.users)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -101,6 +115,11 @@ export default function Header() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleLogout = () => {
+      handleMenuClose()
+      dispatch(logout())
+  }
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -114,6 +133,7 @@ export default function Header() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
 
@@ -143,8 +163,13 @@ export default function Header() {
     </Menu>
   );
 
+  const handleRedirect = React.useCallback((url) => () => {
+    history.push(url)
+  },[history]) 
+
+  
   return (
-    <div className={classes.grow}>
+    <div>
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -158,7 +183,7 @@ export default function Header() {
           <Typography className={classes.title} variant="h6" noWrap>
             Covid 19 - Platform
           </Typography>
-          <div className={classes.search}>
+          {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -170,8 +195,9 @@ export default function Header() {
               }}
               inputProps={{ 'aria-label': 'search' }}
             />
-          </div>
+          </div> */}
           <div className={classes.grow} />
+          {isAuthenticated && <>
           <div className={classes.sectionDesktop}>
             <IconButton
               edge="end"
@@ -195,6 +221,14 @@ export default function Header() {
               <MoreIcon />
             </IconButton>
           </div>
+        </>}
+        {
+          !isAuthenticated && 
+          <div>
+            <Button variant="outlined" startIcon={<LoginIcon/>} size="small" className={classes.button} id="signin" onClick={handleRedirect("/signin")}>Sign In</Button>
+            <Button variant="outlined" startIcon={<RegisterIcon/>} size="small" className={classes.button} id="register" onClick={handleRedirect("/register")}>Register</Button>
+          </div>
+        }
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
