@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from "../table/index";
 import { useSelector, useDispatch } from "react-redux";
-import { getUserList, setAddOrUpdate } from "../../store/actions/hospitalusers/index";
+import { getUserList, setAddOrUpdate, setEditedHospitalUserData } from "../../store/actions/hospitalusers/index";
 import { Button } from "@material-ui/core";
 import { addUserText } from '../../utility/commonTexts';
 import history from '../../routes/history';
@@ -64,8 +64,10 @@ function UserDashboard() {
             field: "userType"
         }];
 
-    const handleUserEdit = () => {
-
+    const handleUserEdit = (row) => {
+        dispatch(setEditedHospitalUserData(row));
+        dispatch(setAddOrUpdate('update'));
+        history.push('/hospital/addupdateuser');
     }
 
     const handleUserDelete = () => {
