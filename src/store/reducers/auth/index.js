@@ -3,7 +3,7 @@ import {
     AUTH_SUCCESS,
     AUTH_FAIL,
     LOGOUT
-} from "../../actions/users"
+} from "../../actions/auth"
 
 const initialState = {
     name: null,

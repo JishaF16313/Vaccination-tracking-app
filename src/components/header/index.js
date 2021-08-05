@@ -91,7 +91,7 @@ export default function Header() {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
-  const {isAuthenticated} = useSelector(store => store.users)
+  const {isAuthenticated} = useSelector(store => store.auth)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 

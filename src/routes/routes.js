@@ -8,7 +8,7 @@ import UserRoutes from "./UserRoutes"
 import AppAdminRoutes from "./AppAdminRoutes";
 
 function Routes() {
-  const {role, isAuthenticated} = useSelector(store => store.users)
+  const {role, isAuthenticated} = useSelector(store => store.auth)
 
   if(!isAuthenticated) return <UnprotectedRoutes/>
 

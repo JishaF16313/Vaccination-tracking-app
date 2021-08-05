@@ -46,7 +46,7 @@ export default function SignIn() {
   const classes = useStyles();
   const dispatch = useDispatch()
   const history = useHistory()
-  const {isAuthenticating, authError, isAuthenticated} = useSelector(store => store.users)
+  const {isAuthenticating, authError, isAuthenticated} = useSelector(store => store.auth)
 
   const validate = Yup.object({
     userName: Yup.string().max(100).required(hospitalUserUserNameValidationText),
