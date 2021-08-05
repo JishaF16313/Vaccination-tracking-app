@@ -11,7 +11,7 @@ import {
 } from '../../utility/validationMessages';
 import history from '../../routes/history';
 import { useDispatch, useSelector } from 'react-redux';
-import { addUser } from '../../store/actions/users/index';
+import { addUser } from '../../store/actions/hospitalusers/index';
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
@@ -45,7 +45,7 @@ const AddUpdateUser = () => {
 
     const storeData = useSelector((store) => {
         return {
-            data: store.users
+            data: store.hospitalusers
         }
     });
 
@@ -77,11 +77,11 @@ const AddUpdateUser = () => {
             userType: userType[0].label
         }
         dispatch(addUser(obj));
-        history.push('/users');
+        history.push('/hospital/users');
     }
 
     const onCancelClicked = (e) => {
-        history.push('/users');
+        history.push('/hospital/users');
     }
 
     return (

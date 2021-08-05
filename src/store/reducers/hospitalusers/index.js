@@ -1,4 +1,4 @@
-import * as actions from '../../actions/users/index';
+import * as actions from '../../actions/hospitalusers/index';
 
 const initialState = {
     userList: [{ id: 1, name: 'User 1', userName: 'Username 1', address: 'Address 1', hospitalName: 'Hospital 1', userType: 'General' },

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from "../table/index";
 import { useSelector, useDispatch } from "react-redux";
-import { getUserList, setAddOrUpdate } from "../../store/actions/users/index";
+import { getUserList, setAddOrUpdate } from "../../store/actions/hospitalusers/index";
 import { Button } from "@material-ui/core";
 import { addUserText } from '../../utility/commonTexts';
 import history from '../../routes/history';
@@ -35,7 +35,7 @@ function UserDashboard() {
     const dispatch = useDispatch();
     const storeData = useSelector((store) => {
         return {
-            data: store.users
+            data: store.hospitalusers
         }
     });
 
@@ -74,7 +74,7 @@ function UserDashboard() {
 
     const handleAddUserBtnClick = () => {
         dispatch(setAddOrUpdate('add'));
-        history.push('/addupdateuser');
+        history.push('/hospital/addupdateuser');
     }
 
     return (
