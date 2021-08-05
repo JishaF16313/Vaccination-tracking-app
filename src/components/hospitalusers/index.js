@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from "../table/index";
 import { useSelector, useDispatch } from "react-redux";
-import { getHospitalList, setAddOrUpdate } from "../../store/actions/hospitals/index";
+import { getUserList, setAddOrUpdate } from "../../store/actions/hospitalusers/index";
 import { Button } from "@material-ui/core";
-import { addHospitalText } from '../../utility/commonTexts';
+import { addUserText } from '../../utility/commonTexts';
 import history from '../../routes/history';
 
 const useStyles = makeStyles({
@@ -24,23 +24,23 @@ const useStyles = makeStyles({
         textAlign: "center",
         padding: "10px"
     },
-    addHospitalButton: {
+    addUserButton: {
         margin: '20px',
         float: 'right'
     }
 });
 
-function HospitalDashboard() {
+function UserDashboard() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const storeData = useSelector((store) => {
         return {
-            data: store.hospitals
+            data: store.hospitalusers
         }
     });
 
     useEffect(() => {
-        dispatch(getHospitalList())
+        dispatch(getUserList())
     }, []);
 
     const columnMap = [
@@ -51,43 +51,43 @@ function HospitalDashboard() {
             title: "Name",
             field: "name"
         }, {
+            title: "Username",
+            field: "userName"
+        }, {
             title: "Address",
             field: "address"
         }, {
-            title: "Zip",
-            field: "zip"
+            title: "Hospital Name",
+            field: "hospitalName"
         }, {
-            title: "City",
-            field: "city"
-        }, {
-            title: "State",
-            field: "state"
+            title: "User Type",
+            field: "userType"
         }];
 
-    const handleHospitalEdit = () => {
+    const handleUserEdit = () => {
 
     }
 
-    const handleHospitalDelete = () => {
+    const handleUserDelete = () => {
 
     }
 
-    const handleAddHospitalBtnClick = () => {
+    const handleAddUserBtnClick = () => {
         dispatch(setAddOrUpdate('add'));
-        history.push('/addupdatehospital');
+        history.push('/hospital/addupdateuser');
     }
 
     return (
         <div className={classes.root}>
-            <h3> Hospital Dashboard </h3>
+            <h3> Hospital User Dashboard </h3>
             <div>
-                <Button onClick={handleAddHospitalBtnClick} className={classes.addHospitalButton} variant="contained" color="primary" size="medium" type="button">{addHospitalText}</Button>
+                <Button onClick={handleAddUserBtnClick} className={classes.addUserButton} variant="contained" color="primary" size="medium" type="button">{addUserText}</Button>
             </div>
             <div className={classes.tableContainer}>
-                <Table columnMap={columnMap} rows={storeData.data.hospitalList} onEdit={handleHospitalEdit} onDelete={handleHospitalDelete} />
+                <Table columnMap={columnMap} rows={storeData.data.userList} onEdit={handleUserEdit} onDelete={handleUserDelete} />
             </div>
         </div>
     )
 }
 
-export default HospitalDashboard;
+export default UserDashboard;

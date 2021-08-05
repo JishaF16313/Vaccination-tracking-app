@@ -2,11 +2,18 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import { hospitalNameLabelText, hospitalAddressLabelText, hospitalZipLabelText, hospitalCityLabelText, hospitalStateLabelText,
-    addHospitalText, cancelText } from '../../utility/commonTexts';
-import { zipValidationRegExp, hospitalNameValidationText, hospitalAddressValidationText, zipValidationText,
-    cityValidationText, stateValidationText, invalidZipValidationText } from '../../utility/validationMessages';
+import {
+    hospitalNameLabelText, hospitalAddressLabelText, hospitalZipLabelText, hospitalCityLabelText, hospitalStateLabelText,
+    addHospitalText, cancelText
+} from '../../utility/commonTexts';
+import {
+    zipValidationRegExp, hospitalNameValidationText, hospitalAddressValidationText, zipValidationText,
+    cityValidationText, stateValidationText, invalidZipValidationText
+} from '../../utility/validationMessages';
 import InputField from '../inputfield/index';
+import history from '../../routes/history';
+import { useDispatch, useSelector } from 'react-redux';
+import { addHospital } from '../../store/actions/hospitals/index';
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
@@ -35,6 +42,14 @@ const AddUpdateHospital = () => {
 
     const title = addHospitalText;
 
+    const storeData = useSelector((store) => {
+        return {
+            data: store.hospitals
+        }
+    });
+
+    const dispatch = useDispatch();
+
     const validate = Yup.object({
         name: Yup.string().max(100).required(hospitalNameValidationText),
         address: Yup.string().max(200).required(hospitalAddressValidationText),
@@ -44,7 +59,13 @@ const AddUpdateHospital = () => {
     });
 
     const submitForm = (values) => {
+        let obj = { id: Number(storeData.data.hospitalList.length) + 1, ...values }
+        dispatch(addHospital(obj));
+        history.push('/hospitals');
+    }
 
+    const onCancelClicked = (e) => {
+        history.push('/hospitals');
     }
 
     return (
@@ -70,7 +91,7 @@ const AddUpdateHospital = () => {
                         </div>
                         <div className={classes.btnDiv}>
                             <Button variant="contained" color="primary" size="medium" type="submit">{addHospitalText}</Button>
-                            <Button className={classes.cancelBtn} variant="contained" size="medium">{cancelText}</Button>
+                            <Button onClick={(e) => onCancelClicked(e)} className={classes.cancelBtn} variant="contained" size="medium">{cancelText}</Button>
                         </div>
                     </Form>
                 )}
