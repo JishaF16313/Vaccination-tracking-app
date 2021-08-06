@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {useState} from 'react'
 import PropTypes from 'prop-types'
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles,withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -25,11 +25,26 @@ const useStyles = makeStyles({
 });
 
 
+const styles = theme => ({
+  tableRow: {
+    "&$selected, &$selected:hover": {
+      backgroundColor: "purple"
+    }
+  },
+  tableCell: {
+    "$selected &": {
+      color: "yellow"
+    }
+  },
+  hover: {},
+  selected: {}
+});
+
 function ActionableTable(props) {
     const {columnMap, rows, onEdit, onDelete } = props
 
     const classes = useStyles()
-
+    const [selectedID, setSelectedID] = useState(0);
     // Flag to show/hide the actions column
     const haveActions = onEdit || onDelete
 
@@ -38,6 +53,11 @@ function ActionableTable(props) {
 
     // Row delete handler
     const handleRowDelete = React.useCallback((row) => () => onDelete(row), [onDelete]) 
+
+    //Row Click Handler
+    const handleCellClick = (row) => {
+      console.log("row",row);
+  }
 
 
     return (
@@ -55,7 +75,14 @@ function ActionableTable(props) {
         </TableHead>
         <TableBody>
           {rows.map((row, index) =>(
-            <TableRow key={`row-${index}`}>
+            <TableRow key={`row-${index}`} hover
+            key={row.id}
+            onClick={() => {
+              setSelectedID(row.id);
+            }}
+            selected={selectedID === row.id}
+            classes={{ hover: classes.hover, selected: classes.selected }}
+            className={classes.tableRow}>
                 {columnMap.map( ({field}) => <TableCell component="th" scope="row" key={`row-${index}-${field}`}>
                 {field.split(".").reduce((agg, val) => agg[val], row)}
               </TableCell> )}
@@ -82,4 +109,4 @@ ActionableTable.propTypes = {
     odDelete: PropTypes.func
 }
 
-export default ActionableTable
+export default withStyles(styles)(ActionableTable);
