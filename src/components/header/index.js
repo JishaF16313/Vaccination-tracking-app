@@ -15,7 +15,7 @@ import {useSelector, useDispatch} from "react-redux"
 import { Button } from '@material-ui/core';
 import RegisterIcon from '@material-ui/icons/PersonAdd';
 import LoginIcon from '@material-ui/icons/ExitToApp';
-import {useHistory} from "react-router-dom"
+import history from "../../routes/history"
 import {logout} from "../../store/actions/auth"
 
 const useStyles = makeStyles((theme) => ({
@@ -89,7 +89,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header() {
   const classes = useStyles();
-  const history = useHistory();
   const dispatch = useDispatch();
   const {isAuthenticated} = useSelector(store => store.auth)
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -117,7 +116,7 @@ export default function Header() {
 
   const handleLogout = () => {
       handleMenuClose()
-      dispatch(logout())
+      dispatch(logout()).then( () => history.push("/"))
   }
 
   const menuId = 'primary-search-account-menu';
@@ -165,7 +164,7 @@ export default function Header() {
 
   const handleRedirect = React.useCallback((url) => () => {
     history.push(url)
-  },[history]) 
+  },[]) 
 
   
   return (

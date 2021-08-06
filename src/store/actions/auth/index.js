@@ -32,6 +32,11 @@ const authFail = (response) => ({
     payload: response
 })
 
-export const logout = () => ({
-    type: LOGOUT
-})
+export const logout = () => dispatch => {
+    return new Promise( (resolve) => {
+        setTimeout(() => {
+            dispatch({type: LOGOUT})
+            resolve("success")
+        })
+    })
+}

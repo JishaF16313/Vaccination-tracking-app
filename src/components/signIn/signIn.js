@@ -10,7 +10,7 @@ import { passwordMinLengthValidationText, passwordValidationText, hospitalUserUs
 import InputField from '../inputfield/index';
 import {useSelector, useDispatch} from "react-redux"
 import {authenticate} from "../../store/actions/auth"
-import {useHistory} from "react-router-dom"
+import history from "../../routes/history"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -45,7 +45,6 @@ btnDiv: {
 export default function SignIn() {
   const classes = useStyles();
   const dispatch = useDispatch()
-  const history = useHistory()
   const {isAuthenticating, authError, isAuthenticated} = useSelector(store => store.auth)
 
   const validate = Yup.object({
@@ -54,8 +53,8 @@ export default function SignIn() {
 });
 
 React.useEffect(() => {
-  isAuthenticated && history.push("/")
-}, [isAuthenticated, history])
+  isAuthenticated && history.push("/redirect")
+}, [isAuthenticated])
 
 const submitForm = (values) => {
   dispatch(authenticate(values))
