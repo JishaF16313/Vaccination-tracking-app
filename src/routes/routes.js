@@ -13,7 +13,7 @@ import AddUpdateHospitalUser from '../components/hospitalusers/addupdateuser';
 import HospitalDashboard from '../components/hospitals/index';
 import HospitalUserDashboard from '../components/hospitalusers/index';
 
-function PrivateRoutes() {
+function Routes() {
     return (
         <div>
             <Router history={history}>
@@ -40,5 +40,5 @@ function PrivateRoutes() {
     )
 }
 
-export default PrivateRoutes;
+export default Routes;
 
