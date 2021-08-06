@@ -15,7 +15,7 @@ import history from "../../routes/history"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(4),
+    margin: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -88,6 +88,13 @@ const submitForm = (values) => {
             {authError}
           </Typography>
         }
+        <div style={{marginTop: "12px"}}>
+          <Typography component="ul">Users:</Typography>
+          <li>Admin : admin@gmail.com</li>
+          <li>Hospital Admin: hoadmin@gmail.com</li>
+          <li>Vaccination Admin: vcadmin@gmail.com</li>
+          <li>Citizen: user@gmail.com</li>
+        </div>
           </Paper>
     </Container>
   );
