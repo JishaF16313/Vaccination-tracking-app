@@ -104,3 +104,4 @@ const data = [{
   normalBed: 100,
   oxygenBed: 200,
   ventilatorBed: 50}]
+  
