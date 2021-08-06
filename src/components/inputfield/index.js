@@ -12,7 +12,7 @@ function InputField ({ label, classes, ...props }) {
                 <TextField label={label} multiline maxRows={3} onChange={props.onChange} className={`form-control ${classes.addressField} ${meta.touched && meta.error && 'is-valid'}`} {...field} {...props} autocomplete="off" />
             )}
             {props.type === 'select' && (
-                <TextField label={label} select className={classes.ddl} onChange={props.onChange} autocomplete="off">
+                <TextField useDefault={true} label={label} defaultValue={props.defaultValue} select className={classes.ddl} onChange={props.onChange} autocomplete="off">
                     {props.options.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                             {option.label}

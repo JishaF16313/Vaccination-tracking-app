@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from "../table/index";
 import { useSelector, useDispatch } from "react-redux";
-import { getHospitalList, setAddOrUpdate } from "../../store/actions/hospitals/index";
+import { getHospitalList, setAddOrUpdate, setEditedHospitalData } from "../../store/actions/hospitals/index";
 import { Button } from "@material-ui/core";
 import { addHospitalText } from '../../utility/commonTexts';
 import history from '../../routes/history';
@@ -64,8 +64,10 @@ function HospitalDashboard() {
             field: "state"
         }];
 
-    const handleHospitalEdit = () => {
-
+    const handleHospitalEdit = (row) => {
+        dispatch(setEditedHospitalData(row));
+        dispatch(setAddOrUpdate('update'));
+        history.push('/addupdatehospital');
     }
 
     const handleHospitalDelete = () => {
