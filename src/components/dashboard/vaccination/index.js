@@ -10,7 +10,6 @@ import {getVaccinationList} from "../../../store/actions/vaccination"
 const useStyles = makeStyles({
     root: {
         padding: "2%",
-        flexGrow: 1,
     },
     title: {
         margin: "10px 0px"

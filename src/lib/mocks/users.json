@@ -16,5 +16,11 @@
             "email":"vcadmin@gmail.com",
             "password":"welcome-123",
             "role":"VcAdmin"
+        },
+        {
+            "name": "User",
+            "email": "user@gmail.com",
+            "password": "welcome-123",
+            "role": "User"
         }
 ]
