@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 const styles = theme => ({
   tableRow: {
     "&$selected, &$selected:hover": {
-      backgroundColor: "purple"
+      backgroundColor: "#d3d7ee"
     }
   },
   tableCell: {

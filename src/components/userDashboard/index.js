@@ -12,26 +12,28 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import { DataGrid } from '@material-ui/data-grid';
+import TextField from '@material-ui/core/TextField';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   customStyle: {
     fontWeight: 500
   },
-  //styling
-  box: {
-    height: 100,
-    display: "flex",
-    border: "1px solid black",
-    padding: 8
+  cnfrmBtn: {
+    top: '50%',
+    height: 40,
+    float: 'right',
+    position: 'relative'
   },
-  centerBox: {
-    justifyContent: "flex-end",
-    alignItems: "flex-end"
+  BtnHolder: {
+    marginTop: theme.spacing(2)
+  },
+  divStyle: {
+    paddingTop: theme.spacing(2)
   }
-});
+}));
 
 function UserDashboard() {
 
@@ -113,7 +115,7 @@ function UserDashboard() {
     { id: 1, branchName: 'K R Puram', hospitalName: 'MaxCure', vaccineType: 'Covishield', slots: 10 },
     { id: 2, branchName: 'KukatPally', hospitalName: 'Care Hospital', vaccineType: 'Covaxin', slots: 20 }
   ];
-  
+
   return (
     // <div>User Dashboard</div>
     <Paper className={classes.root}>
@@ -125,8 +127,9 @@ function UserDashboard() {
         centered
       >
         <Tab className="customStyle" label="Book A Bed" icon={<AddToQueueIcon />} />
-        <Tab className="customStyle" label="Vaccination Details" icon={<CheckCircleIcon />} />
+
         <Tab className="customStyle" label="Schedule Vaccine" icon={<CalendarTodayIcon />} />
+        <Tab className="customStyle" label="Vaccination Details" icon={<CheckCircleIcon />} />
 
       </Tabs>
       <TabPanel value={value} index={0}>
@@ -135,26 +138,41 @@ function UserDashboard() {
           <Table columnMap={columnMap} rows={rows} />
         </div>
         {/* <Button variant="contained" color="primary" size="medium" type="submit">Confirm</Button> */}
-        <Box component="span" m={1} className={`${classes.bottomLeftBox} ${classes.box}`}>
-          <Button variant="contained" color="primary" style={{ height: 40 }}>Confirm</Button>
+        <Box className={classes.BtnHolder}>
+          <Button variant="contained" color="primary" className={classes.cnfrmBtn}>Confirm</Button>
         </Box>
       </TabPanel>
+
       <TabPanel value={value} index={1}>
-        <Typography component="h4" variant="h5" className={classes.title}> Booking Details:</Typography>
-      </TabPanel>
-      <TabPanel value={value} index={2}>
         <Typography component="h4" variant="h5" className={classes.title}> Vaccine Slots:</Typography>
-        <div style={{ height: 250, width: '100%' }}>
-          <DataGrid
-            rows={rows1}
-            columns={columns}
-            pageSize={5}
-            checkboxSelection
+        <form className={classes.container} noValidate>
+          <TextField
+            id="datetime-local"
+            label="Date of Booking"
+            type="datetime-local"
+            defaultValue="2021-08-06T17:30"
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
-        </div>
-        <Box component="span" m={1} className={`${classes.bottomLeftBox} ${classes.box}`}>
-          <Button variant="contained" color="primary" style={{ height: 40 }}>Schedule</Button>
-        </Box>
+
+          <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
+            <DataGrid
+              rows={rows1}
+              columns={columns}
+              pageSize={5}
+              checkboxSelection
+            />
+          </div>
+          <Box className={classes.BtnHolder}>
+            <Button variant="contained" color="primary" className={classes.cnfrmBtn}>Schedule</Button>
+          </Box>
+        </form>
+      </TabPanel>
+
+      <TabPanel value={value} index={2}>
+        <Typography component="h4" variant="h5" className={classes.title}> Booking Details:</Typography>
       </TabPanel>
     </Paper>
   )
