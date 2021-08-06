@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
         width: '25ch'
     },
     ddl: {
-        width: '25ch'
+        width: '22ch'
     }
 }));
 

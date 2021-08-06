@@ -3,7 +3,10 @@ export const TYPES = {
     ADD_UPDATE: 'ADD_UPDATE',
     ADD_USER: 'ADD_USER',
     SET_EDITED_HOSPITAL_USER_DATA: 'SET_EDITED_HOSPITAL_USER_DATA',
-    UPDATE_HOSPITAL_USER: 'UPDATE_HOSPITAL_USER'
+    UPDATE_HOSPITAL_USER: 'UPDATE_HOSPITAL_USER',
+    SET_DELETING_HOSPITAL_USER_ID: 'SET_DELETING_HOSPITAL_USER_ID',
+    OPEN_HOSPITAL_USER_DELETE_DIALOG: 'OPEN_HOSPITAL_USER_DELETE_DIALOG',
+    DELETE_SELECTED_HOSPITAL_USER: 'DELETE_SELECTED_HOSPITAL_USER'
  }
  
  export const getUserList = () => ({
@@ -26,4 +29,14 @@ export const updateHospitalUser = (value) => ({
    type: TYPES.UPDATE_HOSPITAL_USER , payload: value
 });
 
- 
+export const setDeletingHospitalUserId = (value) => ({
+   type: TYPES.SET_DELETING_HOSPITAL_USER_ID , payload: value
+});
+
+export const setOpenHospitalUserDeleteDialog = (value) => ({
+   type: TYPES.OPEN_HOSPITAL_USER_DELETE_DIALOG, payload: value
+});
+
+export const deleteSelectedHospitalUser = () => ({
+   type: TYPES.DELETE_SELECTED_HOSPITAL_USER
+});

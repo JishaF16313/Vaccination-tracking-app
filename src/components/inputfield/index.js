@@ -1,7 +1,7 @@
 import { useField, ErrorMessage } from 'formik';
-import { TextField, MenuItem } from "@material-ui/core";
+import { TextField, FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
 
-function InputField ({ label, classes, ...props }) {
+function InputField({ label, classes, ...props }) {
     const [field, meta] = useField(props);
     return (
         <div>
@@ -12,13 +12,16 @@ function InputField ({ label, classes, ...props }) {
                 <TextField label={label} multiline maxRows={3} onChange={props.onChange} className={`form-control ${classes.addressField} ${meta.touched && meta.error && 'is-valid'}`} {...field} {...props} autocomplete="off" />
             )}
             {props.type === 'select' && (
-                <TextField useDefault={true} label={label} defaultValue={props.defaultValue} select className={classes.ddl} onChange={props.onChange} autocomplete="off">
-                    {props.options.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
+                <FormControl>
+                    <InputLabel id="select-label">{label}</InputLabel>
+                    <Select labelId="select-label" className={classes.ddl} onChange={props.onChange} {...field} {...props} autocomplete="off">
+                        {props.options.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
             )}
             <ErrorMessage component="div" name={field.name} className={classes.errorField} />
         </div>
