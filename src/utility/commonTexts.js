@@ -11,4 +11,11 @@ export const hospitalDdlList = [{ value: 'hospital_1', label: 'Hospital 1' }, { 
 export const addUserText = "Add User";
 export const updateHospitalText = "Update Hospital";
 export const updateUserText = "Update User";
+export const hospitalDashboardText = "Hospital Dashboard";
+export const hospitalUserDashboardText = "Hospital User Dashboard";
+export const deleteConfirmationDialogTitleText = "Delete";
+export const deleteHospitalUserMessageText = "Are you sure you want to delete this user ?";
+export const deleteHospitalMessageText = "Are you sure you want to delete this hospital ?";
+export const deleteAgreeButtonText = "Agree";
+export const deleteDisagreeButtonText = "Disagree";
 

@@ -2,10 +2,13 @@ import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from "../table/index";
 import { useSelector, useDispatch } from "react-redux";
-import { getHospitalList, setAddOrUpdate, setEditedHospitalData } from "../../store/actions/hospitals/index";
+import { getHospitalList, setAddOrUpdate, setEditedHospitalData, setDeletingHospitalId,
+    setOpenHospitalDeleteDialog, deleteSelectedHospital } from "../../store/actions/hospitals/index";
 import { Button } from "@material-ui/core";
-import { addHospitalText } from '../../utility/commonTexts';
+import { addHospitalText, hospitalDashboardText, deleteConfirmationDialogTitleText, deleteHospitalMessageText,
+    deleteAgreeButtonText, deleteDisagreeButtonText } from '../../utility/commonTexts';
 import history from '../../routes/history';
+import ConfirmationDialogue from '../dialog/confirmation';
 
 const useStyles = makeStyles({
     root: {
@@ -70,8 +73,18 @@ function HospitalDashboard() {
         history.push('/addupdatehospital');
     }
 
-    const handleHospitalDelete = () => {
+    const handleHospitalDelete = (row) => {       
+        dispatch(setDeletingHospitalId(row.id));
+        dispatch(setOpenHospitalDeleteDialog(true));
+    }
 
+    const closeDialog = () => {
+        dispatch(setOpenHospitalDeleteDialog(false));
+    }
+    
+    const onDeleteConfirm = () => {
+        dispatch(deleteSelectedHospital());
+        dispatch(setOpenHospitalDeleteDialog(false));
     }
 
     const handleAddHospitalBtnClick = () => {
@@ -81,13 +94,14 @@ function HospitalDashboard() {
 
     return (
         <div className={classes.root}>
-            <h3> Hospital Dashboard </h3>
+            <h3>{hospitalDashboardText}</h3>
             <div>
                 <Button onClick={handleAddHospitalBtnClick} className={classes.addHospitalButton} variant="contained" color="primary" size="medium" type="button">{addHospitalText}</Button>
             </div>
             <div className={classes.tableContainer}>
                 <Table columnMap={columnMap} rows={storeData.data.hospitalList} onEdit={handleHospitalEdit} onDelete={handleHospitalDelete} />
             </div>
+            <ConfirmationDialogue open={storeData.data.openDeleteConfirmationDialog} title={deleteConfirmationDialogTitleText} message={deleteHospitalMessageText} agreeButtonText={deleteAgreeButtonText} disagreeButtonText={deleteDisagreeButtonText} handleDisagree={closeDialog} handleAgree={onDeleteConfirm} />
         </div>
     )
 }

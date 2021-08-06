@@ -1,10 +1,13 @@
 import * as actions from '../../actions/hospitalusers/index';
+import { removeObjectFromArray } from '../../../utility/commonFunctions';
 
 const initialState = {
     userList: [{ id: 1, name: 'User 1', userName: 'Username 1', address: 'Address 1', hospitalName: 'Hospital 1', userType: 'General' },
     { id: 2, name: 'User 2', userName: 'Username 2', address: 'Address 2', hospitalName: 'Hospital 2', userType: 'Platform Admin' }],
     addOrUpdate: 'add',
-    editedHospitalUserData: null
+    editedHospitalUserData: null,
+    deletingHospitalUserId: null,
+    openDeleteConfirmationDialog: false
 };
 
 const Reducer = (state = initialState, { type, payload }) => {
@@ -22,6 +25,13 @@ const Reducer = (state = initialState, { type, payload }) => {
             const updateIndex = updatedList.findIndex(detail => detail.id == state.editedHospitalUserData.id);
             updatedList[updateIndex] = { ...payload };
             return { ...state, userList: updatedList }
+        case actions.TYPES.SET_DELETING_HOSPITAL_USER_ID:
+            return { ...state, deletingHospitalUserId: payload };
+        case actions.TYPES.OPEN_HOSPITAL_USER_DELETE_DIALOG:
+            return { ...state, openDeleteConfirmationDialog: payload };
+        case actions.TYPES.DELETE_SELECTED_HOSPITAL_USER:
+            let updatedArr = removeObjectFromArray(state.userList, 'id', state.deletingHospitalUserId);
+            return { ...state, userList: updatedArr };
         default:
             return state;
     }
