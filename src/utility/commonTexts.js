@@ -19,3 +19,5 @@ export const deleteHospitalMessageText = "Are you sure you want to delete this h
 export const deleteAgreeButtonText = "Agree";
 export const deleteDisagreeButtonText = "Disagree";
 
+export const vaccineList = [{value: "covishield", label: "Covishield"}, {value: "covaxin", label: "Covaxin"}]
+
