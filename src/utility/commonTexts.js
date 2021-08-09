@@ -18,4 +18,6 @@ export const deleteHospitalUserMessageText = "Are you sure you want to delete th
 export const deleteHospitalMessageText = "Are you sure you want to delete this hospital ?";
 export const deleteAgreeButtonText = "Agree";
 export const deleteDisagreeButtonText = "Disagree";
+export const addBranchText = "Add Branch";
+export const updateBranchText = "Update Branch";
 

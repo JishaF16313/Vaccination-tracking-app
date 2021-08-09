@@ -2,8 +2,8 @@ import * as actions from '../../actions/hospitals/index';
 import { removeObjectFromArray } from '../../../utility/commonFunctions';
 
 const initialState = {
-   hospitalList: [{ id: 1, name: 'Hospital 1', address: 'Address 1', zip: '111111', city: 'City 1', state: 'State 1' },
-   { id: 2, name: 'Hospital 2', address: 'Address 2', zip: '222222', city: 'City 2', state: 'State 2' }],
+   hospitalList: [{ id: 1, name: 'Hospital 1', zip: '111111', city: 'City 1' },
+   { id: 2, name: 'Hospital 2', zip: '222222', city: 'City 2' }],
    addOrUpdate: 'add',
    editedHospitalData: null,
    deletingHospitalId: null,

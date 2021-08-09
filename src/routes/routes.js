@@ -12,6 +12,8 @@ import UserDashboard from "../components/userDashboard";
 import AddUpdateHospitalUser from '../components/hospitalusers/addupdateuser';
 import HospitalDashboard from '../components/hospitals/index';
 import HospitalUserDashboard from '../components/hospitalusers/index';
+import AdminDashboard from '../components/dashboard/admin/index';
+import AddUpdateHospitalBranch from '../components/hospitalbranch/index';
 
 function Routes() {
     return (
@@ -32,7 +34,8 @@ function Routes() {
                   {/* <PrivateRoute component={HospitalAdmin} path="/hospitaladmin" /> */}
                   <PrivateRoute component={AddUpdateHospitalUser} roles={[Role.Admin]} path="/hospital/addupdateuser" />
                   {/* Add Private PrivateRouter  */}
-                  <PrivateRoute component={HospitalAdmin} roles={[Role.HoAdmin]} path="/hospitaladmin" />
+                  <PrivateRoute component={AdminDashboard} roles={[Role.Admin]} path="/admindashboard" />
+                  <PrivateRoute component={AddUpdateHospitalBranch} roles={[Role.Admin]} path="/hospital/addupdatebranch" />
                   <Route path="/redirect" exact component={Redirects}/>
                 </Switch>
             </Router>
