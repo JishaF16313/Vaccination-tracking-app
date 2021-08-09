@@ -5,7 +5,8 @@ import {makeStyles} from '@material-ui/core/styles'
 import Table from "../../table"
 import EditVaccinationDetail from './editVaccinationDetail'
 import {useSelector, useDispatch} from "react-redux"
-import {getVaccinationList} from "../../../store/actions/vaccination"
+import {getVaccinationList, deleteVaccinationAppointment} from "../../../store/actions/vaccination"
+import ConfirmDialog from "../../dialog/confirmation"
 
 const useStyles = makeStyles({
     root: {
@@ -44,11 +45,16 @@ function VaccinationDashboard() {
     // Closing the modal
     const handleModalClose = useCallback(() => setmodal({type: null, data: null}),[])
 
-    // Vaccination detail edit handler
+    // Open Vaccination appointmrnt edit modal
     const handleVaccinationEdit = useCallback( (details) => setmodal({type: "edit", data: details}), [])
 
-    // Vaccination detail delete handler
-    const handleVaccinationDelete = useCallback( details => console.log("Delete", details), [])
+    // open vaccination appointment delete modal
+    const handleVaccinationDelete = useCallback( details => setmodal({type: "delete", data: details}), [])
+
+    // Dispatch vaccination appointment delete
+    const handleVaccinationDeleteDispatch = useCallback(() => {
+        dispatch(deleteVaccinationAppointment(modal.data)).then(() => handleModalClose())
+    },[modal, handleModalClose])
 
     // Column title mappings for vaccination details
     const columnMap = useMemo(  () => [{
@@ -77,6 +83,7 @@ function VaccinationDashboard() {
             </div>
             {loading && <div className={classes.loader}><CircularProgress/></div>}
             <EditVaccinationDetail open={modal.type === "edit"} details={modal.data} onClose={handleModalClose} />
+            <ConfirmDialog open={modal.type === "delete"} title="Delete Appointment" message="Are you sure you want to delete the appointment?" handleDisagree={handleModalClose} handleAgree={handleVaccinationDeleteDispatch} agreeButtonText="Delete" disagreeButtonText="Cancel" />
         </div>
     )
 }

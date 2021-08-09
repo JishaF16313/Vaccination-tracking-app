@@ -42,6 +42,23 @@ const updateVaccinationDetailFail = (response) => ({
 })
 
 
+// Vaccination Delete
+export const DELETE_VACCINATION_APPOINTMENT = "DELETE_VACCINATION_APPOINTMENT"
+
+export const deleteVaccinationAppointment = (data) => dispatch =>{
+    return new Promise( (resolve) => {
+        setTimeout(() => {
+            dispatch(deleteVaccinationAppointmentSuccess(data))
+            resolve(data)
+        }, 500)
+    })
+}
+const deleteVaccinationAppointmentSuccess = response => ({
+    type: DELETE_VACCINATION_APPOINTMENT,
+    payload: response
+})
+
+
 const vaccinationData = [{
     id: 123,
     name: "Name1",
