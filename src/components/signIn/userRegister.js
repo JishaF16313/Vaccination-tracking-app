@@ -1,0 +1,130 @@
+import React from 'react';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Paper from "@material-ui/core/Paper"
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import { passwordMinLengthValidationText, passwordValidationText, userAadharIdValidationText} from '../../utility/validationMessages';
+import InputField from '../inputfield/index';
+import {useSelector, useDispatch} from "react-redux"
+import {userRegister} from "../../store/actions/users"
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import * as API from '../../lib/api'
+
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    margin: theme.spacing(4),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: "20px",
+    Width: "400px"
+  },
+  form:{
+    width: "100%"
+  },
+  field: {
+      margin: theme.spacing(2),
+      width: "80%"
+  },
+  input:{
+    width: "100%"
+  },
+  errorField: {
+    color: 'red',
+    marginTop: theme.spacing(2)
+},
+btnDiv: {
+  marginTop: theme.spacing(3),
+  textAlign: "center"
+},
+}));
+
+
+export default function SignUp() {
+  const classes = useStyles();
+  const dispatch = useDispatch()
+  const {isRegister} = useSelector(store => store.users)
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+  const validate = Yup.object({
+    userLoginId: Yup.string().min(16).required(userAadharIdValidationText),
+    pwd: Yup.string().min(8, passwordMinLengthValidationText).max(100).required(passwordValidationText),
+    confirmPwd: Yup.string().when("pwd", {
+        is: val => (val && val.length > 0 ? true : false),
+        then: Yup.string().oneOf(
+          [Yup.ref("pwd")],
+          "Both password need to be the same"
+        )
+      })
+});
+
+
+React.useEffect(() => {
+    //isRegister && history.push("/redirect")
+}, [isRegister])
+
+const submitForm = (values) => {
+    console.log(values);
+    API.API_POST_SERVICE('',values).then((res)=>{
+        dispatch(userRegister(res));
+    })
+ // dispatch(userRegister(true))
+}
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+           
+      <Paper className={classes.paper} elevation={3} >
+      
+        <Typography component="h1" variant="h5">
+          Register
+        </Typography>
+        <Formik initialValues={{userLoginId: '', pwd: ''}} validationSchema={validate} onSubmit={values => submitForm(values)}>
+                {formik => (
+                    <Form className={classes.form}>
+                        <div className={classes.field}>
+                            <InputField label="Aadhar Number" onChange={(e) => formik.setFieldValue('userLoginId', e.target.value)} name="userLoginId" type="text" classes={classes} style={{width: "100%"}} maxLength={16}/>
+                        </div>
+                        <div className={classes.field}>
+                            <InputField label="Password" onChange={(e) => formik.setFieldValue('pwd', e.target.value)} name="pwd" type="password" classes={classes} style={{width: "100%"}}/>
+                        </div>
+                        <div className={classes.field}>
+                            <InputField label="Confirm Password" onChange={(e) => formik.setFieldValue('confirmPwd', e.target.value)} name="confirmPwd" type="password" classes={classes} style={{width: "100%"}}/>
+                        </div>
+                        <div className={classes.field}>
+                            <InputField label="City" onChange={(e) => formik.setFieldValue('cityName', e.target.value)} name="cityName" type="text" classes={classes} style={{width: "100%"}}/>
+                        </div>
+                        <div className={classes.field}>
+                            <InputField label="Pincode" onChange={(e) => formik.setFieldValue('pinCode', e.target.value)} name="pinCode" type="text" classes={classes} style={{width: "100%"}}/>
+                        </div>
+                        <div className={classes.btnDiv}>
+                            <Button variant="contained" color="primary" size="medium" type="submit" disabled={isRegister}>{!isRegister ? "Register" : "Submitting..."}</Button>
+                        </div>
+                    </Form>
+                )}
+            </Formik>
+        {/* {
+          authError && 
+          <Typography variant="caption" className={classes.errorField}>
+            {authError}
+          </Typography>
+        }
+         */}
+         <Snackbar anchorOrigin={{  vertical: 'top', horizontal: 'center' }} open={isRegister} autoHideDuration={6000} >
+            <Alert  severity="success">
+            Registration Sucessfully
+            </Alert>
+            </Snackbar>
+          </Paper>
+    </Container>
+  );
+}
