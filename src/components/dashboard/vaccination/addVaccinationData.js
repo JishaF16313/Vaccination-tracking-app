@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(1)
     },
     addMoreBtn: {
-        margin: "10px 0px"
+        margin: theme.spacing(1)
     }
   }));
 
@@ -77,11 +77,7 @@ function AddVaccinationData(props) {
     }
 
     const initialValues = {
-        slots: [{
-            vaccineType: "",
-            noOfSlots: "",
-            date: ""
-        }]
+        slots: [{...defaultVaccinationSlot}]
     }
 
     return (
@@ -112,7 +108,7 @@ function AddVaccinationData(props) {
                             }}
                           />
                         </FormControl>
-                        <IconButton onClick={() => values.slots.length > 1 &&  remove(index)} className={classes.errorField} disabled={values.slots.length === 1}><RemoveCircleOutlineIcon/></IconButton>
+                        <IconButton onClick={() => remove(index)} className={classes.errorField} disabled={values.slots.length === 1}><RemoveCircleOutlineIcon fontSize="small"/></IconButton>
                     </Paper>
                         ))}                
             <Button onClick={() => push({...defaultVaccinationSlot})} variant="contained" color="primary" size="small" className={classes.addMoreBtn}>Add More</Button>
