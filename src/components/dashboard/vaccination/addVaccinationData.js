@@ -57,12 +57,16 @@ function AddVaccinationData(props) {
         date: ""
     }), [])
 
-
-    const validate = Yup.object({
-        vaccineType: Yup.string().max(100).required("Required"),
-        noOfSlots: Yup.number().required("Required"),
-        date: Yup.date().required("Required")
-    });
+    const validationSchema = Yup.object().shape({
+        slots: Yup.array()
+          .of(
+            Yup.object().shape({
+              vaccineType: Yup.string().required('Required'),
+              noOfSlots: Yup.number().min(0).required('Required'),
+              date: Yup.date().required("Required")
+            })
+          )
+      });
 
    
     // Handle closing of the dialog
@@ -83,7 +87,7 @@ function AddVaccinationData(props) {
     return (
         <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth="sm"> 
         <DialogTitle>Add Vaccination Slots</DialogTitle>
-        <Formik validationSchema={validate} initialValues={initialValues} onSubmit={handleSubmit}>
+        <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleSubmit}>
         { ({values}) => <Form>
                 <FieldArray name="slots">
                     {({insert, remove, push, }) => <DialogContent>
