@@ -5,7 +5,7 @@ import { isAuthenticated } from '../utility/commonFunctions';
 
 const PrivateRoute = ({ component: Component, roles, ...rest }) => (
     <Route {...rest} render={props => {
-        const currentUser = JSON.parse(isAuthenticated());
+        const currentUser = isAuthenticated();
         
        
         if (!currentUser) {
@@ -14,7 +14,7 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => (
         }
 
         // check if route is restricted by role
-        if (roles && !roles.includes(currentUser.role)) {
+        if (roles && !roles.includes(currentUser.role[0].authority)) {
             // role not authorised so redirect to home page
             return <Redirect to={{ pathname: '/'}} />
         }

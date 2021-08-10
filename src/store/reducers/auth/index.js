@@ -6,12 +6,15 @@ import {
 } from "../../actions/auth"
 
 const initialState = {
-    name: null,
-    email: null,
     username: null,
-    role: null,
+    role: null, 
+    cityName: null,
+    hospitalId: null,
+    pinCode: null,
+    hospitalBranchId: null,
     isAuthenticated: false,
-    isAuthenticating: false
+    isAuthenticating: false,
+    token: null
 };
 
 const Reducer = (state = initialState, {type, payload}) => {
@@ -21,7 +24,7 @@ const Reducer = (state = initialState, {type, payload}) => {
             return {...state, isAuthenticating: true}
         case AUTH_SUCCESS:
             localStorage.setItem("user", JSON.stringify(payload))
-            return { ...state, isAuthenticating: false, isAuthenticated: true, name: payload.name, email: payload.email, username: payload.username, role: payload.role}
+            return { ...state, isAuthenticating: false, isAuthenticated: true, username: payload.sub, role: payload.role[0].authority, cityName: payload.cityName, hospitalId: payload.hospitalId, pinCode: payload.pinCode, hospitalBranchId: payload.hospitalBranchId, token: payload.jwt}
         case AUTH_FAIL:{
             return {...state, isAuthenticating: false, authError: payload}
         }

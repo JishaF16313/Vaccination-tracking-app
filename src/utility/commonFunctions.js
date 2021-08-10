@@ -1,7 +1,7 @@
 //for common application function
 export const isAuthenticated = () =>{
     const user = localStorage.getItem("user")
-    return user;
+    return  JSON.parse(user);
 }
 
 export const removeObjectFromArray = (arr, attr, value) => {

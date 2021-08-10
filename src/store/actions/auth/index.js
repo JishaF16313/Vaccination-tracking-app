@@ -17,10 +17,10 @@ export const checkAuth = () => dispatch => {
 
 export const authenticate =  (credentials) => async(dispatch) => {
     dispatch(authInit())
-    if(users.findIndex(user => user.email === credentials.userLoginId) >= 0)
+    if(users.findIndex(user => user.sub === credentials.userLoginId) >= 0)
     {
     return setTimeout(() =>{
-        const user = users.find(user => user.email === credentials.userLoginId)
+        const user = users.find(user => user.sub === credentials.userLoginId)
         user ? dispatch(authSuccess(user)) : dispatch(authFail("Invalid credentials"))
     }, 500)
     }
