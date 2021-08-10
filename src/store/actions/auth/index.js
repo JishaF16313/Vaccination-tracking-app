@@ -1,4 +1,6 @@
 import users from "../../../lib/mocks/users.json"
+import * as API from "../../../lib/api"
+import {parseJwt} from "../../../utility/commonFunctions"
 
 // Authentication
 export const AUTH_INIT = "AUTH_INIT"
@@ -13,13 +15,26 @@ export const checkAuth = () => dispatch => {
     else dispatch(logout())
 }
 
-export const authenticate = (credentials) => dispatch => {
+export const authenticate =  (credentials) => async(dispatch) => {
     dispatch(authInit())
-    setTimeout(() =>{
-        const user = users.find(user => user.email === credentials.userName)
+    if(users.findIndex(user => user.sub === credentials.userLoginId) >= 0)
+    {
+    return setTimeout(() =>{
+        const user = users.find(user => user.sub === credentials.userLoginId)
         user ? dispatch(authSuccess(user)) : dispatch(authFail("Invalid credentials"))
     }, 500)
+    }
+    try{
+    const token = await API.API_PUT_SERVICE("/user/_login",credentials)
+    const user = parseJwt(token)
+    dispatch(authSuccess({...user, jwt: token }))
+    }
+    catch(error)
+    {
+        dispatch(authFail(error.message || "Something failed !"))
+    }
 }
+
 const authInit = () => ({
     type: AUTH_INIT
 })

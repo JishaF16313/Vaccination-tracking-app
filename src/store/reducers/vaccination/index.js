@@ -3,8 +3,10 @@ import {
     GET_VACCINATION_LIST_SUCCESS,
     GET_VACCINATION_LIST_FAIL,
     UPDATE_VACCINATION_DETAIL_SUCCESS,
-    UPDATE_VACCINATION_DETAIL_FAIL
+    UPDATE_VACCINATION_DETAIL_FAIL,
+    DELETE_VACCINATION_APPOINTMENT
 } from "../../actions/vaccination"
+import { removeObjectFromArray } from '../../../utility/commonFunctions';
 
 const initialState = {
     vaccinationList: [],
@@ -26,10 +28,13 @@ const vaccinationReducer = ( state= initialState, {type, payload}) => {
 
         case UPDATE_VACCINATION_DETAIL_SUCCESS:{
             let updatedList = [...state.vaccinationList]
-            const updateIndex = updatedList.findIndex( detail => detail.id == payload.id)
+            const updateIndex = updatedList.findIndex( detail => detail.id === payload.id)
             updatedList[updateIndex] = {...payload}
             return {...state, vaccinationList: updatedList}
         }
+
+        case DELETE_VACCINATION_APPOINTMENT: 
+            return {...state, vaccinationList: removeObjectFromArray(state.vaccinationList, "id", payload.id)}
 
         default:
             return state

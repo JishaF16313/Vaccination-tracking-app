@@ -137,7 +137,7 @@ DoseDetails.propTypes = {
 EditVaccinationDetail.propTypes = {
     open: PropTypes.bool.isRequired, //Flag to show/hide the modal
     onClose: PropTypes.func.isRequired, //Handle closing of the modal
-    details: PropTypes.object.isRequired, //Details of the vaccination appointment
+    details: PropTypes.object, //Details of the vaccination appointment
 }
 
 export default EditVaccinationDetail

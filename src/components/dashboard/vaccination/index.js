@@ -4,15 +4,20 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {makeStyles} from '@material-ui/core/styles'
 import Table from "../../table"
 import EditVaccinationDetail from './editVaccinationDetail'
+import AddVaccinationData from './addVaccinationData';
 import {useSelector, useDispatch} from "react-redux"
-import {getVaccinationList} from "../../../store/actions/vaccination"
+import {getVaccinationList, deleteVaccinationAppointment} from "../../../store/actions/vaccination"
+import ConfirmDialog from "../../dialog/confirmation"
+import Button from "@material-ui/core/Button"
 
 const useStyles = makeStyles({
     root: {
         padding: "2%",
     },
     title: {
-        margin: "10px 0px"
+        margin: "10px 0px 20px 0px",
+        display: "flex",
+        justifyContent: "space-between"
     },
     tableContainer: {
         margin: "10px 0px",
@@ -44,11 +49,19 @@ function VaccinationDashboard() {
     // Closing the modal
     const handleModalClose = useCallback(() => setmodal({type: null, data: null}),[])
 
-    // Vaccination detail edit handler
+    // Open Vaccination appointmrnt edit modal
     const handleVaccinationEdit = useCallback( (details) => setmodal({type: "edit", data: details}), [])
 
-    // Vaccination detail delete handler
-    const handleVaccinationDelete = useCallback( details => console.log("Delete", details), [])
+    // Open vaccination appointment delete modal
+    const handleVaccinationDelete = useCallback( details => setmodal({type: "delete", data: details}), [])
+
+    // Open vaccination slots add modal
+    const handleVaccinaionSlotsAdd = useCallback( () => setmodal({type: "add", data: null}), [])
+
+    // Dispatch vaccination appointment delete
+    const handleVaccinationDeleteDispatch = useCallback(() => {
+        dispatch(deleteVaccinationAppointment(modal.data)).then(() => handleModalClose())
+    },[modal, handleModalClose])
 
     // Column title mappings for vaccination details
     const columnMap = useMemo(  () => [{
@@ -71,12 +84,14 @@ function VaccinationDashboard() {
 
     return (
         <div className={classes.root}>
-            <Typography component="h4" variant="h5" className={classes.title}> Vaccination Appointments</Typography>
+            <Typography component="h4" variant="h5" className={classes.title}>Vaccination Appointments <Button variant="contained" color="primary" onClick={handleVaccinaionSlotsAdd}>Add Vaccination Slots</Button></Typography>
             <div className={classes.tableContainer}>
             <Table columnMap={columnMap} rows={vaccinationList} onEdit={handleVaccinationEdit} onDelete={handleVaccinationDelete} loading={loading}/>
             </div>
             {loading && <div className={classes.loader}><CircularProgress/></div>}
             <EditVaccinationDetail open={modal.type === "edit"} details={modal.data} onClose={handleModalClose} />
+            <ConfirmDialog open={modal.type === "delete"} title="Delete Appointment" message="Are you sure you want to delete the appointment?" handleDisagree={handleModalClose} handleAgree={handleVaccinationDeleteDispatch} agreeButtonText="Delete" disagreeButtonText="Cancel" />
+            <AddVaccinationData open={modal.type === "add"} onClose={handleModalClose}/>
         </div>
     )
 }

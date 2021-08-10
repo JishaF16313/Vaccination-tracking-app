@@ -5,7 +5,7 @@ function InputField({ label, classes, ...props }) {
     const [field, meta] = useField(props);
     return (
         <div>
-            {(props.type === 'text' || props.type === 'password') && (
+            {(props.type === 'text' || props.type === 'password' || props.type === 'number' || props.type === "date") && (
                 <TextField label={label} onChange={props.onChange} className={`form-control ${meta.touched && meta.error && 'is-valid'}`} {...field} {...props} autocomplete="off" />
             )}
             {props.type === 'textarea' && (

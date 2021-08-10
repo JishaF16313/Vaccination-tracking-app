@@ -48,8 +48,8 @@ export default function SignIn() {
   const {isAuthenticating, authError, isAuthenticated} = useSelector(store => store.auth)
 
   const validate = Yup.object({
-    userName: Yup.string().max(100).required(hospitalUserUserNameValidationText),
-    password: Yup.string().min(8, passwordMinLengthValidationText).max(100).required(passwordValidationText),
+    userLoginId: Yup.string().max(100).required(hospitalUserUserNameValidationText),
+    pwd: Yup.string().min(8, passwordMinLengthValidationText).max(100).required(passwordValidationText),
 });
 
 React.useEffect(() => {
@@ -67,14 +67,14 @@ const submitForm = (values) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Formik initialValues={{userName: '', password: ''}} validationSchema={validate} onSubmit={values => submitForm(values)}>
+        <Formik initialValues={{userLoginId: '', pwd: ''}} validationSchema={validate} onSubmit={values => submitForm(values)}>
                 {formik => (
                     <Form className={classes.form}>
                         <div className={classes.field}>
-                            <InputField label="Username" onChange={(e) => formik.setFieldValue('userName', e.target.value)} name="userName" type="text" classes={classes} style={{width: "100%"}}/>
+                            <InputField label="Username"  name="userLoginId" type="text" classes={classes} style={{width: "100%"}}/>
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Password" onChange={(e) => formik.setFieldValue('password', e.target.value)} name="password" type="password" classes={classes} style={{width: "100%"}}/>
+                            <InputField label="Password" name="pwd" type="password" classes={classes} style={{width: "100%"}}/>
                         </div>
                         <div className={classes.btnDiv}>
                             <Button variant="contained" color="primary" size="medium" type="submit" disabled={isAuthenticating}>{!isAuthenticating ? "Login" : "Submitting..."}</Button>
