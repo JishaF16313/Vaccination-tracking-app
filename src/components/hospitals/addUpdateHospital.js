@@ -3,16 +3,13 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import {
-    hospitalNameLabelText, hospitalZipLabelText, hospitalCityLabelText, addHospitalText, cancelText, updateHospitalText
-} from '../../utility/commonTexts';
-import {
-    zipValidationRegExp, hospitalNameValidationText, zipValidationText, cityValidationText, invalidZipValidationText
-} from '../../utility/validationMessages';
+import { hospitalNameLabelText, addHospitalText, cancelText, updateHospitalText } from '../../utility/commonTexts';
+import { hospitalNameValidationText } from '../../utility/validationMessages';
 import InputField from '../inputfield/index';
 import history from '../../routes/history';
 import { useDispatch, useSelector } from 'react-redux';
 import { addHospital, updateHospital } from '../../store/actions/hospitals/index';
+import { startLoading, stopLoading } from '../../store/actions/loader/index';
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
@@ -30,16 +27,14 @@ const useStyles = makeStyles((theme) => ({
     errorField: {
         color: 'red',
         marginTop: theme.spacing(1)
-    },
-    addressField: {
-        width: '25ch'
     }
 }));
 
 function AddUpdateHospital() {
-    const storeData = useSelector((store) => {
+    const storeData = useSelector((store) => {        
         return {
-            data: store.hospitals
+            data: store.hospitals,
+            loggedInUserData: store.auth
         }
     });
 
@@ -50,15 +45,16 @@ function AddUpdateHospital() {
     const title = storeData.data.addOrUpdate === "add" ? addHospitalText : updateHospitalText;
 
     const validate = Yup.object({
-        name: Yup.string().max(100).required(hospitalNameValidationText),        
-        zip: Yup.string().matches(zipValidationRegExp, invalidZipValidationText).max(6).required(zipValidationText),
-        city: Yup.string().max(50).required(cityValidationText)        
+        name: Yup.string().max(100).required(hospitalNameValidationText)     
     });
 
-    const submitForm = (values) => {
-        if (storeData.data.addOrUpdate === "add") {
-            let obj = { id: Number(storeData.data.hospitalList.length) + 1, ...values }
-            dispatch(addHospital(obj));
+    const submitForm = (values) => {        
+        dispatch(startLoading('Please wait...'))
+        if (storeData.data.addOrUpdate === "add") {           
+            let obj = { hospitalName : values.name };
+            let token = storeData.loggedInUserData.token;
+            dispatch(addHospital(obj, token));
+            dispatch(stopLoading());
         } else {
             let obj = { id: storeData.data.editedHospitalData.id , ...values }
             dispatch(updateHospital(obj));
@@ -70,13 +66,11 @@ function AddUpdateHospital() {
         history.push('/admindashboard');
     }
 
-    const initialValues = { name: '', zip: '', city: '' };
+    const initialValues = { name: '' };
 
     useEffect(() => {
         if (storeData.data.addOrUpdate === "update") {
-            initialValues.name = storeData.data.editedHospitalData.name;            
-            initialValues.zip = storeData.data.editedHospitalData.zip;
-            initialValues.city = storeData.data.editedHospitalData.city;           
+            initialValues.name = storeData.data.editedHospitalData.name;        
         }
     }, []);
 
@@ -89,13 +83,7 @@ function AddUpdateHospital() {
                         <Form>
                             <div className={classes.field}>
                                 <InputField onChange={(e) => formik.setFieldValue('name', e.target.value)} label={hospitalNameLabelText} name="name" type="text" classes={classes} />
-                            </div>                           
-                            <div className={classes.field}>
-                                <InputField label={hospitalZipLabelText} name="zip" onChange={(e) => formik.setFieldValue('zip', e.target.value)} type="text" classes={classes} />
-                            </div>
-                            <div className={classes.field}>
-                                <InputField label={hospitalCityLabelText} name="city" onChange={(e) => formik.setFieldValue('city', e.target.value)} type="text" classes={classes} />
-                            </div>                           
+                            </div>                     
                             <div className={classes.btnDiv}>
                                 <Button variant="contained" color="primary" size="medium" type="submit">{storeData.data.addOrUpdate === "add" ? addHospitalText : updateHospitalText}</Button>
                                 <Button onClick={(e) => onCancelClicked(e)} className={classes.cancelBtn} variant="contained" size="medium">{cancelText}</Button>

@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import { hospitalDdlList, cancelText, addBranchText, updateBranchText } from '../../utility/commonTexts';
+import { hospitalDdlList, cancelText, addBranchText, updateBranchText, hospitalZipLabelText, hospitalCityLabelText, } from '../../utility/commonTexts';
 import InputField from '../inputfield/index';
-import { branchNameValidationText, hospitalNameValidationText } from '../../utility/validationMessages';
+import { branchNameValidationText, hospitalNameValidationText, zipValidationText, cityValidationText, invalidZipValidationText, zipValidationRegExp } from '../../utility/validationMessages';
 import history from '../../routes/history';
 import { useDispatch, useSelector } from 'react-redux';
 import { addHospitalBranch, updateHospitalBranch } from '../../store/actions/hospitalbranch/index';
@@ -27,16 +27,14 @@ const useStyles = makeStyles((theme) => ({
         color: 'red',
         marginTop: theme.spacing(1)
     },
-    addressField: {
+    autocompleteField: {
         width: '25ch'
-    },
-    ddl: {
-        width: '22ch'
     }
 }));
 
 function AddUpdateHospitalBranch() {
-    const storeData = useSelector((store) => {       
+    const [hospitalNameValue, setHospitalNameValue] = useState(null);
+    const storeData = useSelector((store) => {
         return {
             data: store.hospitalbranch
         }
@@ -49,26 +47,26 @@ function AddUpdateHospitalBranch() {
     const dispatch = useDispatch();
 
     const validate = Yup.object({
-        name: Yup.string().max(100).required(branchNameValidationText),       
-        hospitalName: Yup.string().required(hospitalNameValidationText)
+        name: Yup.string().max(100).required(branchNameValidationText),
+        hospitalName: Yup.string(),
+        zip: Yup.string().matches(zipValidationRegExp, invalidZipValidationText).max(6).required(zipValidationText),
+        city: Yup.string().max(50).required(cityValidationText)
     });
 
     const submitForm = (values) => {
-        let hospitalName = hospitalDdlList.filter((item) => {
-            return item.value === values.hospitalName
-        });
         if (storeData.data.addOrUpdate === "add") {
             let obj = {
-                id: Number(storeData.data.branchList.length) + 1,
-                name: values.name,               
-                hospitalName: hospitalName[0].label                
+                hospitalName: hospitalNameValue.value ? hospitalNameValue.value : hospitalNameValue.label,
+                branchName: values.name,
+                city: values.city,
+                zip: values.zip
             }
             dispatch(addHospitalBranch(obj));
         } else {
             let obj = {
                 id: storeData.data.branchList.length,
-                name: values.name,               
-                hospitalName: hospitalName[0].label
+                hospitalName: hospitalNameValue.value ? hospitalNameValue.value : hospitalNameValue.label,
+                ...values
             }
             dispatch(updateHospitalBranch(obj));
         }
@@ -79,17 +77,29 @@ function AddUpdateHospitalBranch() {
         history.push('/admindashboard');
     }
 
-    const initialValues = { name: '', hospitalName: '' };
+    const initialValues = { name: '', hospitalName: '', zip: '', city: '' };
 
     useEffect(() => {
         if (storeData.data.addOrUpdate === "update") {
             let hospitalName = hospitalDdlList.filter((item) => {
                 return item.label === storeData.data.editedHospitalBranchData.hospitalName
-            });           
-            initialValues.name = storeData.data.editedHospitalBranchData.name;            
+            });
+            initialValues.name = storeData.data.editedHospitalBranchData.name;
             initialValues.hospitalName = hospitalName[0].value;
+            initialValues.zip = storeData.data.editedHospitalBranchData.zip;
+            initialValues.city = storeData.data.editedHospitalBranchData.city;
         }
     }, []);
+
+    const hospitalNameChange = (event, newValue) => {
+        if (typeof newValue === 'string') {            
+            setHospitalNameValue({ label: newValue });
+        } else if (newValue && newValue.inputValue) {           
+            setHospitalNameValue({ label: newValue.inputValue });
+        } else {          
+            setHospitalNameValue(newValue);
+        }
+    }   
 
     return (
         <div className={classes.mainDiv}>
@@ -99,10 +109,16 @@ function AddUpdateHospitalBranch() {
                     <Form>
                         <div className={classes.field}>
                             <InputField label="Name" onChange={(e) => formik.setFieldValue('name', e.target.value)} name="name" type="text" classes={classes} />
-                        </div>         
+                        </div>
                         <div className={classes.field}>
-                            <InputField defaultValue={initialValues.hospitalName} label="Hospital Name" onChange={(e) => formik.setFieldValue('hospitalName', e.target.value)} name="hospitalName" type="select" options={hospitalDdlList} classes={classes} />
-                        </div>                       
+                            <InputField value={hospitalNameValue} label="Hospital Name" onChange={(e, formik) => hospitalNameChange(e, formik)} name="hospitalName" type="autocomplete" options={hospitalDdlList} classes={classes} />
+                        </div>
+                        <div className={classes.field}>
+                            <InputField label={hospitalZipLabelText} name="zip" onChange={(e) => formik.setFieldValue('zip', e.target.value)} type="text" classes={classes} />
+                        </div>
+                        <div className={classes.field}>
+                            <InputField label={hospitalCityLabelText} name="city" onChange={(e) => formik.setFieldValue('city', e.target.value)} type="text" classes={classes} />
+                        </div>
                         <div className={classes.btnDiv}>
                             <Button variant="contained" color="primary" size="medium" type="submit">{storeData.data.addOrUpdate === "add" ? addBranchText : updateBranchText}</Button>
                             <Button onClick={(e) => onCancelClicked(e)} className={classes.cancelBtn} variant="contained" size="medium">{cancelText}</Button>

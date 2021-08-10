@@ -13,7 +13,7 @@ import AddUpdateHospitalUser from '../components/hospitalusers/addupdateuser';
 import HospitalDashboard from '../components/hospitals/index';
 import HospitalUserDashboard from '../components/hospitalusers/index';
 import AdminDashboard from '../components/dashboard/admin/index';
-import AddUpdateHospitalBranch from '../components/hospitalbranch/index';
+import AddUpdateHospitalBranch from '../components/hospitalbranch/addupdatebranch';
 
 function Routes() {
     return (
