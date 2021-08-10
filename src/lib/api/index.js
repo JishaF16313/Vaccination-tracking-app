@@ -44,10 +44,10 @@ export const API_GET_SERVICE = async (url,config) =>
 {
     try {
     const res = await axios.get(url);
-    return res;
+    return res.data;
     }
     catch (error) {
-        return error;
+        throw error.response.data;
     }
 }
 
@@ -58,7 +58,7 @@ export const API_POST_SERVICE = async (url,param,config) =>
     return res.data;
     }
     catch (error) {
-        return error;
+        throw error.response.data;
     }
 }
 
@@ -67,7 +67,7 @@ export const API_PUT_SERVICE = async (url,param,config) =>
 {
     try {
         const res = await axios.put(url,param);
-        return res;
+        return res.data;
         }
         catch (error) {
             throw error.response.data;
@@ -78,10 +78,10 @@ export const API_DELETE_SERVICE = async (url,config) =>
 {
     try {
         const res = await axios.delete(url);
-        return res;
+        return res.data;
         }
         catch (error) {
-            return error;
+            throw error.response.data;
         }
 }
 
