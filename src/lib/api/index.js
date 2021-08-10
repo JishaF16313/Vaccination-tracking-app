@@ -3,6 +3,7 @@ import axios from 'axios';
 axios.defaults.baseURL = 'https://fakestoreapi.com';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 
 // API Servies Call
 //   API_GET_SERVICE('/products',param).then((res)=>{
@@ -54,7 +55,7 @@ export const API_POST_SERVICE = async (url,param,config) =>
 {
     try {
     const res = await axios.post(url,param);
-    return res;
+    return res.data;
     }
     catch (error) {
         return error;
