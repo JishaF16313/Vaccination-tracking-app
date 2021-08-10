@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { setAlert, clearAlert } from '../alert/index';
 
 export const TYPES = {
    GET_HOSPITAL_LIST: 'GET_HOSPITAL_LIST',
@@ -20,21 +21,20 @@ export const setAddOrUpdate = (value) => ({
 });
 
 //api call for create hospital
-export function addHospital(bodyObject, token) {
-   debugger;
+export function addHospital(bodyObject, token) {   
    token = token ? token : 'xxxx';
    return dispatch => {
       return axios.post('http://9.85.71.82:8080/bas/hospital/_create', bodyObject, { headers: getHeaders(token) })
-         .then((response) => {
-            debugger;
+         .then((response) => {          
             if (response && response.status === 200 && response.data) {
-               dispatch({ type: TYPES.ADD_HOSPITAL, payload: response.data.hospitalId })
+               dispatch({ type: TYPES.ADD_HOSPITAL, payload: response.data.hospitalId });
+               dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Hospital created successfully.' }))
             } else if (response && response.status === 404) {
-
+               dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: 'Resource not found.' }))
             }
          })
-         .catch((error) => {
-
+         .catch((error) => {           
+            dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }))
          });
    }
 };

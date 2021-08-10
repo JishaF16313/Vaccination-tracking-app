@@ -5,6 +5,7 @@ const initialState = {
    hospitalList: [{ id: 1, name: 'Hospital 1', zip: '111111', city: 'City 1' },
    { id: 2, name: 'Hospital 2', zip: '222222', city: 'City 2' }],
    addOrUpdate: 'add',
+   addedHospitalId: null,
    editedHospitalData: null,
    deletingHospitalId: null,
    openDeleteConfirmationDialog: false
@@ -17,7 +18,8 @@ const Reducer = (state = initialState, { type, payload }) => {
       case actions.TYPES.ADD_UPDATE:
          return { ...state, addOrUpdate: payload };
       case actions.TYPES.ADD_HOSPITAL:
-         return { ...state, hospitalList: [...state.hospitalList, payload] };
+         debugger;
+         return { ...state, addedHospitalId: payload };
       case actions.TYPES.SET_EDITED_HOSPITAL_DATA:
          return { ...state, editedHospitalData: payload };
       case actions.TYPES.UPDATE_HOSPITAL:

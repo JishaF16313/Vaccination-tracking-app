@@ -59,7 +59,13 @@ function AddUpdateHospital() {
             let obj = { id: storeData.data.editedHospitalData.id , ...values }
             dispatch(updateHospital(obj));
         }
-        history.push('/admindashboard');
+        setTimeout(() => {
+            debugger;
+            if(storeData.data.addedHospitalId){
+                debugger;
+                history.push('/admindashboard');
+            } 
+        }, 5000);             
     }
 
     const onCancelClicked = (e) => {

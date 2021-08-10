@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import { useDispatch } from "react-redux"
 import { checkAuth } from "../store/actions/auth";
 import Loader from '../components/loader/index';
+import Alert from '../components/alert/index';
 
 const useStyles = makeStyles({
   app: {
@@ -30,6 +31,7 @@ function App() {
     <div className={classes.app}>
       <Header />
       <main className={classes.main}>
+        <Alert />
         <Loader />
         <Route />
       </main>
