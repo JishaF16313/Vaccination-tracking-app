@@ -15,3 +15,5 @@ export const confirmPasswordValidationText = "Confirm password is required.";
 export const passwordMatchValidationText = "Passwords must match.";
 export const addressValidationText = "Address is required.";
 export const userTypeValidationText = "User type is required.";
+
+export const branchNameValidationText = "Branch name is required.";

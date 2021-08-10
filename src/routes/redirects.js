@@ -8,7 +8,7 @@ const Redirects = () => {
     let redirectUrl = ""
     switch(role){
         case Role.Admin:
-            redirectUrl = "/hospitals"
+            redirectUrl = "/admindashboard"
             break
         case Role.HoAdmin:
             redirectUrl = "/hospitaladmin"

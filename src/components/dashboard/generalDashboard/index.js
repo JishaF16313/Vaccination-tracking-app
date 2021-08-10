@@ -40,17 +40,19 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function GeneralDashboard() {
+export default function GeneralDashboard({ hideBookBedAction, ...props }) {
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
             <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <div className={classes.availability_status_wrapper}>
-                        <Button size="small" variant="contained" color="primary">Book Bed</Button>
-                    </div>
-                </Grid>
+                {!hideBookBedAction && (
+                    <Grid item xs={12}>
+                        <div className={classes.availability_status_wrapper}>
+                            <Button size="small" variant="contained" color="primary">Book Bed</Button>
+                        </div>
+                    </Grid>
+                )}
                 <Grid item xs={12} sm={6}>
                     <Paper className={classes.paper}>
                         Total Covid Patients

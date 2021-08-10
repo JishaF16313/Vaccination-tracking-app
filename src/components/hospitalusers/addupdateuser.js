@@ -90,11 +90,11 @@ function AddUpdateUser() {
             }
             dispatch(updateHospitalUser(obj));
         }
-        history.push('/hospital/users');
+        history.push('/admindashboard');
     }
 
     const onCancelClicked = (e) => {
-        history.push('/hospital/users');
+        history.push('/admindashboard');
     }
 
     const initialValues = { name: '', userName: '', password: '', confirmPassword: '', address: '', hospitalName: '', userType: '' };
