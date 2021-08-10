@@ -69,7 +69,7 @@ export const API_PUT_SERVICE = async (url,param,config) =>
         return res;
         }
         catch (error) {
-            return error;
+            throw error.response.data;
         }
 }
 
