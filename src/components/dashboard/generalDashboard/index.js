@@ -1,13 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import BedForm from './bedSummeryTable';
-
+import Button from "@material-ui/core/Button"
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        flexGrow: 1,
+        padding: "2%"
     },
     paper: {
         padding: theme.spacing(2),
@@ -17,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 'bold',
     },
     availability_status_wrapper: {
-        backgroundColor: '#337ab7',
         padding: '8px 0',
         position: 'relative'
     },
@@ -39,58 +37,43 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         fontSize: '44px',
         color: '#23c83f'
-    },
-    upload_button: {
-        padding: '10px 22px',
-        backgroundColor: '#5cb85c',
-        color: '#FFFFFF',
-        outline: 'none',
-        border: 'none',
-        cursor: 'pointer',
-        fontWeight: '900',
-        position: 'absolute',
-        top: '2px',
-        left: '40px'
     }
 }));
 
-
-
-export default function HospitalAdmin() {
+export default function GeneralDashboard({ hideBookBedAction, ...props }) {
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
             <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <Paper className={classes.availability_status_wrapper}>
-                        <button className={classes.upload_button}>Bulk upload bed details</button>
-                        <p style={{"textAlign" : "center"}} className={classes.availability_status}>Bed Availability Status</p>
-                    </Paper>
-                </Grid>
+                {!hideBookBedAction && (
+                    <Grid item xs={12}>
+                        <div className={classes.availability_status_wrapper}>
+                            <Button size="small" variant="contained" color="primary">Book Bed</Button>
+                        </div>
+                    </Grid>
+                )}
                 <Grid item xs={12} sm={6}>
                     <Paper className={classes.paper}>
-                        Beds booked in the hospital
+                        Total Covid Patients
                     </Paper>
                     <Paper className={classes.numbers}>
-                        50
+                        50000
                     </Paper>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <Paper className={classes.paper}>How many people are vaccinated</Paper>
+                    <Paper className={classes.paper}>Beds Available</Paper>
                     <Paper className={classes.numbers}>
                         5,00,000
                     </Paper>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <Paper className={classes.paper}>How many beds are available</Paper>
+                    <Paper className={classes.paper}>People Vaccinated</Paper>
                     <Paper className={classes.available_number}>
                         25,000
                     </Paper>
                 </Grid>
-               
             </Grid>
-            <BedForm></BedForm>   
         </div>
     );
 }

@@ -1,7 +1,7 @@
 export const Role = {
-    Admin: 'Admin',
-    HoAdmin:'HoAdmin',
-    VcAdmin:'VcAdmin',
-    User: 'User'    
+    Admin: 'PORTAL_ADMIN',
+    HoAdmin:'HOSPITAL_ADMIN',
+    VcAdmin:'VACCINATION_ADMIN',
+    User: 'CITIZEN'    
 }
 export default Role;

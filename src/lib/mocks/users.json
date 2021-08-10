@@ -1,20 +1,55 @@
 [
         {
-            "name":"General Admin",
-            "email":"admin@gmail.com",
-            "password":"welcome-123",
-            "role":"Admin"
-        },
-        {
-            "name":"Hospital Admin",
-            "email":"hoadmin@gmail.com",
-            "password":"welcome-123",
-            "role":"HoAdmin"
-        },
-        {
-            "name":"Vaccination Admin",
-            "email":"vcadmin@gmail.com",
-            "password":"welcome-123",
-            "role":"VcAdmin"
-        }
+            "sub": "admin@gmail.com",
+            "role": [
+              {
+                "authority": "PORTAL_ADMIN"
+              }
+            ],
+            "cityName": "Toronto",
+            "pinCode": "123-123",
+            "hospitalId": "",
+            "hospitalBranchId": "",
+            "exp": 1628238512,
+            "iat": 1628231312
+          },{
+            "sub": "user@gmail.com", 
+            "role": [
+              {
+                "authority": "CITIZEN"
+              }
+            ],
+            "cityName": "Toronto",
+            "pinCode": "123-123",
+            "hospitalId": "",
+            "hospitalBranchId": "",
+            "exp": 1628238512,
+            "iat": 1628231312
+          },{
+            "sub": "hoadmin@gmail.com", 
+            "role": [
+              {
+                "authority": "HOSPITAL_ADMIN"
+              }
+            ],
+            "cityName": "Toronto",
+            "pinCode": "123-123",
+            "hospitalId": "",
+            "hospitalBranchId": "",
+            "exp": 1628238512,
+            "iat": 1628231312
+          },{
+            "sub": "vcadmin@gmail.com", 
+            "role": [
+              {
+                "authority": "VACCINATION_ADMIN"
+              }
+            ],
+            "cityName": "Toronto",
+            "pinCode": "123-123",
+            "hospitalId": "",
+            "hospitalBranchId": "",
+            "exp": 1628238512,
+            "iat": 1628231312
+          }
 ]
