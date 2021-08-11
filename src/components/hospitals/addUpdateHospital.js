@@ -9,7 +9,7 @@ import InputField from '../inputfield/index';
 import history from '../../routes/history';
 import { useDispatch, useSelector } from 'react-redux';
 import { addHospital, updateHospital } from '../../store/actions/hospitals/index';
-import { startLoading, stopLoading } from '../../store/actions/loader/index';
+import { startLoading } from '../../store/actions/loader/index';
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
@@ -49,23 +49,18 @@ function AddUpdateHospital() {
     });
 
     const submitForm = (values) => {        
-        dispatch(startLoading('Please wait...'))
+        dispatch(startLoading('Please wait...'));
         if (storeData.data.addOrUpdate === "add") {           
             let obj = { hospitalName : values.name };
             let token = storeData.loggedInUserData.token;
             dispatch(addHospital(obj, token));
-            dispatch(stopLoading());
         } else {
             let obj = { id: storeData.data.editedHospitalData.id , ...values }
             dispatch(updateHospital(obj));
-        }
-        setTimeout(() => {
-            debugger;
-            if(storeData.data.addedHospitalId){
-                debugger;
-                history.push('/admindashboard');
-            } 
-        }, 5000);             
+        }       
+        // if(storeData.alertData.alertType === "success"){
+        //     history.push('/admindashboard');
+        // }                   
     }
 
     const onCancelClicked = (e) => {

@@ -3,12 +3,14 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import { hospitalDdlList, cancelText, addBranchText, updateBranchText, hospitalZipLabelText, hospitalCityLabelText, } from '../../utility/commonTexts';
+import { cancelText, addBranchText, updateBranchText, hospitalZipLabelText, hospitalCityLabelText, } from '../../utility/commonTexts';
 import InputField from '../inputfield/index';
 import { branchNameValidationText, hospitalNameValidationText, zipValidationText, cityValidationText, invalidZipValidationText, zipValidationRegExp } from '../../utility/validationMessages';
 import history from '../../routes/history';
 import { useDispatch, useSelector } from 'react-redux';
 import { addHospitalBranch, updateHospitalBranch } from '../../store/actions/hospitalbranch/index';
+import { startLoading } from '../../store/actions/loader/index';
+import { getHospitalList } from '../../store/actions/hospitals/index';
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
@@ -34,9 +36,13 @@ const useStyles = makeStyles((theme) => ({
 
 function AddUpdateHospitalBranch() {
     const [hospitalNameValue, setHospitalNameValue] = useState(null);
+    const [hospitalDdlOptions, setHospitalDdlOptions] = useState(null);
+
     const storeData = useSelector((store) => {
         return {
-            data: store.hospitalbranch
+            data: store.hospitalbranch,
+            loggedInUserData: store.auth,
+            hospitalData: store.hospitals
         }
     });
 
@@ -46,6 +52,12 @@ function AddUpdateHospitalBranch() {
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        dispatch(startLoading('Please wait...'));
+        let token = storeData.loggedInUserData.token;
+        dispatch(getHospitalList(token));
+    }, []);
+
     const validate = Yup.object({
         name: Yup.string().max(100).required(branchNameValidationText),
         hospitalName: Yup.string(),
@@ -54,14 +66,16 @@ function AddUpdateHospitalBranch() {
     });
 
     const submitForm = (values) => {
+        dispatch(startLoading('Please wait...'));
         if (storeData.data.addOrUpdate === "add") {
             let obj = {
                 hospitalName: hospitalNameValue.value ? hospitalNameValue.value : hospitalNameValue.label,
                 branchName: values.name,
                 city: values.city,
-                zip: values.zip
+                pin: values.zip
             }
-            dispatch(addHospitalBranch(obj));
+            let token = storeData.loggedInUserData.token;
+            dispatch(addHospitalBranch(obj, token));
         } else {
             let obj = {
                 id: storeData.data.branchList.length,
@@ -70,7 +84,7 @@ function AddUpdateHospitalBranch() {
             }
             dispatch(updateHospitalBranch(obj));
         }
-        history.push('/admindashboard');
+        //history.push('/admindashboard');
     }
 
     const onCancelClicked = (e) => {
@@ -81,25 +95,25 @@ function AddUpdateHospitalBranch() {
 
     useEffect(() => {
         if (storeData.data.addOrUpdate === "update") {
-            let hospitalName = hospitalDdlList.filter((item) => {
-                return item.label === storeData.data.editedHospitalBranchData.hospitalName
-            });
-            initialValues.name = storeData.data.editedHospitalBranchData.name;
-            initialValues.hospitalName = hospitalName[0].value;
-            initialValues.zip = storeData.data.editedHospitalBranchData.zip;
-            initialValues.city = storeData.data.editedHospitalBranchData.city;
+            // let hospitalName = hospitalDdlList.filter((item) => {
+            //     return item.label === storeData.data.editedHospitalBranchData.hospitalName
+            // });
+            // initialValues.name = storeData.data.editedHospitalBranchData.name;
+            // initialValues.hospitalName = hospitalName[0].value;
+            // initialValues.zip = storeData.data.editedHospitalBranchData.zip;
+            // initialValues.city = storeData.data.editedHospitalBranchData.city;
         }
     }, []);
 
     const hospitalNameChange = (event, newValue) => {
-        if (typeof newValue === 'string') {            
+        if (typeof newValue === 'string') {
             setHospitalNameValue({ label: newValue });
-        } else if (newValue && newValue.inputValue) {           
+        } else if (newValue && newValue.inputValue) {
             setHospitalNameValue({ label: newValue.inputValue });
-        } else {          
+        } else {
             setHospitalNameValue(newValue);
         }
-    }   
+    }
 
     return (
         <div className={classes.mainDiv}>
@@ -111,7 +125,7 @@ function AddUpdateHospitalBranch() {
                             <InputField label="Name" onChange={(e) => formik.setFieldValue('name', e.target.value)} name="name" type="text" classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField value={hospitalNameValue} label="Hospital Name" onChange={(e, formik) => hospitalNameChange(e, formik)} name="hospitalName" type="autocomplete" options={hospitalDdlList} classes={classes} />
+                            <InputField value={hospitalNameValue} label="Hospital Name" onChange={(e, formik) => hospitalNameChange(e, formik)} name="hospitalName" type="autocomplete" options={storeData.hospitalData.hospitalDdlOptions ? storeData.hospitalData.hospitalDdlOptions : []} classes={classes} />
                         </div>
                         <div className={classes.field}>
                             <InputField label={hospitalZipLabelText} name="zip" onChange={(e) => formik.setFieldValue('zip', e.target.value)} type="text" classes={classes} />

@@ -1,7 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearAlert } from '../../store/actions/alert/index';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,12 +20,14 @@ function AlertMessage() {
     return {
       data: store.alert
     }
-  })
+  });
+
+  const dispatch = useDispatch();
 
   return (
     <div className={classes.root}>
       {storeData.data.alertType && (
-        <Alert severity={storeData.data.alertType}>
+        <Alert severity={storeData.data.alertType} onClose={() => dispatch(clearAlert())}>
           <AlertTitle>{storeData.data.alertTitle}</AlertTitle>
           {storeData.data.alertMessage}
         </Alert>
