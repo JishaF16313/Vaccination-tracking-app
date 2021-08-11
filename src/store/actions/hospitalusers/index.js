@@ -1,3 +1,8 @@
+import axios from 'axios';
+import { setAlert } from '../alert/index';
+import { stopLoading } from '../loader/index';
+import history from '../../../routes/history';
+
 export const TYPES = {
     GET_USER_LIST: 'GET_USER_LIST',
     ADD_UPDATE: 'ADD_UPDATE',
@@ -17,9 +22,31 @@ export const TYPES = {
     type: TYPES.ADD_UPDATE , payload: value
  });
  
- export const addHospitalUser = (value) => ({ 
-    type: TYPES.ADD_USER , payload: value
- });
+ export function addHospitalUser(bodyObject, token){    
+   token = token ? token : 'xxxx';   
+   return async dispatch => {
+      try {
+         await axios.post(`http://9.43.49.119:8081/user/_create?role=${bodyObject.userType}`, bodyObject, { headers: getHeaders(token) })
+         .then((response) => {
+            return onSuccess(response);
+         })         
+      } catch (error) {
+         return onError(error);
+      }
+
+      function onSuccess(response) {
+         dispatch({ type: TYPES.ADD_USER, payload: response.data });
+         dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Hospital user created successfully.' }));
+         dispatch(stopLoading());
+         history.push('/admindashboard');
+      }
+      function onError(error) {
+         dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+         dispatch(stopLoading());
+      }
+   }
+   //type: TYPES.ADD_USER , payload: value
+ };
  
  export const setEditedHospitalUserData = (value) => ({
    type: TYPES.SET_EDITED_HOSPITAL_USER_DATA , payload: value
@@ -40,3 +67,11 @@ export const setOpenHospitalUserDeleteDialog = (value) => ({
 export const deleteSelectedHospitalUser = () => ({
    type: TYPES.DELETE_SELECTED_HOSPITAL_USER
 });
+
+export const getHeaders = (token) => {
+   const headers = {
+      'Content-Type': 'application/json',
+      'X-Token-ID': token
+   }
+   return headers;
+}

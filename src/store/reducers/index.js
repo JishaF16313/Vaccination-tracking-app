@@ -4,6 +4,8 @@ import hospitalusers from './hospitalusers/index';
 import vaccination from './vaccination';
 import auth from "./auth";
 import hospitalbranch from './hospitalbranch/index';
+import loader from './loader/index';
+import alert from './alert/index';
 import users from './users/index';
 
 export default combineReducers({
@@ -12,5 +14,7 @@ export default combineReducers({
     vaccination,
     auth,
     hospitalbranch,
+    loader,
+    alert,
     users
 });

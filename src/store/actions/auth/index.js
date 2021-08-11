@@ -15,7 +15,7 @@ export const checkAuth = () => dispatch => {
     else dispatch(logout())
 }
 
-export const authenticate =  (credentials) => async(dispatch) => {
+export const authenticate =  (credentials) => async(dispatch) => {   
     dispatch(authInit())
     if(users.findIndex(user => user.sub === credentials.userLoginId) >= 0)
     {
@@ -24,9 +24,9 @@ export const authenticate =  (credentials) => async(dispatch) => {
         user ? dispatch(authSuccess(user)) : dispatch(authFail("Invalid credentials"))
     }, 500)
     }
-    try{
-    const token = await API.API_PUT_SERVICE("/user/_login",credentials)
-    const user = parseJwt(token)
+    try{    
+    const token = await API.API_PUT_SERVICE("http://9.43.49.119:8081/user/_login",credentials)
+    const user = parseJwt(token)    
     dispatch(authSuccess({...user, jwt: token }))
     }
     catch(error)

@@ -3,16 +3,19 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import { hospitalDdlList, hospitalUserTypes, cancelText, addUserText, updateUserText } from '../../utility/commonTexts';
+import { hospitalUserTypes, cancelText, addUserText, updateUserText } from '../../utility/commonTexts';
 import InputField from '../inputfield/index';
 import {
-    hospitalUserNameValidationText, hospitalUserUserNameValidationText, passwordMinLengthValidationText,
-    passwordValidationText, confirmPasswordValidationText, passwordMatchValidationText, addressValidationText,
-    userTypeValidationText
+    hospitalUserUserNameValidationText, passwordMinLengthValidationText,
+    passwordValidationText, confirmPasswordValidationText, passwordMatchValidationText,
+    userTypeValidationText, zipValidationText, cityValidationText, invalidZipValidationText, zipValidationRegExp
 } from '../../utility/validationMessages';
 import history from '../../routes/history';
 import { useDispatch, useSelector } from 'react-redux';
 import { addHospitalUser, updateHospitalUser } from '../../store/actions/hospitalusers/index';
+import { startLoading } from '../../store/actions/loader/index';
+import { getHospitalList } from '../../store/actions/hospitals/index';
+import { getHospitalBranchList } from '../../store/actions/hospitalbranch/index';
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
@@ -42,7 +45,10 @@ const useStyles = makeStyles((theme) => ({
 function AddUpdateUser() {
     const storeData = useSelector((store) => {
         return {
-            data: store.hospitalusers
+            data: store.hospitalusers,
+            loggedInUserData: store.auth,
+            hospitalData: store.hospitals,
+            HospitalBranchData: store.hospitalbranch
         }
     });
 
@@ -52,68 +58,80 @@ function AddUpdateUser() {
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        dispatch(startLoading('Please wait...'));
+        let token = storeData.loggedInUserData.token;
+        dispatch(getHospitalList(token));
+    }, []);
+
+    useEffect(() => {
+        dispatch(startLoading('Please wait...'));
+        let token = storeData.loggedInUserData.token;
+        dispatch(getHospitalBranchList(token));
+    }, []);
+
     const validate = Yup.object({
-        name: Yup.string().max(100).required(hospitalUserNameValidationText),
         userName: Yup.string().max(100).required(hospitalUserUserNameValidationText),
         password: storeData.data.addOrUpdate === "add" ? Yup.string().min(8, passwordMinLengthValidationText).max(100).required(passwordValidationText) : Yup.string(),
         confirmPassword: storeData.data.addOrUpdate === "add" ? Yup.string().required(confirmPasswordValidationText).oneOf([Yup.ref('password'), null], passwordMatchValidationText) : Yup.string(),
-        address: Yup.string().max(200).required(addressValidationText),
-        hospitalName: Yup.string(),
+        hospitalName: Yup.string().required('Hospital name is required.'),
+        branchName: Yup.string().required('Branch name is required.'),
+        city: Yup.string().required(cityValidationText),
+        zip: Yup.string().matches(zipValidationRegExp, invalidZipValidationText).max(6).required(zipValidationText),
         userType: Yup.string().required(userTypeValidationText),
     });
 
-    const submitForm = (values) => {
-        let hospitalName = hospitalDdlList.filter((item) => {
-            return item.value === values.hospitalName
-        });
-        let userType = hospitalUserTypes.filter((item) => {
-            return item.value === values.userType
-        });
+    const submitForm = (values) => {        
         if (storeData.data.addOrUpdate === "add") {
             let obj = {
-                id: Number(storeData.data.userList.length) + 1,
-                name: values.name,
-                userName: values.userName,
-                address: values.address,
-                hospitalName: hospitalName[0].label,
-                userType: userType[0].label
+                userLoginId: values.userName,
+                pwd: values.password,
+                confirmPwd: values.confirmPassword,
+                hospitalData: {
+                    hospitalId: values.hospitalName,
+                    branchId: values.branchName,
+                    location: {
+                        cityName: values.city,
+                        pinCode: values.zip 
+                    }
+                },
+                userType: values.userType
             }
-            dispatch(addHospitalUser(obj));
+            let token = storeData.loggedInUserData.token;
+            dispatch(addHospitalUser(obj, token));
         } else {
             let obj = {
                 id: storeData.data.userList.length,
                 name: values.name,
                 userName: values.userName,
-                address: values.address,
-                hospitalName: hospitalName[0].label,
-                userType: userType[0].label
+                address: values.address
             }
             dispatch(updateHospitalUser(obj));
         }
-        history.push('/admindashboard');
+        //history.push('/admindashboard');
     }
 
     const onCancelClicked = (e) => {
         history.push('/admindashboard');
     }
 
-    const initialValues = { name: '', userName: '', password: '', confirmPassword: '', address: '', hospitalName: '', userType: '' };
+    const initialValues = { userName: '', password: '', confirmPassword: '', hospitalName: '', city: '', zip: '', branchName: '', userType: '' };
 
     useEffect(() => {
         if (storeData.data.addOrUpdate === "update") {
-            let hospitalName = hospitalDdlList.filter((item) => {
-                return item.label === storeData.data.editedHospitalUserData.hospitalName
-            });
-            let userType = hospitalUserTypes.filter((item) => {
-                return item.label === storeData.data.editedHospitalUserData.userType
-            });
-            initialValues.name = storeData.data.editedHospitalUserData.name;
-            initialValues.userName = storeData.data.editedHospitalUserData.userName;
-            initialValues.address = storeData.data.editedHospitalUserData.address;
-            initialValues.hospitalName = hospitalName[0].value;
-            initialValues.userType = userType[0].value;
-            initialValues.password = "";
-            initialValues.confirmPassword = "";
+            // let hospitalName = hospitalDdlList.filter((item) => {
+            //     return item.label === storeData.data.editedHospitalUserData.hospitalName
+            // });
+            // let userType = hospitalUserTypes.filter((item) => {
+            //     return item.label === storeData.data.editedHospitalUserData.userType
+            // });
+            // initialValues.name = storeData.data.editedHospitalUserData.name;
+            // initialValues.userName = storeData.data.editedHospitalUserData.userName;
+            // initialValues.address = storeData.data.editedHospitalUserData.address;
+            // initialValues.hospitalName = hospitalName[0].value;
+            // initialValues.userType = userType[0].value;
+            // initialValues.password = "";
+            // initialValues.confirmPassword = "";
         }
     }, []);
 
@@ -123,9 +141,6 @@ function AddUpdateUser() {
             <Formik initialValues={initialValues} validationSchema={validate} onSubmit={values => submitForm(values)}>
                 {formik => (
                     <Form>
-                        <div className={classes.field}>
-                            <InputField label="Name" onChange={(e) => formik.setFieldValue('name', e.target.value)} name="name" type="text" classes={classes} />
-                        </div>
                         <div className={classes.field}>
                             <InputField label="Username" onChange={(e) => formik.setFieldValue('userName', e.target.value)} name="userName" type="text" classes={classes} />
                         </div>
@@ -139,10 +154,16 @@ function AddUpdateUser() {
                                 </div></React.Fragment>
                         )}
                         <div className={classes.field}>
-                            <InputField label="Address" onChange={(e) => formik.setFieldValue('address', e.target.value)} name="address" type="textarea" classes={classes} />
+                            <InputField label="City" onChange={(e) => formik.setFieldValue('city', e.target.value)} name="city" type="text" classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField defaultValue={initialValues.hospitalName} label="Hospital Name" onChange={(e) => formik.setFieldValue('hospitalName', e.target.value)} name="hospitalName" type="select" options={hospitalDdlList} classes={classes} />
+                            <InputField label="Zip" onChange={(e) => formik.setFieldValue('zip', e.target.value)} name="zip" type="text" classes={classes} />
+                        </div>
+                        <div className={classes.field}>
+                            <InputField label="Hospital Name" onChange={(e) => formik.setFieldValue('hospitalName', e.target.value)} name="hospitalName" type="select" options={storeData.hospitalData.hospitalDdlOptions ? storeData.hospitalData.hospitalDdlOptions : []} classes={classes} />
+                        </div>
+                        <div className={classes.field}>
+                            <InputField label="Branch Name" onChange={(e) => formik.setFieldValue('branchName', e.target.value)} name="branchName" type="select" options={storeData.HospitalBranchData.hospitalBranchDdlOptions ? storeData.HospitalBranchData.hospitalBranchDdlOptions : []} classes={classes} />
                         </div>
                         <div className={classes.field}>
                             <InputField defaultValue={initialValues.userType} label="User Type" onChange={(e) => formik.setFieldValue('userType', e.target.value)} name="userType" type="select" options={hospitalUserTypes} classes={classes} />
