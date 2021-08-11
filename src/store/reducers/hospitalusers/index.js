@@ -5,7 +5,7 @@ const initialState = {
     userList: [{ id: 1, name: 'User 1', userName: 'Username 1', address: 'Address 1', hospitalName: 'Hospital 1', userType: 'General' },
     { id: 2, name: 'User 2', userName: 'Username 2', address: 'Address 2', hospitalName: 'Hospital 2', userType: 'Platform Admin' }],
     addOrUpdate: 'add',
-    addedHospitalBranchId: null,
+    addedHospitalUserId: null,
     editedHospitalUserData: null,
     deletingHospitalUserId: null,
     openDeleteConfirmationDialog: false
@@ -18,7 +18,7 @@ const Reducer = (state = initialState, { type, payload }) => {
         case actions.TYPES.ADD_UPDATE:
             return { ...state, addOrUpdate: payload };
         case actions.TYPES.ADD_USER:
-            return { ...state, addedHospitalBranchId: payload };
+            return { ...state, addedHospitalUserId: payload };
         case actions.TYPES.SET_EDITED_HOSPITAL_USER_DATA:
             return { ...state, editedHospitalUserData: payload };
         case actions.TYPES.UPDATE_HOSPITAL_USER:

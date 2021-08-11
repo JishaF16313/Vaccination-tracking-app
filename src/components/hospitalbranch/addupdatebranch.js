@@ -36,8 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 function AddUpdateHospitalBranch() {
     const [hospitalNameValue, setHospitalNameValue] = useState(null);
-    const [hospitalDdlOptions, setHospitalDdlOptions] = useState(null);
-
+    
     const storeData = useSelector((store) => {
         return {
             data: store.hospitalbranch,
@@ -69,7 +68,8 @@ function AddUpdateHospitalBranch() {
         dispatch(startLoading('Please wait...'));
         if (storeData.data.addOrUpdate === "add") {
             let obj = {
-                hospitalName: hospitalNameValue.value ? hospitalNameValue.value : hospitalNameValue.label,
+                hospitalId: hospitalNameValue.value ? hospitalNameValue.value : null,
+                hospitalName: hospitalNameValue.label ? hospitalNameValue.label : null,
                 branchName: values.name,
                 city: values.city,
                 pin: values.zip

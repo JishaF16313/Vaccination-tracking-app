@@ -58,9 +58,6 @@ function AddUpdateHospital() {
             let obj = { id: storeData.data.editedHospitalData.id , ...values }
             dispatch(updateHospital(obj));
         }       
-        // if(storeData.alertData.alertType === "success"){
-        //     history.push('/admindashboard');
-        // }                   
     }
 
     const onCancelClicked = (e) => {
