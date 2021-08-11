@@ -129,7 +129,7 @@ const submitForm = (values) => {
         
          <Snackbar anchorOrigin={{  vertical: 'top', horizontal: 'center' }} open={isRegister} autoHideDuration={6000} >
             <Alert  severity="success">
-            Registration Sucessfully
+            User registered Successfully
             </Alert>
             </Snackbar>
           </Paper>
