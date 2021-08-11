@@ -18,3 +18,4 @@ export const addressValidationText = "Address is required.";
 export const userTypeValidationText = "User type is required.";
 export const dateOfBirthValidationText = "Date of Birth is required";
 export const branchNameValidationText = "Branch name is required.";
+export const userAadharIdValidationText = "Aadhar Number is required.";
