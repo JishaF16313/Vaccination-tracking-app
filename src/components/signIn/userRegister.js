@@ -7,13 +7,14 @@ import Paper from "@material-ui/core/Paper"
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { passwordMinLengthValidationText, passwordValidationText, userAadharIdValidationText} from '../../utility/validationMessages';
+import { passwordMinLengthValidationText, passwordValidationText, userAadharIdValidationText, cityValidationText, zipValidationText ,confirmPasswordValidationText} from '../../utility/validationMessages';
 import InputField from '../inputfield/index';
 import {useSelector, useDispatch} from "react-redux"
-import {userRegister} from "../../store/actions/users"
+import {userRegister,userRegisterFail} from "../../store/actions/users"
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import * as API from '../../lib/api'
+import * as API from '../../lib/api';
+import {USER_REGISTER_V1} from '../../env-config'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +50,7 @@ btnDiv: {
 export default function SignUp() {
   const classes = useStyles();
   const dispatch = useDispatch()
-  const {isRegister} = useSelector(store => store.users)
+  const {isRegister,isRegisterFail} = useSelector(store => store.users)
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -63,7 +64,9 @@ export default function SignUp() {
           [Yup.ref("pwd")],
           "Both password need to be the same"
         )
-      })
+      }).required(confirmPasswordValidationText),
+      cityName: Yup.string().required(cityValidationText),
+      pinCode: Yup.string().required(zipValidationText)
 });
 
 
@@ -73,10 +76,13 @@ React.useEffect(() => {
 
 const submitForm = (values) => {
     console.log(values);
-    API.API_POST_SERVICE('',values).then((res)=>{
+    try{
+    API.API_POST_SERVICE(USER_REGISTER_V1,values).then((res)=>{
         dispatch(userRegister(res));
     })
- // dispatch(userRegister(true))
+  } catch(error){
+    dispatch(userRegisterFail(error));
+  } 
 }
 
   return (
@@ -107,18 +113,20 @@ const submitForm = (values) => {
                             <InputField label="Pincode" onChange={(e) => formik.setFieldValue('pinCode', e.target.value)} name="pinCode" type="text" classes={classes} style={{width: "100%"}}/>
                         </div>
                         <div className={classes.btnDiv}>
-                            <Button variant="contained" color="primary" size="medium" type="submit" disabled={isRegister}>{!isRegister ? "Register" : "Submitting..."}</Button>
+                            <Button variant="contained" color="primary" size="medium" type="submit" disabled={isRegister}>Register</Button>
                         </div>
                     </Form>
                 )}
             </Formik>
-        {/* {
-          authError && 
-          <Typography variant="caption" className={classes.errorField}>
-            {authError}
-          </Typography>
+        {
+          isRegisterFail && 
+           <Snackbar anchorOrigin={{  vertical: 'top', horizontal: 'center' }} open={isRegister} autoHideDuration={6000} >
+           <Alert  severity="error">
+           {isRegisterFail}
+           </Alert>
+           </Snackbar>
         }
-         */}
+        
          <Snackbar anchorOrigin={{  vertical: 'top', horizontal: 'center' }} open={isRegister} autoHideDuration={6000} >
             <Alert  severity="success">
             Registration Sucessfully

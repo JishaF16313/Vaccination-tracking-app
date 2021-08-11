@@ -13,7 +13,8 @@ const Reducer = (state = initialState, {type, payload}) => {
         // Authentication
         case USER_REGISTER_INIT:
             return {...state, isRegister: payload}        
-
+        case USER_REGISTER_FAIL:
+            return {...state, isRegisterFail: payload}       
         default:
             return state;
     }

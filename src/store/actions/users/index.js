@@ -9,4 +9,9 @@ export const userRegister = (response) => ({
     payload: response
 })
 
+export const userRegisterFail = (response) => ({
+    type: USER_REGISTER_FAIL,
+    payload: response
+})
+
 
