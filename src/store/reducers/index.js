@@ -7,6 +7,7 @@ import hospitalbranch from './hospitalbranch/index';
 import loader from './loader/index';
 import alert from './alert/index';
 import users from './users/index';
+import patientReducer from './hospitalAdmin/index';
 
 export default combineReducers({
     hospitals,
@@ -16,5 +17,6 @@ export default combineReducers({
     hospitalbranch,
     loader,
     alert,
-    users
+    users,
+    patientReducer
 });
