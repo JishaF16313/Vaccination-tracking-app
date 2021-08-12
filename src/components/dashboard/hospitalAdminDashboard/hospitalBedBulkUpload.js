@@ -70,8 +70,6 @@ const HospitalBedBulkUpload = (props) => {
     const classes = useStyles();
 
     const handleCellClick = (param, event) => {
-        console.log(param);
-        console.log(event);
         if (param.colIndex === 2) {
             event.stopPropagation();
         }
@@ -79,10 +77,8 @@ const HospitalBedBulkUpload = (props) => {
 
     const handleRowClick = (param) => {
         if (param && param.length) {
-            console.log("Row:");
-            console.log(param);
+            
             //setSelectedPatientArray(selectedPatientArray => [...selectedPatientArray, param.row.bookingId]);
-           // console.log("VVVVVVVVVVVVVV", selectedPatientArray)
           }
       
     };
@@ -167,3 +163,4 @@ const HospitalBedBulkUpload = (props) => {
 
 
 export default HospitalBedBulkUpload
+

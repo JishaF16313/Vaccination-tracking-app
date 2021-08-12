@@ -28,21 +28,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BedForm() {
   const classes = useStyles();
-  const { hospitalPatientData, loading, error } = useSelector(store => store.patientReducer)
-  console.log("AAAAAAA", hospitalPatientData);
-  const [modal, setmodal] = useState({
-    type: null,
-    data: null
-  })
-
-
+  const { hospitalPatientData } = useSelector(store => store.patientReducer)
 
   const [selectedPatientArray, setSelectedPatientArray] = useState([]);
   
 
   const handleCellClick = (param, event) => {
-    console.log(param);
-    console.log(event);
     if (param.colIndex === 2) {
       event.stopPropagation();
     }
@@ -50,24 +41,10 @@ export default function BedForm() {
 
   const handleRowClick = (param) => {
     if (param && param.length) {
-      console.log("Row:");
-      console.log(param);
       //setSelectedPatientArray(selectedPatientArray => [...selectedPatientArray, param.row.bookingId]);
-     // console.log("VVVVVVVVVVVVVV", selectedPatientArray)
     }
-
-
   };
 
-  const CheckboxSelectionGrid = () => {
-    alert('ABCD');
-  }
-
-  const handleBedEdit = useCallback((details) => setmodal({ type: "edit", data: details }), [])
-
-  const handleBedDelete = useCallback(details => console.log("Delete", details), [])
-
-  const handleModalClose = useCallback(() => setmodal({ type: null, data: null }), [])
   const columnMap = [
     {
       field: 'id',
@@ -135,8 +112,7 @@ export default function BedForm() {
       <Button className={classes.upload_button} variant="contained" color="primary">
         DISCHARGE
       </Button>
-      <EditBedModel open={modal.type === "edit"} details={modal.data} onClose={handleModalClose}></EditBedModel>
-
+	   {/* <EditBedModel open={modal.type === "edit"} details={modal.data} onClose={handleModalClose}></EditBedModel>*/}
 
     </div>
   );
