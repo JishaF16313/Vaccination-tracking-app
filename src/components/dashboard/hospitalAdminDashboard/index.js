@@ -2,7 +2,12 @@ import React, { useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import BedForm from './bedSummeryTable';
+
+import HospitalBedBulkUpload from './hospitalBedBulkUpload';
+import PatientSummaryTable from './patientSummaryTable';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
+import PatientTable from './patientTable';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -16,10 +21,11 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '18px',
         fontWeight: 'bold',
     },
-    availability_status_wrapper: {
-        backgroundColor: '#337ab7',
+    buttons_wrapper: {
         padding: '8px 0',
-        position: 'relative'
+        display: 'flex',
+        justifyContent: 'flex-end'
+
     },
     availability_status: {
         margin: 0,
@@ -56,41 +62,44 @@ const useStyles = makeStyles((theme) => ({
 
 
 
+
 export default function HospitalAdmin() {
     const classes = useStyles();
+    let [showBulkUpload, setBulkUpload] = useState(false);
+    const handelShowHide = (val) => {
+       setBulkUpload(!val);
+    }
 
     return (
         <div className={classes.root}>
-            <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <Paper className={classes.availability_status_wrapper}>
-                        <button className={classes.upload_button}>Bulk upload bed details</button>
-                        <p style={{"textAlign" : "center"}} className={classes.availability_status}>Bed Availability Status</p>
-                    </Paper>
+            {!showBulkUpload &&
+                <Grid container spacing={1}>
+                    <Grid item xs={12}>
+                        <Paper>
+                            <ButtonGroup className={classes.buttons_wrapper} variant="text" color="primary" aria-label="text primary button group">
+                                <Button>Upload History</Button>
+                                <Button onClick={() => handelShowHide(showBulkUpload)}>Bulk Upload</Button>
+                                <Button>User Details</Button>
+                            </ButtonGroup>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Paper className={classes.paper}>
+                            Beds booked in the hospital
+                        </Paper>
+                        <Paper className={classes.numbers}>
+                            50
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                         <PatientSummaryTable></PatientSummaryTable>
+                    </Grid>
+                   
+
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Paper className={classes.paper}>
-                        Beds booked in the hospital
-                    </Paper>
-                    <Paper className={classes.numbers}>
-                        50
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Paper className={classes.paper}>How many people are vaccinated</Paper>
-                    <Paper className={classes.numbers}>
-                        5,00,000
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Paper className={classes.paper}>How many beds are available</Paper>
-                    <Paper className={classes.available_number}>
-                        25,000
-                    </Paper>
-                </Grid>
-               
-            </Grid>
-            <BedForm></BedForm>   
+                
+            }
+            {showBulkUpload && <HospitalBedBulkUpload handelShowHide = {handelShowHide} showBulkUpload = {showBulkUpload}></HospitalBedBulkUpload>}
         </div>
     );
 }
