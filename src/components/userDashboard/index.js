@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo,useCallback,useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
@@ -13,6 +13,8 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import { DataGrid } from '@material-ui/data-grid';
 import TextField from '@material-ui/core/TextField';
+import PatientDetailsForm from '../patientDetailsForm';
+import ConfirmBedBookingDetails from './handleBedBookingConfirmModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,11 +41,18 @@ function UserDashboard() {
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   }
+  // Confirm bed detail handler
+  const handleConfirmBedBooking = useCallback( (details) => setmodal({type: "edit", data: details}), []);
 
+  // State to show/hide modals
+  const [modal, setmodal] = useState({
+    type: null,
+    data: null
+  })
   // Column title mappings for hospital bed details
   const columnMap = useMemo(() => [{
     title: "Hospital Name",
@@ -64,7 +73,9 @@ function UserDashboard() {
     title: "Action",
     field: "selected"
   }], [])
-
+  
+  // Closing the modal
+  const handleModalClose = useCallback(() => setmodal({type: null, data: null}),[])
   // Vaccination data - to be called from API
   const rows = data;
 
@@ -127,20 +138,20 @@ function UserDashboard() {
         centered
       >
         <Tab className="customStyle" label="Book A Bed" icon={<AddToQueueIcon />} />
-
         <Tab className="customStyle" label="Schedule Vaccine" icon={<CalendarTodayIcon />} />
-        <Tab className="customStyle" label="Vaccination Details" icon={<CheckCircleIcon />} />
+        {/* <Tab className="customStyle" label="Vaccination Details" icon={<CheckCircleIcon />} /> */}
 
       </Tabs>
       <TabPanel value={value} index={0}>
+        <PatientDetailsForm></PatientDetailsForm>
         <Typography component="h4" variant="h5" className={classes.title}> Hospital Details:</Typography>
         <div className={classes.tableContainer}>
           <Table columnMap={columnMap} rows={rows} />
         </div>
-        {/* <Button variant="contained" color="primary" size="medium" type="submit">Confirm</Button> */}
         <Box className={classes.BtnHolder}>
-          <Button variant="contained" color="primary" className={classes.cnfrmBtn}>Confirm</Button>
+          <Button variant="contained" color="primary" onClick={handleConfirmBedBooking} className={classes.cnfrmBtn}>Confirm</Button>
         </Box>
+        <ConfirmBedBookingDetails open={modal.type === "edit"} details={modal.data} onClose={handleModalClose} />
       </TabPanel>
 
       <TabPanel value={value} index={1}>
@@ -171,9 +182,9 @@ function UserDashboard() {
         </form>
       </TabPanel>
 
-      <TabPanel value={value} index={2}>
+      {/* <TabPanel value={value} index={2}>
         <Typography component="h4" variant="h5" className={classes.title}> Booking Details:</Typography>
-      </TabPanel>
+      </TabPanel> */}
     </Paper>
   )
 }

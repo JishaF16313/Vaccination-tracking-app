@@ -13,7 +13,8 @@ import AddUpdateHospitalUser from '../components/hospitalusers/addupdateuser';
 import HospitalDashboard from '../components/hospitals/index';
 import HospitalUserDashboard from '../components/hospitalusers/index';
 import AdminDashboard from '../components/dashboard/admin/index';
-import AddUpdateHospitalBranch from '../components/hospitalbranch/index';
+import AddUpdateHospitalBranch from '../components/hospitalbranch/addupdatebranch';
+import SignUp from '../components/signIn/userRegister';
 
 function Routes() {
     return (
@@ -22,6 +23,7 @@ function Routes() {
                 <Switch>
                   <Route component={GeneralDashboard} path="/" exact/>
                   <Route component={SignIn} path="/signIn" />
+                  <Route component={SignUp} path="/register" />
                   <PrivateRoute component={AddUpdateHospital} roles={[Role.Admin]} path="/addupdatehospital" />
                   <PrivateRoute component={VaccinationDashboard} roles={[Role.VcAdmin]} path="/vaccination"/>
                   <PrivateRoute component={HospitalAdmin} roles={[Role.HoAdmin]} path="/hospitaladmin" />
