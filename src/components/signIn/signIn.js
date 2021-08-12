@@ -71,7 +71,7 @@ const submitForm = (values) => {
                 {formik => (
                     <Form className={classes.form}>
                         <div className={classes.field}>
-                            <InputField label="Username"  name="userLoginId" type="text" classes={classes} style={{width: "100%"}}/>
+                            <InputField label="User ID/Aadhar"  name="userLoginId" type="text" classes={classes} style={{width: "100%"}}/>
                         </div>
                         <div className={classes.field}>
                             <InputField label="Password" name="pwd" type="password" classes={classes} style={{width: "100%"}}/>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -90,9 +90,12 @@ const useStyles = makeStyles((theme) => ({
 export default function Header() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const {isAuthenticated} = useSelector(store => store.auth)
+  const {isAuthenticated, token} = useSelector(store => store.auth)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [userName,setuserName] = useState('');
+  const [hospitalID,sethospitalID] = useState('')
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -116,24 +119,32 @@ export default function Header() {
 
   const handleLogout = () => {
       handleMenuClose()
-      dispatch(logout()).then( () => history.push("/"))
+      dispatch(logout(token))
   }
 
+  useEffect(()=>{
+    if(user!= null){
+    setuserName(user.sub);  
+    sethospitalID(user.hospitalId);
+    }
+  },[user]);
+
+  
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleLogout}>Logout</MenuItem>
-    </Menu>
+    anchorEl={anchorEl}
+    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+    id={menuId}
+    keepMounted
+    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+    open={isMenuOpen}
+    onClose={handleMenuClose}
+  >
+    <MenuItem onClick={handleMenuClose}>{userName}</MenuItem>
+    <MenuItem onClick={handleMenuClose}>{hospitalID}</MenuItem>
+    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+  </Menu>
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';

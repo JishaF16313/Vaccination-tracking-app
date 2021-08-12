@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:8080';
+// axios.defaults.baseURL = 'http://localhost:8080';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
@@ -54,7 +54,7 @@ export const API_GET_SERVICE = async (url,config) =>
 export const API_POST_SERVICE = async (url,param,config) => 
 {
     try {
-    const res = await axios.post(url,param);
+    const res = await axios.post(url,param,config);
     return res.data;
     }
     catch (error) {
@@ -66,7 +66,7 @@ export const API_POST_SERVICE = async (url,param,config) =>
 export const API_PUT_SERVICE = async (url,param,config) => 
 {
     try {
-        const res = await axios.put(url,param);
+        const res = await axios.put(url,param, config);
         return res.data;
         }
         catch (error) {

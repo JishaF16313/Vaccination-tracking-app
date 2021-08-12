@@ -1,3 +1,7 @@
+import * as API from "../../../lib/api"
+import { setAlert } from '../alert/index';
+import * as API_HOST from '../../../env-config';
+
 // Vaccination List
 export const GET_VACCINATION_LIST_INIT = "GET_VACCINATION_LIST_INIT"
 export const GET_VACCINATION_LIST_SUCCESS = "GET_VACCINATION_LIST_SUCCESS"
@@ -59,6 +63,42 @@ const deleteVaccinationAppointmentSuccess = response => ({
 })
 
 
+// Vaccination Data Upload
+export const uploadVaccinationData = (reqBody, token) => async(dispatch) => {
+    try{
+        const response = await API.API_POST_SERVICE(`${API_HOST.VACCINATION_SERVICE}uploadVaccineAvailablity`, reqBody, {headers: {"X-Token-ID" : token}})
+        dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination bulk upload successful.' }));
+        return response
+    }
+    catch (error){
+        dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+        console.log(error);
+    }
+}
+
+
+// Vaccination List
+export const GET_VACCINATION_UPLOAD_HISTORY_INIT = "GET_VACCINATION_UPLOAD_HISTORY_INIT"
+export const GET_VACCINATION_UPLOAD_HISTORY_SUCCESS = "GET_VACCINATION_UPLOAD_HISTORY_SUCCESS"
+export const GET_VACCINATION_UPLOAD_HISTORY_FAIL = "GET_VACCINATION_UPLOAD_HISTORY_FAIL"
+
+export const getVaccinationUploadHistory = () => dispatch => {
+    dispatch(getVaccinationUploadHistoryInit())
+    setTimeout(() => dispatch(getVaccinationUploadHistorySuccess(vaccinationUploadHistory)), 500)
+}
+
+const getVaccinationUploadHistoryInit = () => ({
+    type: GET_VACCINATION_UPLOAD_HISTORY_INIT
+})
+const getVaccinationUploadHistorySuccess = (response) => ({
+    type: GET_VACCINATION_UPLOAD_HISTORY_SUCCESS,
+    payload: response
+})
+const getVaccinationUploadHistoryFail = (response) => ({
+    type: GET_VACCINATION_UPLOAD_HISTORY_FAIL,
+    payload: response
+})
+
 const vaccinationData = [{
     id: 123,
     name: "Name1",
@@ -98,3 +138,11 @@ const vaccinationData = [{
         vaccine: "covishield"},
 }]
 
+const vaccinationUploadHistory = [{
+    id: "123",
+    status: "Success",
+},
+{
+    id: "456",
+    status: "Success"
+}]

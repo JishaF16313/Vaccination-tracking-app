@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import Button from '@material-ui/core/Button';
@@ -14,7 +14,8 @@ import {userRegister,userRegisterFail} from "../../store/actions/users"
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import * as API from '../../lib/api';
-import {USER_REGISTER_V1} from '../../env-config'
+import {USER_REGISTER_V1 ,USER_SERVICE} from '../../env-config'
+import history from "../../routes/history";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -50,10 +51,21 @@ btnDiv: {
 export default function SignUp() {
   const classes = useStyles();
   const dispatch = useDispatch()
-  const {isRegister,isRegisterFail} = useSelector(store => store.users)
+  const {isRegister,isRegisterFail} = useSelector(store => store.users);
+  const[registerFail,setregisterFail] = useState(false);
 
+
+  const handleClose = () => {
+    dispatch(userRegister(false));
+    isRegister && history.push("/signin");
+  }
+  const failhandleClose = () => {
+    setregisterFail(false)
+  }
+  
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
+
   }
   const validate = Yup.object({
     userLoginId: Yup.string().min(16).required(userAadharIdValidationText),
@@ -70,18 +82,18 @@ export default function SignUp() {
 });
 
 
-React.useEffect(() => {
-    //isRegister && history.push("/redirect")
-}, [isRegister])
+// React.useEffect(() => {
+//     isRegister && history.push("/signin")
+// }, [isRegister])
 
-const submitForm = (values) => {
-    console.log(values);
+const submitForm = async (values) => {
     try{
-    API.API_POST_SERVICE(USER_REGISTER_V1,values).then((res)=>{
+      await API.API_POST_SERVICE(`${USER_SERVICE}${USER_REGISTER_V1}`,values).then((res)=>{
         dispatch(userRegister(res));
     })
   } catch(error){
-    dispatch(userRegisterFail(error));
+    dispatch(userRegisterFail(error.message));
+    setregisterFail(true)
   } 
 }
 
@@ -118,18 +130,16 @@ const submitForm = (values) => {
                     </Form>
                 )}
             </Formik>
-        {
-          isRegisterFail && 
-           <Snackbar anchorOrigin={{  vertical: 'top', horizontal: 'center' }} open={isRegister} autoHideDuration={6000} >
-           <Alert  severity="error">
+        
+           <Snackbar anchorOrigin={{  vertical: 'top', horizontal: 'center' }} open={registerFail} autoHideDuration={6000} onClose={failhandleClose}>
+           <Alert  severity="error" onClose={failhandleClose}>
            {isRegisterFail}
            </Alert>
            </Snackbar>
-        }
-        
-         <Snackbar anchorOrigin={{  vertical: 'top', horizontal: 'center' }} open={isRegister} autoHideDuration={6000} >
-            <Alert  severity="success">
-            User registered Successfully
+               
+         <Snackbar anchorOrigin={{  vertical: 'top', horizontal: 'center' }} open={isRegister} autoHideDuration={2000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success">
+            User registered Successfully            
             </Alert>
             </Snackbar>
           </Paper>
