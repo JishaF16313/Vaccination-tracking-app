@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 function AddVaccinationData(props) {
     const {open, onClose} = props
     const dispatch = useDispatch()
-    const {hospitalId, hospitalBranchId} = useSelector(store => store.auth)
+    const { hospitalBranchId, token} = useSelector(store => store.auth)
     const classes = useStyles()
 
     const [saving, setsaving] = useState(false)
@@ -79,11 +79,10 @@ function AddVaccinationData(props) {
     const handleSubmit = async(data) => {
       setsaving(true)
         const reqBody = {
-          branchName: hospitalId,
           branchId: hospitalBranchId,
           Vaccines: [...data.slots]
         }
-        await dispatch(uploadVaccinationData())
+        await dispatch(uploadVaccinationData(reqBody, token))
         handleClose();
         setsaving(false)
     }

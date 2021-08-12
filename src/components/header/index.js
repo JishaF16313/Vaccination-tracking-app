@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Header() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const {isAuthenticated} = useSelector(store => store.auth)
+  const {isAuthenticated, token} = useSelector(store => store.auth)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -116,7 +116,7 @@ export default function Header() {
 
   const handleLogout = () => {
       handleMenuClose()
-      dispatch(logout()).then( () => history.push("/"))
+      dispatch(logout(token))
   }
 
   const menuId = 'primary-search-account-menu';

@@ -9,6 +9,7 @@ import {useSelector, useDispatch} from "react-redux"
 import {getVaccinationList, deleteVaccinationAppointment} from "../../../store/actions/vaccination"
 import ConfirmDialog from "../../dialog/confirmation"
 import Button from "@material-ui/core/Button"
+import history from "../../../routes/history"
 
 const useStyles = makeStyles({
     root: {
@@ -23,6 +24,7 @@ const useStyles = makeStyles({
         margin: "10px 0px",
         padding: "2px"
     },
+    buttons:{ margin: "0px 5px"},
     loader: {
         width: "100%",
         textAlign: "center",
@@ -84,7 +86,12 @@ function VaccinationDashboard() {
 
     return (
         <div className={classes.root}>
-            <Typography component="h4" variant="h5" className={classes.title}>Vaccination Appointments <Button variant="contained" color="primary" onClick={handleVaccinaionSlotsAdd}>Add Vaccination Slots</Button></Typography>
+            <Typography component="h4" variant="h5" className={classes.title}>Vaccination Appointments
+                <div>
+                    <Button variant="contained" color="primary" className={classes.buttons} onClick={handleVaccinaionSlotsAdd}>Add Vaccination Slots</Button>
+                    <Button variant="contained" color="primary" className={classes.buttons} onClick={() => history.push("/vaccination/uploadhistory")}>Upload History</Button>
+                </div>
+            </Typography>
             <div className={classes.tableContainer}>
             <Table columnMap={columnMap} rows={vaccinationList} onEdit={handleVaccinationEdit} onDelete={handleVaccinationDelete} loading={loading}/>
             </div>
