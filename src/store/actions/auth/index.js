@@ -10,7 +10,6 @@ export const LOGOUT = "LOGOUT"
 
 export const checkAuth = () => dispatch => {
     const user = JSON.parse(localStorage.getItem("user"))
-    console.log("checking auth", user);
     if(user) dispatch(authSuccess(user))
     else dispatch(logout())
 }

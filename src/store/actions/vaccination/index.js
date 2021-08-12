@@ -1,3 +1,5 @@
+import * as API from "../../../lib/api"
+
 // Vaccination List
 export const GET_VACCINATION_LIST_INIT = "GET_VACCINATION_LIST_INIT"
 export const GET_VACCINATION_LIST_SUCCESS = "GET_VACCINATION_LIST_SUCCESS"
@@ -57,6 +59,18 @@ const deleteVaccinationAppointmentSuccess = response => ({
     type: DELETE_VACCINATION_APPOINTMENT,
     payload: response
 })
+
+
+// Vaccination Data Upload
+export const uploadVaccinationData = async(reqBody) => {
+    try{
+        const response = await API.API_POST_SERVICE("/vaccine/uploadVaccineAvailablity", reqBody)
+        return response
+    }
+    catch (error){
+        console.log(error);
+    }
+}
 
 
 const vaccinationData = [{
