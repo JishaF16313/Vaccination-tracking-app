@@ -1,6 +1,7 @@
-import users from "../../../lib/mocks/users.json"
-import * as API from "../../../lib/api"
-import {parseJwt} from "../../../utility/commonFunctions"
+import users from "../../../lib/mocks/users.json";
+import * as API from "../../../lib/api";
+import {parseJwt} from "../../../utility/commonFunctions";
+import * as API_HOST from '../../../env-config';
 
 // Authentication
 export const AUTH_INIT = "AUTH_INIT"
@@ -25,7 +26,7 @@ export const authenticate =  (credentials) => async(dispatch) => {
     }, 500)
     }
     try{    
-    const token = await API.API_PUT_SERVICE("http://9.43.49.119:8081/user/_login",credentials)
+    const token = await API.API_PUT_SERVICE(`${API_HOST.USER_SERVICE}_login`, credentials)
     const user = parseJwt(token)    
     dispatch(authSuccess({...user, jwt: token }))
     }
@@ -37,15 +38,17 @@ export const authenticate =  (credentials) => async(dispatch) => {
 
 const authInit = () => ({
     type: AUTH_INIT
-})
+});
+
 const authSuccess = (response) => ({
     type: AUTH_SUCCESS,
     payload: response
-})
+});
+
 const authFail = (response) => ({
     type: AUTH_FAIL,
     payload: response
-})
+});
 
 export const logout = () => dispatch => {
     return new Promise( (resolve) => {

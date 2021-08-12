@@ -2,6 +2,7 @@ import axios from 'axios';
 import { setAlert } from '../alert/index';
 import { stopLoading } from '../loader/index';
 import history from '../../../routes/history';
+import * as API_HOST from '../../../env-config';
 
 export const TYPES = {
    GET_HOSPITAL_LIST: 'GET_HOSPITAL_LIST',
@@ -16,10 +17,9 @@ export const TYPES = {
 }
 
 export function getHospitalList(token) {
-   token = token ? token : 'xxxx';
    return async dispatch => {
       try {
-         await axios.get('http://9.199.45.76:8080/bas/_allHospitals', { headers: getHeaders(token) })
+         await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}_allHospitals`, { headers: getHeaders(token) })
          .then((response) => {            
             let hospitalList = response.data.map((item) => {
                   return { label: item.hospitalName , value: item.hospitalId };
@@ -52,10 +52,9 @@ export const setAddOrUpdate = (value) => ({
 
 //api call for create hospital
 export function addHospital(bodyObject, token) {
-   token = token ? token : 'xxxx';
    return async dispatch => {
       try {
-         await axios.post('http://9.199.45.76:8080/bas/hospital/_create', bodyObject, { headers: getHeaders(token) })
+         await axios.post(`${API_HOST.BED_AVAILABILITY_SERVICE}hospital/_create`, bodyObject, { headers: getHeaders(token) })
          .then((response) => {
             return onSuccess(response);
          })         

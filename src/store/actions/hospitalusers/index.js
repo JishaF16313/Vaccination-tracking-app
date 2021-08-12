@@ -2,6 +2,7 @@ import axios from 'axios';
 import { setAlert } from '../alert/index';
 import { stopLoading } from '../loader/index';
 import history from '../../../routes/history';
+import * as API_HOST from '../../../env-config';
 
 export const TYPES = {
     GET_USER_LIST: 'GET_USER_LIST',
@@ -23,10 +24,9 @@ export const TYPES = {
  });
  
  export function addHospitalUser(bodyObject, token){    
-   token = token ? token : 'xxxx';   
    return async dispatch => {
       try {
-         await axios.post(`http://9.43.49.119:8081/user/_create?role=${bodyObject.userType}`, bodyObject, { headers: getHeaders(token) })
+         await axios.post(`${API_HOST.USER_SERVICE}_create?role=${bodyObject.userType}`, bodyObject, { headers: getHeaders(token) })
          .then((response) => {
             return onSuccess(response);
          })         
@@ -45,7 +45,6 @@ export const TYPES = {
          dispatch(stopLoading());
       }
    }
-   //type: TYPES.ADD_USER , payload: value
  };
  
  export const setEditedHospitalUserData = (value) => ({
