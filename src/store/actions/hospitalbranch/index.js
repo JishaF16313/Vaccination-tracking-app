@@ -2,6 +2,7 @@ import axios from 'axios';
 import { setAlert } from '../alert/index';
 import { stopLoading } from '../loader/index';
 import history from '../../../routes/history';
+import * as API_HOST from '../../../env-config';
 
 export const TYPES = {
    GET_HOSPITAL_BRANCH_LIST: 'GET_HOSPITAL_BRANCH_LIST',
@@ -12,12 +13,11 @@ export const TYPES = {
    SET_HOSPITAL_BRANCH_DDL_OPTIONS: 'SET_HOSPITAL_BRANCH_DDL_OPTIONS'
 }
 
-export function getHospitalBranchList(token){
-   token = token ? token : 'xxxx';
+export function getHospitalBranchList(token, hospitalId){
    return async dispatch => {
       try {
-         await axios.get('http://9.199.45.76:8080/bas/_allBranches', { headers: getHeaders(token) })
-         .then((response) => {    
+         await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}${hospitalId}/_allBranches`, { headers: getHeaders(token) })
+         .then((response) => {
             let branchList = response.data.map((item) => {
                   return { label: item.branchName , value: item.branchId };
             });           
@@ -49,10 +49,9 @@ export const setAddOrUpdate = (value) => ({
 
 //api call for create hospital branch
 export function addHospitalBranch(bodyObject, token) {
-   token = token ? token : 'xxxx';
    return async dispatch => {
       try {
-         await axios.post('http://9.199.45.76:8080/bas/branch/_create', bodyObject, { headers: getHeaders(token) })
+         await axios.post(`${API_HOST.BED_AVAILABILITY_SERVICE}branch/_create`, bodyObject, { headers: getHeaders(token) })
          .then((response) => {
             return onSuccess(response);
          })         

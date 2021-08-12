@@ -84,8 +84,6 @@ const BedDetails = ({details}) => {
     else return null;
   };
 
-  console.log("bedData", bedData);
-
   return (
     <>
       <form noValidate autoComplete="off">
