@@ -9,8 +9,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from "@material-ui/core/Button"
 import FormControl from "@material-ui/core/FormControl"
 import Paper from '@material-ui/core/Paper';
-import {useDispatch} from "react-redux"
-import {updateVaccinationDetail} from "../../../store/actions/vaccination"
+import {useDispatch, useSelector} from "react-redux"
+import {uploadVaccinationData} from "../../../store/actions/vaccination"
 import InputField  from "../../inputfield" 
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import IconButton from "@material-ui/core/IconButton"
@@ -47,23 +47,24 @@ const useStyles = makeStyles((theme) => ({
 function AddVaccinationData(props) {
     const {open, onClose} = props
     const dispatch = useDispatch()
+    const { hospitalBranchId, token} = useSelector(store => store.auth)
     const classes = useStyles()
 
     const [saving, setsaving] = useState(false)
 
     const defaultVaccinationSlot = React.useMemo(() => ({
-        vaccineType: "",
-        noOfSlots: "",
-        date: ""
+        "vaccine-type": "",
+        count: "",
+        dateOfAvailablity: ""
     }), [])
 
     const validationSchema = Yup.object().shape({
         slots: Yup.array()
           .of(
             Yup.object().shape({
-              vaccineType: Yup.string().required('Required'),
-              noOfSlots: Yup.number().min(0).required('Required'),
-              date: Yup.date().required("Required")
+              "vaccine-type": Yup.string().required('Required'),
+              count: Yup.number().min(0).required('Required'),
+              dateOfAvailablity: Yup.date().required("Required")
             })
           )
       });
@@ -75,9 +76,15 @@ function AddVaccinationData(props) {
 
 
     // Handle vaccination update
-    const handleSubmit = (data) => {
-        setsaving(true)
-        console.log(data);
+    const handleSubmit = async(data) => {
+      setsaving(true)
+        const reqBody = {
+          branchId: hospitalBranchId,
+          Vaccines: [...data.slots]
+        }
+        await dispatch(uploadVaccinationData(reqBody, token))
+        handleClose();
+        setsaving(false)
     }
 
     const initialValues = {
@@ -94,17 +101,17 @@ function AddVaccinationData(props) {
                         { values.slots.map((slotData, index) => (
                         <Paper elevation={1} square key={index} className={classes.paper}>
                         <FormControl className={classes.formControl}>
-                            <InputField label="Vaccine" id={`slots.${index}.vaccineType`} name={`slots.${index}.vaccineType`} type="select" options={vaccineList} classes={classes} className={classes.vaccinePicker} />               
+                            <InputField label="Vaccine" id={`slots.${index}.vaccine-type`} name={`slots.${index}.vaccine-type`} type="select" options={vaccineList} classes={classes} className={classes.vaccinePicker} />               
                         </FormControl>
                         <FormControl className={classes.formControl}>
-                            <InputField label="Slots" type="number" id={`slots.${index}.noOfSlots`} name={`slots.${index}.noOfSlots`} classes={classes} inputProps={{min: 0}} className={classes.slotCount}/>
+                            <InputField label="Slots" type="number" id={`slots.${index}.count`} name={`slots.${index}.count`} classes={classes} inputProps={{min: 0}} className={classes.slotCount}/>
                         </FormControl>
                         <FormControl className={classes.formControl}>
                         <InputField
-                            id={`slots.${index}.date`}
+                            id={`slots.${index}.dateOfAvailablity`}
                             label="Availibility Date"
                             type="date"
-                            name={`slots.${index}.date`}
+                            name={`slots.${index}.dateOfAvailablity`}
                             classes={classes}
                             className={classes.datePicker}
                             InputLabelProps={{

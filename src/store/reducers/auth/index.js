@@ -24,7 +24,7 @@ const Reducer = (state = initialState, {type, payload}) => {
             return {...state, isAuthenticating: true}
         case AUTH_SUCCESS:
             localStorage.setItem("user", JSON.stringify(payload))
-            return { ...state, isAuthenticating: false, isAuthenticated: true, username: payload.sub, role: payload.role[0].authority, cityName: payload.cityName, hospitalId: payload.hospitalId, pinCode: payload.pinCode, hospitalBranchId: payload.hospitalBranchId, token: payload.jwt}
+            return { ...state, isAuthenticating: false, isAuthenticated: true, username: payload.sub, role: payload.role[0].authority, cityName: payload.cityName, hospitalId: payload.hospitalId, pinCode: payload.pinCode, hospitalBranchId: payload.hospitalBranchId, token: payload.token}
         case AUTH_FAIL:{
             return {...state, isAuthenticating: false, authError: payload}
         }
