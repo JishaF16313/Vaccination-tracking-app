@@ -54,7 +54,7 @@ export const logout = (token) => async(dispatch) => {
     dispatch({type: LOGOUT})
     history.push("/")
     try{
-        await API.API_PUT_SERVICE("http://9.43.89.156:8081/user/_logout",{},{headers: { "X-Token-ID": token}})
+        await API.API_PUT_SERVICE(`${API_HOST.USER_SERVICE}_logout`,{},{headers: { "X-Token-ID": token}})
     }
     catch(error)
     {

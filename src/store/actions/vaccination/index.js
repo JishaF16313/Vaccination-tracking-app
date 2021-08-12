@@ -1,5 +1,6 @@
 import * as API from "../../../lib/api"
 import { setAlert } from '../alert/index';
+import * as API_HOST from '../../../env-config';
 
 // Vaccination List
 export const GET_VACCINATION_LIST_INIT = "GET_VACCINATION_LIST_INIT"
@@ -65,7 +66,7 @@ const deleteVaccinationAppointmentSuccess = response => ({
 // Vaccination Data Upload
 export const uploadVaccinationData = (reqBody, token) => async(dispatch) => {
     try{
-        const response = await API.API_POST_SERVICE("http://9.77.195.118:8090/vaccine/uploadVaccineAvailablity", reqBody, {headers: {"X-Token-ID" : token}})
+        const response = await API.API_POST_SERVICE(`${API_HOST.VACCINATION_SERVICE}uploadVaccineAvailablity`, reqBody, {headers: {"X-Token-ID" : token}})
         dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination bulk upload successful.' }));
         return response
     }
