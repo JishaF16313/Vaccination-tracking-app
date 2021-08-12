@@ -1,10 +1,12 @@
-import React, {useEffect} from "react"
+import React, { useEffect } from "react"
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Route from '../routes/routes';
-import {makeStyles} from "@material-ui/core/styles"
-import {useDispatch} from "react-redux"
-import {checkAuth} from "../store/actions/auth"
+import { makeStyles } from "@material-ui/core/styles"
+import { useDispatch } from "react-redux"
+import { checkAuth } from "../store/actions/auth";
+import Loader from '../components/loader/index';
+import Alert from '../components/alert/index';
 
 const useStyles = makeStyles({
   app: {
@@ -29,7 +31,9 @@ function App() {
     <div className={classes.app}>
       <Header />
       <main className={classes.main}>
-      <Route />
+        <Alert />
+        <Loader />
+        <Route />
       </main>
       <Footer />
     </div>

@@ -1,20 +1,22 @@
 import * as actions from '../../actions/hospitalbranch/index';
-import { removeObjectFromArray } from '../../../utility/commonFunctions';
 
 const initialState = {
-    branchList: [],
+    branchList: null,
     addOrUpdate: 'add',
-    editedHospitalBranchData: null
+    editedHospitalBranchData: null,
+    hospitalBranchDdlOptions: null
 };
 
 const Reducer = (state = initialState, { type, payload }) => {
     switch (type) {
         case actions.TYPES.GET_HOSPITAL_BRANCH_LIST:
-            return state;
+            return { ...state, branchList: payload };
+        case actions.TYPES.SET_HOSPITAL_BRANCH_DDL_OPTIONS:
+            return { ...state, hospitalBranchDdlOptions: payload };
         case actions.TYPES.ADD_UPDATE:
             return { ...state, addOrUpdate: payload };
         case actions.TYPES.ADD_BRANCH:
-            return { ...state, branchList: [...state.branchList, payload] };
+            return { ...state, branchList: payload };
         case actions.TYPES.SET_EDITED_HOSPITAL_BRANCH_DATA:
             return { ...state, editedHospitalBranchData: payload };
         case actions.TYPES.UPDATE_HOSPITAL_BRANCH:
