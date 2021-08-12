@@ -5,10 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { hospitalDdlList, hospitalUserTypes, cancelText, addPatientText, cityDdlList, stateDdlList} from '../../utility/commonTexts';
 import InputField from '../inputfield/index';
 import {
-    hospitalUserNameValidationText, dateOfBirthValidationText, passwordMinLengthValidationText,
-    passwordValidationText, confirmPasswordValidationText, passwordMatchValidationText, addressValidationText,
-    userTypeValidationText, invalidDateValidationText, zipValidationText
+    hospitalUserNameValidationText, dateOfBirthValidationText, invalidDateValidationText, zipValidationText,contactNumberValidationText, emailValidationText, stateValidationText, cityValidationText, aadharCardValidationText
 } from '../../utility/validationMessages';
+import { SetPatientDetails } from '../../store/actions/patientDetails/index';
+import { useDispatch, useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
@@ -41,43 +41,59 @@ const PatientDetailsForm = () => {
     const title = addPatientText;
 
     const validate = Yup.object({
-        name: Yup.string().max(100).required(hospitalUserNameValidationText),
+        firstName: Yup.string().max(100).required(hospitalUserNameValidationText),
+        lastName: Yup.string().max(100).required(hospitalUserNameValidationText),
         dob: Yup.string()
         .required(dateOfBirthValidationText)
         .matches(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, invalidDateValidationText),
-        password: Yup.string().min(8, passwordMinLengthValidationText).max(100).required(passwordValidationText),
-        confirmPassword: Yup.string().required(confirmPasswordValidationText).oneOf([Yup.ref('password'), null], passwordMatchValidationText),
-        address: Yup.string().max(200).required(addressValidationText),
-        city: Yup.string(),
-        pincode: Yup.number().min(6).max(7).required(zipValidationText),
-        userType: Yup.string().required(userTypeValidationText),
-        state: Yup.string()
+        contactNumber: Yup.number().min(10).required(contactNumberValidationText),
+        emailID: Yup.string().required(emailValidationText),
+        city: Yup.string().required(cityValidationText),
+        pincode: Yup.number().required(zipValidationText),
+        state: Yup.string().required(stateValidationText),
+        panNumber: Yup.string(),
+        aadharNumber: Yup.string().required(aadharCardValidationText)
     });
 
-    const submitForm = (values) => {
+    const dispatch = useDispatch();
 
-    }
+    const submitForm = (values) => {
+        // getHospitalBedByPincode(values);
+        console.log("values",values);
+        var patientDetails = {};
+        patientDetails.patient_first_name = values.firstName;
+        patientDetails.patient_last_name =  values.lastName;
+        patientDetails.patient_contact_number = values.contactNumber;
+        patientDetails.patient_email_id = values.emailID;
+        patientDetails.patient_LocationDetails = {};
+        patientDetails.patient_LocationDetails.city_name = values.city;
+        patientDetails.patient_LocationDetails.pin_number = values.pin_number;
+        patientDetails.patient_IdentificationDetail = {};
+        patientDetails.patient_IdentificationDetail.panNumber = values.panNumber
+        patientDetails.patient_IdentificationDetail.aadharNumber = values.aadharNumber
+        dispatch(SetPatientDetails(patientDetails));
+  }
 
     return (
         <div className={classes.mainDiv}>
             <h3>{title}</h3>
-            <Formik initialValues={{ name: '', userName: '', password: '', confirmPassword: '', address: '' }} validationSchema={validate} onSubmit={values => submitForm(values)}>
+            <Formik initialValues={{ firstName: '', lastName: '', contactNumber: '', emailID: '' }} validationSchema={validate} onSubmit={values => submitForm(values)}>
                 {formik => (
                     <Form>
                         <div className={classes.field}>
-                            <InputField label="Name" onChange={(e) => formik.setFieldValue('name', e.target.value)} name="name" type="text" classes={classes} />
+                            <InputField label="First Name" onChange={(e) => formik.setFieldValue('firstName', e.target.value)} name="firstName" type="text" classes={classes} />
+                        </div>
+                        <div className={classes.field}>
+                            <InputField label="Last Name" onChange={(e) => formik.setFieldValue('lastName', e.target.value)} name="lastName" type="text" classes={classes} />
                         </div>
                         <div className={classes.field}>
                             <InputField label="Date of Birth" onChange={(e) => formik.setFieldValue('dob', e.target.value)} name="dob" type="text" classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Password" onChange={(e) => formik.setFieldValue('password', e.target.value)} name="password" type="password" classes={classes} />
+                            <InputField label="Contact Number" onChange={(e) => formik.setFieldValue('contactNumber', e.target.value)} name="contactNumber" type="text" classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Confirm Password" onChange={(e) => formik.setFieldValue('confirmPassword', e.target.value)} name="confirmPassword" classes={classes} type="password" />
-                        </div>
-                        <div className={classes.field}>
-                            <InputField label="Address" onChange={(e) => formik.setFieldValue('address', e.target.value)} name="address" type="textarea" classes={classes} />
+                            <InputField label="Email ID" onChange={(e) => formik.setFieldValue('emailID', e.target.value)} name="emailID" type="text" classes={classes} />
                         </div>
                         <div className={classes.field}>
                             <InputField label="Zip Code" onChange={(e) => formik.setFieldValue('pincode', e.target.value)} name="pincode" type="text" classes={classes} />
@@ -89,7 +105,10 @@ const PatientDetailsForm = () => {
                             <InputField label="State" onChange={(e) => formik.setFieldValue('state', e.target.value)} name="city" type="select" options={stateDdlList} classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="User Type" onChange={(e) => formik.setFieldValue('userType', e.target.value)} name="userType" type="select" options={hospitalUserTypes} classes={classes} />
+                            <InputField label="Pan Number" onChange={(e) => formik.setFieldValue('panNumber', e.target.value)} name="panNumber" type="text" classes={classes} />
+                        </div>
+                        <div className={classes.field}>
+                            <InputField label="Aadhar Number" onChange={(e) => formik.setFieldValue('aadharNumber', e.target.value)} name="aadharNumber" type="text" classes={classes} />
                         </div>
                         <div className={classes.btnDiv}>
                             <Button variant="contained" color="primary" size="medium" type="submit">{addPatientText}</Button>
