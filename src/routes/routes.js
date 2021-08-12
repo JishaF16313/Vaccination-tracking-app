@@ -15,6 +15,7 @@ import HospitalUserDashboard from '../components/hospitalusers/index';
 import AdminDashboard from '../components/dashboard/admin/index';
 import AddUpdateHospitalBranch from '../components/hospitalbranch/addupdatebranch';
 import SignUp from '../components/signIn/userRegister';
+import VaccinationUploadHistory from "../components/dashboard/vaccination/vaccinationUploadHistory";
 
 function Routes() {
     return (
@@ -25,7 +26,7 @@ function Routes() {
                   <Route component={SignIn} path="/signIn" />
                   <Route component={SignUp} path="/register" />
                   <PrivateRoute component={AddUpdateHospital} roles={[Role.Admin]} path="/addupdatehospital" />
-                  <PrivateRoute component={VaccinationDashboard} roles={[Role.VcAdmin]} path="/vaccination"/>
+                  <PrivateRoute component={VaccinationDashboard} roles={[Role.VcAdmin]} path="/vaccination" exact/>
                   <PrivateRoute component={HospitalAdmin} roles={[Role.HoAdmin]} path="/hospitaladmin" />
                   <PrivateRoute component={UserDashboard} roles={[Role.User]} path="/userDashboard"/>
                   <PrivateRoute component={HospitalDashboard} roles={[Role.Admin]} path="/hospitals" />
@@ -38,6 +39,7 @@ function Routes() {
                   {/* Add Private PrivateRouter  */}
                   <PrivateRoute component={AdminDashboard} roles={[Role.Admin]} path="/admindashboard" />
                   <PrivateRoute component={AddUpdateHospitalBranch} roles={[Role.Admin]} path="/hospital/addupdatebranch" />
+                  <PrivateRoute component={VaccinationUploadHistory} roles={[Role.VcAdmin]} path="/vaccination/uploadhistory"/>
                   <Route path="/redirect" exact component={Redirects}/>
                 </Switch>
             </Router>
