@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Button } from "@material-ui/core";
@@ -43,6 +43,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AddUpdateUser() {
+    const [selectedHospitalId, setselectedHospitalId] = useState(null);
+
     const storeData = useSelector((store) => {
         return {
             data: store.hospitalusers,
@@ -64,35 +66,29 @@ function AddUpdateUser() {
         dispatch(getHospitalList(token));
     }, []);
 
-    useEffect(() => {
-        dispatch(startLoading('Please wait...'));
-        let token = storeData.loggedInUserData.token;
-        dispatch(getHospitalBranchList(token));
-    }, []);
-
     const validate = Yup.object({
         userName: Yup.string().max(100).required(hospitalUserUserNameValidationText),
         password: storeData.data.addOrUpdate === "add" ? Yup.string().min(8, passwordMinLengthValidationText).max(100).required(passwordValidationText) : Yup.string(),
         confirmPassword: storeData.data.addOrUpdate === "add" ? Yup.string().required(confirmPasswordValidationText).oneOf([Yup.ref('password'), null], passwordMatchValidationText) : Yup.string(),
-        hospitalName: Yup.string().required('Hospital name is required.'),
+        //hospitalName: Yup.string().required('Hospital name is required.'),
         branchName: Yup.string().required('Branch name is required.'),
         city: Yup.string().required(cityValidationText),
         zip: Yup.string().matches(zipValidationRegExp, invalidZipValidationText).max(6).required(zipValidationText),
         userType: Yup.string().required(userTypeValidationText),
     });
 
-    const submitForm = (values) => {        
+    const submitForm = (values) => {
         if (storeData.data.addOrUpdate === "add") {
             let obj = {
                 userLoginId: values.userName,
                 pwd: values.password,
                 confirmPwd: values.confirmPassword,
                 hospitalData: {
-                    hospitalId: values.hospitalName,
+                    hospitalId: selectedHospitalId,
                     branchId: values.branchName,
                     location: {
                         cityName: values.city,
-                        pinCode: values.zip 
+                        pinCode: values.zip
                     }
                 },
                 userType: values.userType
@@ -135,6 +131,13 @@ function AddUpdateUser() {
         }
     }, []);
 
+    const onHospitalNameChanged = (val) => {
+        setselectedHospitalId(val);
+        dispatch(startLoading('Please wait...'));
+        let token = storeData.loggedInUserData.token;
+        dispatch(getHospitalBranchList(token,val));
+    }
+
     return (
         <div className={classes.mainDiv}>
             <h3>{title}</h3>
@@ -160,7 +163,7 @@ function AddUpdateUser() {
                             <InputField label="Zip" onChange={(e) => formik.setFieldValue('zip', e.target.value)} name="zip" type="text" classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Hospital Name" onChange={(e) => formik.setFieldValue('hospitalName', e.target.value)} name="hospitalName" type="select" options={storeData.hospitalData.hospitalDdlOptions ? storeData.hospitalData.hospitalDdlOptions : []} classes={classes} />
+                            <InputField label="Hospital Name" value={selectedHospitalId} onChange={(e) => onHospitalNameChanged(e.target.value)} name="hospitalName" type="select" options={storeData.hospitalData.hospitalDdlOptions ? storeData.hospitalData.hospitalDdlOptions : []} classes={classes} />
                         </div>
                         <div className={classes.field}>
                             <InputField label="Branch Name" onChange={(e) => formik.setFieldValue('branchName', e.target.value)} name="branchName" type="select" options={storeData.HospitalBranchData.hospitalBranchDdlOptions ? storeData.HospitalBranchData.hospitalBranchDdlOptions : []} classes={classes} />
