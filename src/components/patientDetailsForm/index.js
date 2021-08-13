@@ -76,12 +76,13 @@ const PatientDetailsForm = () => {
         panNumber: Yup.string(),
         aadharNumber: Yup.string().required(aadharCardValidationText)
     });
-
+    
     const dispatch = useDispatch();
 
     const submitForm = (values) => {
-        // getHospitalBedByPincode(values);
         console.log("values", values);
+        let token = storeData.loggedInUserData.token;
+
         var patientDetails = {};
         patientDetails.patient_first_name = values.firstName;
         patientDetails.patient_last_name = values.lastName;
@@ -91,9 +92,10 @@ const PatientDetailsForm = () => {
         patientDetails.patient_LocationDetails.city_name = values.city;
         patientDetails.patient_LocationDetails.pin_number = values.pincode;
         patientDetails.patient_IdentificationDetail = {};
-        patientDetails.patient_IdentificationDetail.pan_number = values.panNumber
-        patientDetails.patient_IdentificationDetail.aadhar_card = values.aadharNumber
-        dispatch(SetPatientDetails(patientDetails));
+        patientDetails.patient_IdentificationDetail.pan_number = values.panNumber;
+        patientDetails.patient_IdentificationDetail.aadhar_card = values.aadharNumber;
+
+        dispatch(SetPatientDetails(patientDetails,token));
     }
 
     // Column title mappings for hospital bed details
@@ -101,21 +103,26 @@ const PatientDetailsForm = () => {
         title: "Hospital Name",
         field: "hospitalName"
     }, {
-        title: "ID",
-        field: "id"
+        title: "Hospital ID",
+        field: "hospitalId"
     }, {
-        title: "Address",
-        field: "address"
+        title: "Branch Name",
+        field: "branchName"
     }, {
-        title: "Beds Available",
-        field: "availableBeds"
+        title: "Branch ID",
+        field: "branchId"
     }, {
-        title: "Beds with Oxygen Cylinder",
-        field: "bedsWithOxygen"
+        title: "Beds Type",
+        field: "bedType"
     }, {
-        title: "Action",
-        field: "selected"
-    }], [])
+        title: "Bed Facility",
+        field: "bedFacility"
+    },
+    {
+        title: "Bed ID",
+        field: "bedId"
+    }
+], [])
 
     const rows = data;
     return (
@@ -161,9 +168,12 @@ const PatientDetailsForm = () => {
                     </Form>
                 )}
             </Formik>
-            <Typography component="h4" variant="h5" className={classes.title}> Hospital Details:</Typography>
+            <div >
+            <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
             <div className={classes.tableContainer}>
-                <Table columnMap={columnMap} rows={rows} />
+                <Table columnMap={columnMap} rows={storeData.hospitalAvailableBedList ? storeData.hospitalAvailableBedList : []} />
+                {storeData.hospitalAvailableBedList}
+            </div>
             </div>
         </div>
 
@@ -171,32 +181,13 @@ const PatientDetailsForm = () => {
 }
 
 const data = [{
-    id: 100,
-    hospitalName: "Kims Hospital",
-    address: "Hyderabad",
-    availableBeds: 10,
-    bedsWithOxygen: 'Y',
-    selected: false
-  }, {
-    id: 102,
-    hospitalName: "Mahavir Jain Hospitals",
-    address: "Bengaluru",
-    availableBeds: 5,
-    bedsWithOxygen: 'Y',
-    selected: false
-  }, {
-    id: 103,
-    hospitalName: "Apollo Hospitals",
-    address: "Hyderabad",
-    availableBeds: 22,
-    bedsWithOxygen: 'Y',
-    selected: false
-  }, {
-    id: 104,
-    hospitalName: "Prestine Hospitals",
-    address: "Bengaluru",
-    availableBeds: 8,
-    bedsWithOxygen: 'N',
-    selected: false
-  },]
+    bedFacility: "Oxygen",
+    bedId: "244fec7a-474b-484e-baa7-69867a7b2324",
+    bedType: "Single",
+    branchId: "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
+    branchName: "Indira Nagar",
+    hospitalId: "9f3c716d-6efc-43a7-9752-616d9f65bfca",
+    hospitalName: "Appollo",
+    }]
+
 export default PatientDetailsForm;
