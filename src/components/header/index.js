@@ -94,7 +94,7 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [userName,setuserName] = useState('');
-  const [hospitalID,sethospitalID] = useState('')
+  const [rolelID,setRoleID] = useState('')
   const user = JSON.parse(localStorage.getItem("user"));
 
   const isMenuOpen = Boolean(anchorEl);
@@ -125,7 +125,7 @@ export default function Header() {
   useEffect(()=>{
     if(user!= null){
     setuserName(user.sub);  
-    sethospitalID(user.hospitalId);
+    setRoleID(user.role[0].authority);
     }
   },[user]);
 
@@ -142,7 +142,7 @@ export default function Header() {
     onClose={handleMenuClose}
   >
     <MenuItem onClick={handleMenuClose}>{userName}</MenuItem>
-    <MenuItem onClick={handleMenuClose}>{hospitalID}</MenuItem>
+    <MenuItem onClick={handleMenuClose}>{rolelID}</MenuItem>
     <MenuItem onClick={handleLogout}>Logout</MenuItem>
   </Menu>
   );
