@@ -25,24 +25,13 @@ const initialState = {
 const patientReducer = ( state= initialState, {type, payload}) => {
     switch(type)
     {
-        case actions.GET_PATIENT_BED_LIST_INIT:
-            return {...state, hospitalBedData: [], loading: true}
+        case actions.TYPES.ADD_BED :
+            {
 
-        case actions.GET_PATIENT_BED_LIST_SUCCESS:
-            return {...state, hospitalBedData: payload, loading: false}
-
-        case actions.GET_HOSPITAL_BED_LIST_FAIL:
-            return {...state, error: payload, loading: false}
-
-        case actions.UPDATE_PATIENT_BED_DETAIL_SUCCESS:{
-            let updatedList = [...state.hospitalBedData]
-            const updateIndex = updatedList.findIndex( detail => detail.id == payload.id)
-            updatedList[updateIndex] = {...payload}
-            return {...state, hospitalBedData: updatedList}
+            return {...state}
         }
 
         default:
-            console.log("BBBBBBBBBB",state)
             return state
     }
 

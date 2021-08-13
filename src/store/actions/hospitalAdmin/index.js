@@ -1,47 +1,46 @@
-export const GET_PATIENT_BED_LIST_INIT = "GET_PATIENT_BED_LIST_INIT"
-export const GET_PATIENT_BED_LIST_SUCCESS = "GET_PATIENT_BED_LIST_SUCCESS"
-export const GET_PATIENT_BED_LIST_FAIL = "GET_PATIENT_BED_LIST_FAIL"
-export const GET_HOSPITAL_BED_LIST_FAIL = "GET_HOSPITAL_BED_LIST_FAIL"
-
-export const UPDATE_PATIENT_BED_DETAIL_SUCCESS = "UPDATE_PATIENT_BED_DETAIL_SUCCESS"
-export const UPDATE_PATIENT_BED_DETAIL_FAIL = "UPDATE_PATIENT_BED_DETAIL_FAIL"
-
-const hospitalPatientData = []
-
-export const getHospitalBedListList = () => dispatch => {
-    dispatch(getHospitalBedListInit())
-    setTimeout(() => dispatch(getHospitalBedListSuccess(hospitalPatientData)), 500)
-}
-
-const getHospitalBedListInit = () => ({
-    type: GET_PATIENT_BED_LIST_INIT
-})
-const getHospitalBedListSuccess = (response) => ({
-    type: GET_PATIENT_BED_LIST_SUCCESS,
-    payload: response
-})
-const getHospitalBedListFail = (response) => ({
-    type: GET_PATIENT_BED_LIST_FAIL,
-    payload: response
-})
+import axios from 'axios';
+import { setAlert } from '../alert/index';
+import { stopLoading } from '../loader/index';
+import history from '../../../routes/history';
+import * as API_HOST from '../../../env-config';
 
 
+export const TYPES = {
+    GET_HOSPITAL_BED_LIST: 'GET_HOSPITAL_BED_LIST',
+    ADD_BED: 'ADD_BED',
+    RESET_TEMP_: 'GET_HOSPITAL_BED_LIST',
+ }
 
+//api call for create hospital bed
+export function addBed(bodyObject, token) {
+    return async dispatch => {
+       try {
+          await axios.post(`${API_HOST.BED_AVAILABILITY_SERVICE}/_bulkUpload`, bodyObject, { headers: getHeaders(token) })
+          .then((response) => {
+             return onSuccess(response);
+          })         
+       } catch (error) {
+          return onError(error);
+       }
+ 
+       function onSuccess(response) {
+          dispatch({ type: TYPES.ADD_BED, payload: response.data });
+          dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Bed created successfully.' }));
+          dispatch(stopLoading());
 
-export const updateHospitalBedDetail = (data) => dispatch => {
-    return new Promise( (resolve) => {
-        setTimeout(() => {
-            dispatch(updateHospitalBedDetaitSuccess(data))
-            resolve(data)
-        }, 500)
-    })
-}
+       }
+       function onError(error) {
+          dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+          dispatch(stopLoading());
+       }
+    }
+ };
+ 
 
-const updateHospitalBedDetaitSuccess = (response) => ({
-    type: UPDATE_PATIENT_BED_DETAIL_SUCCESS,
-    payload: response
-})
-const updateHospitalBedDetailFail = (response) => ({
-    type: UPDATE_PATIENT_BED_DETAIL_FAIL,
-    payload: response
-})
+ export const getHeaders = (token) => {
+    const headers = {
+       'Content-Type': 'application/json',
+       'X-Token-ID': token
+    }
+    return headers;
+ }
