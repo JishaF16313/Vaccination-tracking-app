@@ -144,10 +144,10 @@ function UserDashboard() {
       </Tabs>
       <TabPanel value={value} index={0}>
         <PatientDetailsForm></PatientDetailsForm>
-        <Typography component="h4" variant="h5" className={classes.title}> Hospital Details:</Typography>
+        {/* <Typography component="h4" variant="h5" className={classes.title}> Hospital Details:</Typography>
         <div className={classes.tableContainer}>
           <Table columnMap={columnMap} rows={rows} />
-        </div>
+        </div> */}
         <Box className={classes.BtnHolder}>
           <Button variant="contained" color="primary" onClick={handleConfirmBedBooking} className={classes.cnfrmBtn}>Confirm</Button>
         </Box>

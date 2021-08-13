@@ -27,6 +27,7 @@ function Routes() {
                   <Route component={SignUp} path="/register" />
                   <PrivateRoute component={AddUpdateHospital} roles={[Role.Admin]} path="/addupdatehospital" />
                   <PrivateRoute component={VaccinationDashboard} roles={[Role.VcAdmin]} path="/vaccination" exact/>
+
                   <PrivateRoute component={HospitalAdmin} roles={[Role.HoAdmin]} path="/hospitaladmin" />
                   <PrivateRoute component={UserDashboard} roles={[Role.User]} path="/userDashboard"/>
                   <PrivateRoute component={HospitalDashboard} roles={[Role.Admin]} path="/hospitals" />
