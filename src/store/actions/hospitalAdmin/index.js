@@ -44,3 +44,4 @@ export function addBed(bodyObject, token) {
     }
     return headers;
  }
+ 
