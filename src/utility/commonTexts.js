@@ -22,5 +22,12 @@ export const deleteAgreeButtonText = "Agree";
 export const deleteDisagreeButtonText = "Disagree";
 export const addBranchText = "Add Branch";
 export const updateBranchText = "Update Branch";
-
 export const vaccineList = [{value: "COVISHIELD", label: "Covishield"}, {value: "COVAXIN", label: "Covaxin"}]
+
+export const loaderText = "Please wait...";
+export const bookBedText = "Book Bed";
+export const totalPatientText = "Total Covid Patients";
+export const bedsAvailableText = "Beds Available";
+export const peopleVaccinatedText = "People Vaccinated";
+export const vaccineAvailableText = "Vaccine Available";
+

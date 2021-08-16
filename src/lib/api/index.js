@@ -52,7 +52,7 @@ export const API_GET_SERVICE = async (url,config) =>
 }
 
 export const API_POST_SERVICE = async (url,param,config) => 
-{
+{ 
     try {
     const res = await axios.post(url,param,config);
     return res.data;
