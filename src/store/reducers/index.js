@@ -8,6 +8,7 @@ import loader from './loader/index';
 import alert from './alert/index';
 import users from './users/index';
 import patientReducer from './hospitalAdmin/index';
+import dashboard from './dashboard/index';
 
 export default combineReducers({
     hospitals,
@@ -18,5 +19,6 @@ export default combineReducers({
     loader,
     alert,
     users,
-    patientReducer
+    patientReducer,
+    dashboard
 });
