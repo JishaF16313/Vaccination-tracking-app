@@ -65,8 +65,7 @@ const PatientDetailsForm = () => {
     const title = addPatientText;
     const storeData = useSelector((store) => {
         return {
-            loggedInUserData: store.auth,
-            hospitalAvailableBedList: store.hospitalAvailableBedList
+            loggedInUserData: store.auth
         }
     });
     

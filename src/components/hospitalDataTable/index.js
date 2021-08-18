@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import ConfirmBedBookingDetails from '../userDashboard/handleBedBookingConfirmModal';
-
+import { SetPatientBedBookingDetails }from '../../store/actions/patientDetails/index';
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
         margin: theme.spacing(6)
@@ -35,7 +35,7 @@ const HospitalDataTable = (props) => {
     const classes = useStyles();
     const storeData = useSelector((store) => {
         return {
-            // loggedInUserData: store.auth,
+            loggedInUserData: store.auth,
             data: store.patientdetails
         }
     });
@@ -53,10 +53,35 @@ const HospitalDataTable = (props) => {
         type: null,
         data: null
     });
-
+    const dispatch = useDispatch();
+    
+    
     // Closing the modal
     const handleModalClose = useCallback(() => setmodal({ type: null, data: null }), []);
-
+    const [select, setSelection] = React.useState([]);
+    let token = storeData.loggedInUserData.token;
+    const confirmBookingDetails = (data) => {
+        let bookingData = {
+            "hospital-name" : "Appollo",
+            "hospital-id": "9f3c716d-6efc-43a7-9752-616d9f65bfca",
+            "hospital-branch-id": "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
+            "LocationDetail": {
+              "city_name": "Bengaluru",
+              "pin_number": "560017"
+            },
+            "Bed": {
+              "bed-id": "244fec7a-474b-484e-baa7-69867a7b2324",
+              "bed-type": "Single",
+              "bed-facility": "Oxygen"
+            }
+        }
+        let requestData = {
+            "bookingId": "6bd02a27-7fc9-4046-91c4-5020354d9e85",
+            "bookingData": bookingData
+        }
+        dispatch(SetPatientBedBookingDetails(requestData,token));
+    }
+    
     // Column title mappings for hospital bed details
     const columnMap = useMemo(() => [{
         headerName: "Hospital Name",
@@ -98,24 +123,40 @@ const HospitalDataTable = (props) => {
                 <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
                 <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
                     <DataGrid
-                        rows={storeData.data.hospitalAvailableBedList ? storeData.data.hospitalAvailableBedList : null}
+                        rows={storeData.data.hospitalAvailableBedList ? storeData.data.hospitalAvailableBedList.bedAvailabilityData : null}
                         columns={columnMap}
                         pageSize={5}
                         checkboxSelection
                         disableMultipleSelection={true}
                         onChange={handleChange}
-                        onSelectionModelChange={item => console.log(item)}
+                        onSelectionChange={(newSelection) => {
+                            setSelection(newSelection.rows);
+                            console.log("data==",newSelection);
+                        }}
+                       
                     />
                 </div>
             </div>
             <Box className={classes.BtnHolder}>
-                <Button variant="contained" color="primary" onClick={handleConfirmBedBooking} className={classes.cnfrmBtn}>Confirm</Button>
+                <Button variant="contained" color="primary" onClick={confirmBookingDetails} className={classes.cnfrmBtn}>Confirm</Button>
             </Box>
             <ConfirmBedBookingDetails open={modal.type === "edit"} details={modal.data} onClose={handleModalClose} />
+            <h1>{select}</h1>
         </div>
         )}
         </div>
     )
 };
+
+const data = [{
+    bedFacility: "Oxygen",
+    bedId: "244fec7a-474b-484e-baa7-69867a7b2324",
+    bedType: "Single",
+    branchId: "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
+    branchName: "Indira Nagar",
+    hospitalId: "9f3c716d-6efc-43a7-9752-616d9f65bfca",
+    hospitalName: "Appollo",
+    id: "1"
+}]
 
 export default HospitalDataTable;
