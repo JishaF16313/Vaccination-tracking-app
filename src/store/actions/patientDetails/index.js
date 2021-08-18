@@ -10,20 +10,47 @@ export const TYPES = {
 }
 
 export function SetPatientDetails (value,token) { 
-   //  token = token ? token : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODEyMzQ2NzgiLCJyb2xlIjpbeyJhdXRob3JpdHkiOiJQT1JUQUxfQURNSU4ifV0sImNpdHlOYW1lIjoiQmFuZ2Fsb3JlIiwiaG9zcGl0YWxJZCI6bnVsbCwicGluQ29kZSI6IjU2MDAwMSIsImhvc3BpdGFsQnJhbmNoSWQiOm51bGwsImV4cCI6MTYyODc2Mzc3MSwiaWF0IjoxNjI4NzU2NTcxfQ.s8xQH6jnuDXJPhXlBv00f_JRUp6wjUfOKARpUB_2qUU";
+    token = token ? token : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIYXJzaCBLIiwicm9sZSI6W3siYXV0aG9yaXR5IjoiSE9TUElUQUxfQURNSU4ifV0sImNpdHlOYW1lIjoiY2l0eSIsImhvc3BpdGFsSWQiOiI5NThiYmYzNi1hOGRlLTRjMDQtYjE1MC1mMmQwNmYyZmQ2MDgiLCJwaW5Db2RlIjoiMTExMTExIiwiaG9zcGl0YWxCcmFuY2hJZCI6ImI0ZjAzMGI5LWY2YWItNGM5Ny1iNjBiLTRjNjg0ZDliNTA1MiIsImV4cCI6MTYyOTI2MzM5NywiaWF0IjoxNjI4ODMxMzk3fQ.obIJF7cGDHPnP_rDWIkWPqKit8IdKraGSEA5AQLrTrc";
     return async dispatch => {
        try {
-          await axios.post(`${API_HOST.BEDBOOKING_SERVICE}_book`, value , { headers: getHeaders(token) })
-          .then((response) => {            
-            let hospitalAvailableBedList = parseHospitalBedData(response);
-            return onSuccess(response, hospitalAvailableBedList);
-          });        
+         //  await axios.post(`${API_HOST.BEDBOOKING_SERVICE}_book`, value , { headers: getHeaders(token) })
+         //  .then((response) => {            
+         //    let hospitalAvailableBedList = parseHospitalBedData(response);
+         //    return onSuccess(response, hospitalAvailableBedList);
+         //  }); 
+         let response={
+            "bookingId": "6bd02a27-7fc9-4046-91c4-5020354d9e85",
+            "bookingStatus": "pending",
+            "waitingNumber": "18",
+            "Hospitals": [
+              {
+                  "hospitalName": "Appollo",
+                "hospitalId": "9f3c716d-6efc-43a7-9752-616d9f65bfca",
+                "Branches": [
+                  {
+                    "branchName": "Indira Nagar",
+                    "branchId": "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
+                    "Beds": [
+                      {
+                        "bed-type": "Single",
+                        "bed-facility": "Oxygen",
+                        "bed-id": "244fec7a-474b-484e-baa7-69867a7b2324"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+         let hospitalAvailableBedList = parseHospitalBedData(response);
+         return onSuccess(response, hospitalAvailableBedList);
        } catch (error) {
           return onError(error);
        }
  
        function onSuccess(response, hospitalAvailableBedList) {
-        let message = "Booking for Patient Confirmed.Please check available beds and find booking details.'Booking ID -"+ " "+ response.data.bookingId + " Booking Status - " + response.data.bookingStatus;
+      //   let message = "Booking for Patient Confirmed.Please check available beds and find booking details.'Booking ID -"+ " "+ response.data.bookingId + " Booking Status - " + response.data.bookingStatus;
+      let message = "Booking for Patient Confirmed.Please check available beds and find booking details.'Booking ID -"+ " "+ response.bookingId + " Booking Status - " + response.bookingStatus;
         dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: message }));
         dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));
         dispatch(stopLoading());
