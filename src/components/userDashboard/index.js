@@ -1,4 +1,4 @@
-import React, { useMemo,useCallback,useState } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
@@ -6,15 +6,15 @@ import Tab from '@material-ui/core/Tab';
 import TabPanel from '../tabpanel';
 import Table from "../table";
 import { Typography } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import { DataGrid } from '@material-ui/data-grid';
 import TextField from '@material-ui/core/TextField';
 import PatientDetailsForm from '../patientDetailsForm';
-import ConfirmBedBookingDetails from './handleBedBookingConfirmModal';
+import HospitalDataTable from '../hospitalDataTable';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +34,12 @@ const useStyles = makeStyles((theme) => ({
   },
   divStyle: {
     paddingTop: theme.spacing(2)
+  },
+  show: {
+    display: 'block'
+  },
+  hidden: {
+    display: 'none'
   }
 }));
 
@@ -41,18 +47,19 @@ function UserDashboard() {
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   }
   // Confirm bed detail handler
-  const handleConfirmBedBooking = useCallback( (details) => setmodal({type: "edit", data: details}), []);
+  const handleConfirmBedBooking = useCallback((details) => setmodal({ type: "edit", data: details }), []);
 
   // State to show/hide modals
   const [modal, setmodal] = useState({
     type: null,
     data: null
-  })
+  });
+
   // Column title mappings for hospital bed details
   const columnMap = useMemo(() => [{
     title: "Hospital Name",
@@ -73,9 +80,9 @@ function UserDashboard() {
     title: "Action",
     field: "selected"
   }], [])
-  
+
   // Closing the modal
-  const handleModalClose = useCallback(() => setmodal({type: null, data: null}),[])
+  const handleModalClose = useCallback(() => setmodal({ type: null, data: null }), [])
   // Vaccination data - to be called from API
   const rows = data;
 
@@ -144,14 +151,7 @@ function UserDashboard() {
       </Tabs>
       <TabPanel value={value} index={0}>
         <PatientDetailsForm></PatientDetailsForm>
-        {/* <Typography component="h4" variant="h5" className={classes.title}> Hospital Details:</Typography>
-        <div className={classes.tableContainer}>
-          <Table columnMap={columnMap} rows={rows} />
-        </div> */}
-        <Box className={classes.BtnHolder}>
-          <Button variant="contained" color="primary" onClick={handleConfirmBedBooking} className={classes.cnfrmBtn}>Confirm</Button>
-        </Box>
-        <ConfirmBedBookingDetails open={modal.type === "edit"} details={modal.data} onClose={handleModalClose} />
+        <HospitalDataTable></HospitalDataTable>
       </TabPanel>
 
       <TabPanel value={value} index={1}>

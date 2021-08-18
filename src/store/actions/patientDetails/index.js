@@ -10,20 +10,21 @@ export const TYPES = {
 }
 
 export function SetPatientDetails (value,token) { 
-   //  token = token ? token : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODEyMzQ2NzgiLCJyb2xlIjpbeyJhdXRob3JpdHkiOiJQT1JUQUxfQURNSU4ifV0sImNpdHlOYW1lIjoiQmFuZ2Fsb3JlIiwiaG9zcGl0YWxJZCI6bnVsbCwicGluQ29kZSI6IjU2MDAwMSIsImhvc3BpdGFsQnJhbmNoSWQiOm51bGwsImV4cCI6MTYyODc2Mzc3MSwiaWF0IjoxNjI4NzU2NTcxfQ.s8xQH6jnuDXJPhXlBv00f_JRUp6wjUfOKARpUB_2qUU";
+    token = token ? token : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIYXJzaCBLIiwicm9sZSI6W3siYXV0aG9yaXR5IjoiSE9TUElUQUxfQURNSU4ifV0sImNpdHlOYW1lIjoiY2l0eSIsImhvc3BpdGFsSWQiOiI5NThiYmYzNi1hOGRlLTRjMDQtYjE1MC1mMmQwNmYyZmQ2MDgiLCJwaW5Db2RlIjoiMTExMTExIiwiaG9zcGl0YWxCcmFuY2hJZCI6IjlmNzNkOTY4LTU0ODItNGFiMi04MDdhLTM3NWQ3NmQ2OWJmYyIsImV4cCI6MTYyOTY5NzU1MiwiaWF0IjoxNjI5MjY1NTUyfQ.YdZvhoxj7VlBrkycB8e066ClAwcK-pdjjVeV4k8IfbY";
     return async dispatch => {
        try {
           await axios.post(`${API_HOST.BEDBOOKING_SERVICE}_book`, value , { headers: getHeaders(token) })
           .then((response) => {            
             let hospitalAvailableBedList = parseHospitalBedData(response);
             return onSuccess(response, hospitalAvailableBedList);
-          });        
+          }); 
        } catch (error) {
           return onError(error);
        }
  
        function onSuccess(response, hospitalAvailableBedList) {
         let message = "Booking for Patient Confirmed.Please check available beds and find booking details.'Booking ID -"+ " "+ response.data.bookingId + " Booking Status - " + response.data.bookingStatus;
+      // let message = "Booking for Patient Confirmed.Please check available beds and find booking details.'Booking ID -"+ " "+ response.bookingId + " Booking Status - " + response.bookingStatus;
         dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: message }));
         dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));
         dispatch(stopLoading());
@@ -77,6 +78,7 @@ export function SetPatientDetails (value,token) {
           for(var j=0; j<data.Hospitals[i].Branches.length;j++){
              for(var k=0;k<data.Hospitals[i].Branches[j].Beds.length;k++){
                parsedResponseArr.push({
+                  "id" :  data.Hospitals[i].hospitalId,
                   "hospitalName" : data.Hospitals[i].hospitalName,
                   "hospitalId" : data.Hospitals[i].hospitalId,
                   "branchName" : data.Hospitals[i].Branches[j].branchName,
@@ -104,8 +106,8 @@ export function SetPatientDetails (value,token) {
       //       })
       //    })
       // });
+      return parsedResponseArr;
     }
-    return parsedResponseArr;
  }
 
  export const hospitalAvailbleBedList = (value) => ({
