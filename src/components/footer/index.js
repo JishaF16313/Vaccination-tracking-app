@@ -35,10 +35,7 @@ export default function Footer() {
     <React.Fragment>
       <CssBaseline />      
       {/* Footer */}
-      <footer className={classes.footer}>
-        <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-          Something here to give the footer a purpose!
-        </Typography>
+      <footer className={classes.footer}>       
         <Copyright />
       </footer>
       {/* End footer */}
