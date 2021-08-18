@@ -9,9 +9,10 @@ import {
 } from '../../utility/validationMessages';
 import { SetPatientDetails } from '../../store/actions/patientDetails/index';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { useMemo,useCallback,useState } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { Typography } from '@material-ui/core';
-import Table from "../table";
+import { DataGrid } from '@material-ui/data-grid';
+import { startLoading } from '../../store/actions/loader/index';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +49,15 @@ const useStyles = makeStyles((theme) => ({
     },
     divStyle: {
         paddingTop: theme.spacing(2)
+    },
+    title: {
+        marginTop: theme.spacing(2)
+    },
+    show: {
+        display: 'block'
+    },
+    hidden: {
+        display: 'none'
     }
 }));
 
@@ -57,11 +67,11 @@ const PatientDetailsForm = () => {
     const title = addPatientText;
     const storeData = useSelector((store) => {
         return {
-            loggedInUserData: store.auth,
+            // loggedInUserData: store.auth,
             hospitalAvailableBedList: store.hospitalAvailableBedList
         }
     });
-
+    
     const validate = Yup.object({
         firstName: Yup.string().max(100).required(hospitalUserNameValidationText),
         lastName: Yup.string().max(100).required(hospitalUserNameValidationText),
@@ -76,13 +86,14 @@ const PatientDetailsForm = () => {
         panNumber: Yup.string(),
         aadharNumber: Yup.string().required(aadharCardValidationText)
     });
-    
+
     const dispatch = useDispatch();
 
     const submitForm = (values) => {
         console.log("values", values);
-        let token = storeData.loggedInUserData.token;
-
+        // let token = storeData.loggedInUserData.token;
+        dispatch(startLoading('Please wait...'));
+        
         var patientDetails = {};
         patientDetails.patient_first_name = values.firstName;
         patientDetails.patient_last_name = values.lastName;
@@ -95,40 +106,47 @@ const PatientDetailsForm = () => {
         patientDetails.patient_IdentificationDetail.pan_number = values.panNumber;
         patientDetails.patient_IdentificationDetail.aadhar_card = values.aadharNumber;
 
-        dispatch(SetPatientDetails(patientDetails,token));
+        dispatch(SetPatientDetails(patientDetails));
     }
 
     // Column title mappings for hospital bed details
     const columnMap = useMemo(() => [{
-        title: "Hospital Name",
-        field: "hospitalName"
+        headerName: "Hospital Name",
+        field: "hospitalName",
+        width: 180
     }, {
-        title: "Hospital ID",
-        field: "hospitalId"
+        headerName: "Hospital ID",
+        field: "hospitalId",
+        width: 180
     }, {
-        title: "Branch Name",
-        field: "branchName"
+        headerName: "Branch Name",
+        field: "branchName",
+        width: 180
     }, {
-        title: "Branch ID",
-        field: "branchId"
+        headerName: "Branch ID",
+        field: "branchId",
+        width: 180
     }, {
-        title: "Beds Type",
-        field: "bedType"
+        headerName: "Beds Type",
+        field: "bedType",
+        width: 180
     }, {
-        title: "Bed Facility",
-        field: "bedFacility"
+        headerName: "Bed Facility",
+        field: "bedFacility",
+        width: 180
     },
     {
-        title: "Bed ID",
-        field: "bedId"
+        headerName: "Bed ID",
+        field: "bedId",
+        width: 180
     }
-], [])
+    ], [])
 
     const rows = data;
     return (
         <div className={classes.mainDiv}>
             <h3>{title}</h3>
-            <Formik initialValues={{ firstName: '', lastName: '', contactNumber: '', emailID: '' }} validationSchema={validate} onSubmit={values => submitForm(values)}>
+            <Formik initialValues={{ firstName: '', lastName: '', contactNumber: '', emailID: '' }} validationSchema={validate} onSubmit={values => submitForm(values)} className={storeData.hospitalAvailableBedList ? classes.hidden : classes.show}>
                 {formik => (
                     <Form>
                         <div className={classes.field}>
@@ -168,13 +186,20 @@ const PatientDetailsForm = () => {
                     </Form>
                 )}
             </Formik>
-            <div >
-            <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
-            <div className={classes.tableContainer}>
-                <Table columnMap={columnMap} rows={storeData.hospitalAvailableBedList ? storeData.hospitalAvailableBedList : []} />
-                {storeData.hospitalAvailableBedList}
-            </div>
-            </div>
+            {/* <div className={storeData.hospitalAvailableBedList ? classes.show : classes.hidden}>
+                <div>
+                    <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
+                    <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
+                        <DataGrid
+                            rows={storeData.hospitalAvailableBedList ? storeData.hospitalAvailableBedList : []}
+                            columns={columnMap}
+                            pageSize={5}
+                            checkboxSelection
+                            disableMultipleSelection={true}
+                        />
+                    </div>
+                </div>
+            </div> */}
         </div>
 
     )
@@ -188,6 +213,7 @@ const data = [{
     branchName: "Indira Nagar",
     hospitalId: "9f3c716d-6efc-43a7-9752-616d9f65bfca",
     hospitalName: "Appollo",
-    }]
+    id: "1"
+}]
 
 export default PatientDetailsForm;
