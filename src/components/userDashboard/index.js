@@ -59,7 +59,6 @@ function UserDashboard() {
     type: null,
     data: null
   });
-  const [hasHospitalAvailableBedList, setHospitalAvailableBedList] = useState(false);
 
   // Column title mappings for hospital bed details
   const columnMap = useMemo(() => [{
@@ -152,7 +151,7 @@ function UserDashboard() {
       </Tabs>
       <TabPanel value={value} index={0}>
         <PatientDetailsForm></PatientDetailsForm>
-        <HospitalDataTable onChange={handleChange}></HospitalDataTable>
+        <HospitalDataTable></HospitalDataTable>
       </TabPanel>
 
       <TabPanel value={value} index={1}>

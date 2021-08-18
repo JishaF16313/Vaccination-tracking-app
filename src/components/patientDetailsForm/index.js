@@ -10,8 +10,6 @@ import {
 import { SetPatientDetails } from '../../store/actions/patientDetails/index';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useMemo, useCallback, useState } from 'react';
-import { Typography } from '@material-ui/core';
-import { DataGrid } from '@material-ui/data-grid';
 import { startLoading } from '../../store/actions/loader/index';
 
 
@@ -67,7 +65,7 @@ const PatientDetailsForm = () => {
     const title = addPatientText;
     const storeData = useSelector((store) => {
         return {
-            // loggedInUserData: store.auth,
+            loggedInUserData: store.auth,
             hospitalAvailableBedList: store.hospitalAvailableBedList
         }
     });
@@ -91,7 +89,7 @@ const PatientDetailsForm = () => {
 
     const submitForm = (values) => {
         console.log("values", values);
-        // let token = storeData.loggedInUserData.token;
+        let token = storeData.loggedInUserData.token;
         dispatch(startLoading('Please wait...'));
         
         var patientDetails = {};
@@ -106,7 +104,7 @@ const PatientDetailsForm = () => {
         patientDetails.patient_IdentificationDetail.pan_number = values.panNumber;
         patientDetails.patient_IdentificationDetail.aadhar_card = values.aadharNumber;
 
-        dispatch(SetPatientDetails(patientDetails));
+        dispatch(SetPatientDetails(patientDetails,token));
     }
 
     // Column title mappings for hospital bed details
@@ -186,20 +184,6 @@ const PatientDetailsForm = () => {
                     </Form>
                 )}
             </Formik>
-            {/* <div className={storeData.hospitalAvailableBedList ? classes.show : classes.hidden}>
-                <div>
-                    <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
-                    <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
-                        <DataGrid
-                            rows={storeData.hospitalAvailableBedList ? storeData.hospitalAvailableBedList : []}
-                            columns={columnMap}
-                            pageSize={5}
-                            checkboxSelection
-                            disableMultipleSelection={true}
-                        />
-                    </div>
-                </div>
-            </div> */}
         </div>
 
     )
