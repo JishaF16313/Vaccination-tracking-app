@@ -33,11 +33,10 @@ const useStyles = makeStyles((theme) => ({
 }))
 const HospitalDataTable = (props) => {
     const classes = useStyles();
-
     const storeData = useSelector((store) => {
         return {
             // loggedInUserData: store.auth,
-            hospitalAvailableBedList: store.hospitalAvailableBedList
+            data: store.patientdetails
         }
     });
 
@@ -90,22 +89,22 @@ const HospitalDataTable = (props) => {
         width: 180
     }
     ], [])
-
-    const rows = data;
     return (
         /***change the class name to show for development and testing className={storeData.hospitalAvailableBedList ? classes.show : classes.hidden} */
-        <div className={classes.mainDiv} className={storeData.hospitalAvailableBedList ? classes.show : classes.hidden}> 
+       <div>
+        {storeData.data.hospitalAvailableBedList && (
+        <div className={classes.mainDiv} className={storeData.data.hospitalAvailableBedList ? classes.show : classes.hidden}> 
             <div>
                 <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
                 <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
                     <DataGrid
-                        rows={storeData.hospitalAvailableBedList ? storeData.hospitalAvailableBedList : []}
+                        rows={storeData.data.hospitalAvailableBedList ? storeData.data.hospitalAvailableBedList : null}
                         columns={columnMap}
                         pageSize={5}
                         checkboxSelection
                         disableMultipleSelection={true}
                         onChange={handleChange}
-                        onSelectionModelChange={itm => console.log(itm)}
+                        onSelectionModelChange={item => console.log(item)}
                     />
                 </div>
             </div>
@@ -114,28 +113,9 @@ const HospitalDataTable = (props) => {
             </Box>
             <ConfirmBedBookingDetails open={modal.type === "edit"} details={modal.data} onClose={handleModalClose} />
         </div>
+        )}
+        </div>
     )
 };
-
-const data = [{
-    bedFacility: "Oxygen",
-    bedId: "244fec7a-474b-484e-baa7-69867a7b2324",
-    bedType: "Single",
-    branchId: "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
-    branchName: "Indira Nagar",
-    hospitalId: "9f3c716d-6efc-43a7-9752-616d9f65bfca",
-    hospitalName: "Appollo",
-    id: "1"
-},
-{
-    bedFacility: "Oxygen",
-    bedId: "244fec7a-474b-484e-baa7-69867a7b2324",
-    bedType: "Single",
-    branchId: "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
-    branchName: "Indira Nagar",
-    hospitalId: "9f3c716d-6efc-43a7-9752-616d9f65bfca",
-    hospitalName: "Appollo",
-    id: "2"
-}]
 
 export default HospitalDataTable;
