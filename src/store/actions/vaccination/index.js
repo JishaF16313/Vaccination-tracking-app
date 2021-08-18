@@ -1,5 +1,6 @@
 import * as API from "../../../lib/api"
 import { setAlert } from '../alert/index';
+import {startLoading, stopLoading} from "../loader"
 import * as API_HOST from '../../../env-config';
 
 // Vaccination List
@@ -7,9 +8,19 @@ export const GET_VACCINATION_LIST_INIT = "GET_VACCINATION_LIST_INIT"
 export const GET_VACCINATION_LIST_SUCCESS = "GET_VACCINATION_LIST_SUCCESS"
 export const GET_VACCINATION_LIST_FAIL = "GET_VACCINATION_LIST_FAIL"
 
-export const getVaccinationList = () => dispatch => {
-    dispatch(getVaccinationListInit())
-    setTimeout(() => dispatch(getVaccinationListSuccess(vaccinationData)), 500)
+export const getVaccinationList = () => async(dispatch, getState) => {
+  dispatch(getVaccinationListInit())
+  const token = getState().auth.token
+    try {
+      const response = vaccinationData
+      //const response = await API.API_GET_SERVICE(`${API_HOST.VACCINATION_SERVICE}getVaccineSchdeuledInformationForDay`,{headers: {"X-Token-ID" : token}})
+      dispatch(getVaccinationListSuccess(response))
+    }
+    catch(error)
+    {
+      dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: "Unable to get the appointments" }));
+      dispatch(getVaccinationListFail(error.message))
+    }
 }
 
 const getVaccinationListInit = () => ({
@@ -28,20 +39,23 @@ const getVaccinationListFail = (response) => ({
 export const UPDATE_VACCINATION_DETAIL_SUCCESS = "UPDATE_VACCINATION_DETAIL_SUCCESS"
 export const UPDATE_VACCINATION_DETAIL_FAIL = "UPDATE_VACCINATION_DETAIL_FAIL"
 
-export const updateVaccinationDetail = (data) => dispatch => {
-    return new Promise( (resolve) => {
-        setTimeout(() => {
-            dispatch(updateVaccinationDetaitSuccess(data))
-            resolve(data)
-        }, 500)
-    })
+export const updateVaccinationDetail = (bookingId) => async(dispatch, getState) => {
+  const token = getState().auth.token
+  dispatch(startLoading())
+    try{
+      const response = await API.API_PUT_SERVICE(`${API_HOST.VACCINATION_SERVICE}${bookingId}/updateVaccineStatus`,{},{headers: {"X-Token-ID" : token}})
+      dispatch(updateVaccinationDetaitSuccess(response))
+      dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination status update successful.' }));
+      dispatch(stopLoading())
+    }
+    catch (error)
+    {
+      dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: "Vaccination status update failed" }));
+      dispatch(stopLoading())
+    }
 }
 const updateVaccinationDetaitSuccess = (response) => ({
     type: UPDATE_VACCINATION_DETAIL_SUCCESS,
-    payload: response
-})
-const updateVaccinationDetailFail = (response) => ({
-    type: UPDATE_VACCINATION_DETAIL_FAIL,
     payload: response
 })
 
@@ -49,13 +63,20 @@ const updateVaccinationDetailFail = (response) => ({
 // Vaccination Delete
 export const DELETE_VACCINATION_APPOINTMENT = "DELETE_VACCINATION_APPOINTMENT"
 
-export const deleteVaccinationAppointment = (data) => dispatch =>{
-    return new Promise( (resolve) => {
-        setTimeout(() => {
-            dispatch(deleteVaccinationAppointmentSuccess(data))
-            resolve(data)
-        }, 500)
-    })
+export const deleteVaccinationAppointment = (bookingId) => async(dispatch,getStore) =>{
+    const token = getStore().auth.token
+    dispatch(startLoading())
+    try{
+      const response = await API.API_DELETE_SERVICE(`${API_HOST.VACCINATION_SERVICE}${bookingId}/_deleteVaccinationBooingId`,{headers: {"X-Token-ID" : token}})
+      dispatch(deleteVaccinationAppointmentSuccess(bookingId))
+      dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination deleted successfully.' }));
+      dispatch(stopLoading())
+    }
+    catch (error)
+    {
+      dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: "Vaccination delete failed" }));
+      dispatch(stopLoading())
+    }
 }
 const deleteVaccinationAppointmentSuccess = response => ({
     type: DELETE_VACCINATION_APPOINTMENT,
@@ -64,7 +85,8 @@ const deleteVaccinationAppointmentSuccess = response => ({
 
 
 // Vaccination Data Upload
-export const uploadVaccinationData = (reqBody, token) => async(dispatch) => {
+export const uploadVaccinationData = (reqBody) => async(dispatch, getState) => {
+  const token = getState().auth.token
     try{
         const response = await API.API_POST_SERVICE(`${API_HOST.VACCINATION_SERVICE}uploadVaccinAvailablity`, reqBody, {headers: {"X-Token-ID" : token}})
         dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination bulk upload successful.' }));
@@ -77,14 +99,24 @@ export const uploadVaccinationData = (reqBody, token) => async(dispatch) => {
 }
 
 
-// Vaccination List
+// Vaccination Upload History
 export const GET_VACCINATION_UPLOAD_HISTORY_INIT = "GET_VACCINATION_UPLOAD_HISTORY_INIT"
 export const GET_VACCINATION_UPLOAD_HISTORY_SUCCESS = "GET_VACCINATION_UPLOAD_HISTORY_SUCCESS"
 export const GET_VACCINATION_UPLOAD_HISTORY_FAIL = "GET_VACCINATION_UPLOAD_HISTORY_FAIL"
 
-export const getVaccinationUploadHistory = () => dispatch => {
-    dispatch(getVaccinationUploadHistoryInit())
-    setTimeout(() => dispatch(getVaccinationUploadHistorySuccess(vaccinationUploadHistory)), 500)
+export const getVaccinationUploadHistory = () => async(dispatch, getState) => {
+  dispatch(getVaccinationUploadHistoryInit())
+  const token = getState().auth.token
+  try{
+    const response = vaccinationUploadHistory
+    //const response = await API.API_GET_SERVICE(`${API_HOST.VACCINATION_SERVICE}getUploadVaccineStatus`,{headers: {"X-Token-ID" : token}})
+    dispatch(getVaccinationUploadHistorySuccess(response))
+  }
+  catch (error)
+  {
+    dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: "Unable to get the upload history" }));
+    dispatch(getVaccinationUploadHistoryFail(error.message))
+  }
 }
 
 const getVaccinationUploadHistoryInit = () => ({
@@ -99,50 +131,96 @@ const getVaccinationUploadHistoryFail = (response) => ({
     payload: response
 })
 
-const vaccinationData = [{
-    id: 123,
-    name: "Name1",
-    address: "Banglore",
-    dose1: {
-        status: "pending",
-        date: "",
-        vaccine: ""        
-    },
-    dose2: {
-        status: "pending",
-        date: "",
-        vaccine: ""},
-},{
-    id: 456,
-    name: "Name2",
-    address: "Delhi",
-    dose1: {
-        status: "done",
-        date: "",
-        vaccine: "covishield"},
-    dose2: {
-        status: "pending",
-        date: "",
-        vaccine: ""},
-},{
-    id: 789,
-    name: "Name2",
-    address: "Delhi",
-    dose1: {
-        status: "done",
-        date: "",
-        vaccine: "covishield"},
-    dose2: {
-        status: "done",
-        date: "",
-        vaccine: "covishield"},
-}]
+const vaccinationData = {
+    "Patients": [
+      {
+        "vaccine-booking-id": "1234",
+        "patient-name": "Patient 1",
+        "patient-aadhar": "389847829478",
+        "hospital-name": "Hosp1",
+        "branch-name": "Branch1",
+        "vaccine_booked_date": new Date(Date.now()).toISOString(),
+        "cityName": "City1",
+        "dose": [
+          {
+            "dose-name": "dose1",
+            "vaccine-type": "",
+            "status": "pending",
+            "date": "",
+          }
+        ]
+      },
+      {
+        "vaccine-booking-id": "4698",
+        "patient-name": "Patient 2",
+        "patient-aadhar": "479563027856",
+        "hospital-name": "Hosp1",
+        "branch-name": "Branch1",
+        "vaccine_booked_date": new Date(Date.now()).toISOString(),
+        "cityName": "City1",
+        "dose": [
+          {
+            "dose-name": "dose1",
+            "vaccine-type": "Covishield",
+            "status": "done",
+            "date": new Date(Date.now()).toISOString(),
+          },
+        ]
+      },
+      {
+        "vaccine-booking-id": "910111",
+        "patient-name": "Patient 3",
+        "patient-aadhar": "489382674937",
+        "hospital-name": "Hosp1",
+        "branch-name": "Branch1",
+        "vaccine_booked_date": new Date(Date.now()).toISOString(),
+        "cityName": "City1",
+        "dose": [
+          {
+            "dose-name": "dose1",
+            "vaccine-type": "Covishield",
+            "status": "done",
+            "date": new Date(Date.now()).toISOString(),
+          },
+          {
+            "dose-name": "dose2",
+            "vaccine-type": "",
+            "status": "pending",
+            "date": "",
+          }
+        ]
+      },
+      {
+        "vaccine-booking-id": "910145",
+        "patient-name": "Patient 4",
+        "patient-aadhar": "4782984467283",
+        "hospital-name": "Hosp1",
+        "branch-name": "Branch1",
+        "vaccine_booked_date": new Date(Date.now()).toISOString(),
+        "cityName": "City1",
+        "dose": [
+          {
+            "dose-name": "dose1",
+            "vaccine-type": "Covishield",
+            "status": "done",
+            "date": new Date(Date.now()).toISOString(),
+          },
+          {
+            "dose-name": "dose2",
+            "vaccine-type": "Covishield",
+            "status": "done",
+            "date": new Date(Date.now()).toISOString(),
+          }
+        ]
+      }
+    ]
+  }
 
-const vaccinationUploadHistory = [{
-    id: "123",
+const vaccinationUploadHistory ={ uploads: [{
+    uploadId: "123",
     status: "Success",
 },
 {
-    id: "456",
+    uploadId: "456",
     status: "Success"
-}]
+}]}

@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 function VaccinationUploadHistory() {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const {vaccinationUploadHistory, loading, error} = useSelector(store => store.vaccination)
+    const {vaccinationUploadHistory, loading,} = useSelector(store => store.vaccination)
 
     // Getting list of vaccination appointments
     useEffect(() => {
@@ -43,12 +43,11 @@ function VaccinationUploadHistory() {
     // Column title mappings for vaccination details
     const columnMap = useMemo(  () => [{
         title: "Upload ID",
-        field: "id"
+        field: "uploadId"
     },{
         title: "Upload Status",
         field: "status"
     }], [])
-
 
     return (
         <div className={classes.root}>
@@ -57,7 +56,7 @@ function VaccinationUploadHistory() {
                 Vaccination Upload History
             </Typography>
             <div className={classes.tableContainer}>
-            <Table columnMap={columnMap} rows={vaccinationUploadHistory} loading={loading}/>
+            <Table columnMap={columnMap} rows={vaccinationUploadHistory} loading={loading} rowIdField={"uploadId"}/>
             </div>
             {loading && <div className={classes.loader}><CircularProgress/></div>}
         </div>

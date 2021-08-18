@@ -43,7 +43,7 @@ axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 export const API_GET_SERVICE = async (url,config) => 
 {
     try {
-    const res = await axios.get(url);
+    const res = await axios.get(url, config);
     return res.data;
     }
     catch (error) {
@@ -77,7 +77,7 @@ export const API_PUT_SERVICE = async (url,param,config) =>
 export const API_DELETE_SERVICE = async (url,config) => 
 {
     try {
-        const res = await axios.delete(url);
+        const res = await axios.delete(url, config);
         return res.data;
         }
         catch (error) {
