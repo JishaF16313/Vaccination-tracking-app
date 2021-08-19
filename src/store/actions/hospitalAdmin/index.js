@@ -8,6 +8,7 @@ import * as API_HOST from '../../../env-config';
 export const TYPES = {
     GET_HOSPITAL_BED_LIST: 'GET_HOSPITAL_BED_LIST',
     ADD_BED: 'ADD_BED',
+    CLEAR_ADD_BED: 'CLEAR_ADD_BED',
     RESET_TEMP_: 'GET_HOSPITAL_BED_LIST',
  }
 
@@ -15,7 +16,7 @@ export const TYPES = {
 export function addBed(bodyObject, token) {
     return async dispatch => {
        try {
-          await axios.post(`${API_HOST.BED_AVAILABILITY_SERVICE}/_bulkUpload`, bodyObject, { headers: getHeaders(token) })
+          await axios.post(`${API_HOST.BED_AVAILABILITY_SERVICE}_bulkUpload`, bodyObject, { headers: getHeaders(token) })
           .then((response) => {
              return onSuccess(response);
           })         
@@ -35,8 +36,54 @@ export function addBed(bodyObject, token) {
        }
     }
  };
- 
 
+ export function getPatientList(token) {
+    return async dispatch => {
+       try {
+          await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}_allpatientList`, { headers: getHeaders(token) })
+          .then((response) => {            
+             let patientList = response.data
+                   
+            //  });           
+             return onSuccess( patientList);
+          });        
+       } catch (error) {
+          return onError(error);
+       }
+ 
+       function onSuccess( patientList) {
+          dispatch({ type: TYPES.POPULATE_PATIENT_LIST, payload: patientList });
+          dispatch(stopLoading());
+       }
+       function onError(error) {
+          dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+          dispatch(stopLoading());
+       }
+    }
+ }
+ 
+ export function getUploadHistory(token) {
+    return async dispatch => {
+       try {
+          await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}_allpatientList`, { headers: getHeaders(token) })
+          .then((response) => {            
+                    
+             return onSuccess(response.data);
+          });        
+       } catch (error) {
+          return onError(error);
+       }
+ 
+       function onSuccess( uploadHistoryData) {
+          dispatch({ type: TYPES.POPULATE_UPLOAD_HISTORY, payload: uploadHistoryData });
+          dispatch(stopLoading());
+       }
+       function onError(error) {
+          dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+          dispatch(stopLoading());
+       }
+    }
+ }
  export const getHeaders = (token) => {
     const headers = {
        'Content-Type': 'application/json',

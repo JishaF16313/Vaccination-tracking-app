@@ -63,9 +63,9 @@ const useStyles = makeStyles((theme) => ({
 
 const HospitalBedBulkUpload = (props) => {
 
-    const storeData = useSelector((store) => {        
+    const storeData = useSelector((store) => {
         return {
-            data: store.hospitals,
+            data: store.patientReducer,
             loggedInUserData: store.auth
         }
     });
@@ -73,8 +73,6 @@ const HospitalBedBulkUpload = (props) => {
     const [bedCount, setBed] = useState(0);
     const [rows, setRows] = useState([]);
     const dispatch = useDispatch();
-
-
     const classes = useStyles();
 
     const handleCellClick = (param, event) => {
@@ -105,14 +103,22 @@ const HospitalBedBulkUpload = (props) => {
         setRows(initialRow);
     }
 
+    const resetForm = () => {
+        setRows([]);
+        setBed(0);
+    }
+
     const uploadBeds = () => {
-        let obj = {
+    const branchId =  JSON.parse(localStorage.getItem("user")).hospitalBranchId;
+        let postPayLoad = {
                     "Beds": rows,
-                    "branchId": "630a6b33-b2c0-4870-83f1-e5941baf3afe",
-                    "branchName": "INS-1"
+                    "branchId" : branchId,
+                    //"branchName": "INS-1"
                 }
         let token = storeData.loggedInUserData.token;
-        dispatch(addBed(obj, token));
+        dispatch(addBed(postPayLoad, token));
+        resetForm();
+       
 
     }
 
@@ -170,8 +176,8 @@ const HospitalBedBulkUpload = (props) => {
                 <Grid item xs={12}>
                     <Paper>
                         <ButtonGroup className={classes.buttons_wrapper} variant="text" color="primary" aria-label="text primary button group">
-                            <Button>Upload History</Button>
-                            <Button onClick={() => props.handelShowHide(props.showBulkUpload)}>Dashboard</Button>
+                            <Button onClick={() => props.handelShowHide("history")}>Upload History</Button>
+                            <Button onClick={() => props.handelShowHide("dashboard")}>Dashboard</Button>
                             <Button>User Details</Button>
                         </ButtonGroup>
                     </Paper>
