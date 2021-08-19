@@ -10,6 +10,7 @@ import users from './users/index';
 import patientReducer from './hospitalAdmin/index';
 import dashboard from './dashboard/index';
 import patientdetails from './patientDetails/index';
+import schedulevaccination from './schedulevaccination/index';
 
 export default combineReducers({
     hospitals,
@@ -22,5 +23,6 @@ export default combineReducers({
     users,
     patientReducer,
     dashboard,
-    patientdetails
+    patientdetails,
+    schedulevaccination
 });
