@@ -47,10 +47,9 @@ const useStyles = makeStyles((theme) => ({
 function AddVaccinationData(props) {
     const {open, onClose} = props
     const dispatch = useDispatch()
-    const { hospitalBranchId, token} = useSelector(store => store.auth)
+    const { hospitalBranchId} = useSelector(store => store.auth)
     const classes = useStyles()
 
-    const [saving, setsaving] = useState(false)
 
     const defaultVaccinationSlot = React.useMemo(() => ({
         "vaccine-type": "",
@@ -76,15 +75,13 @@ function AddVaccinationData(props) {
 
 
     // Handle vaccination update
-    const handleSubmit = async(data) => {
-      setsaving(true)
+    const handleSubmit = (data) => {
         const reqBody = {
           branchId: hospitalBranchId,
           Vaccines: [...data.slots]
         }
-        await dispatch(uploadVaccinationData(reqBody, token))
+        dispatch(uploadVaccinationData(reqBody))
         handleClose();
-        setsaving(false)
     }
 
     const initialValues = {
@@ -127,11 +124,11 @@ function AddVaccinationData(props) {
         }
         </FieldArray>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary" disabled={saving}>
+          <Button onClick={handleClose} color="secondary" >
             Cancel
           </Button>
-          <Button type="submit"  color="primary" disabled={saving}>
-            {saving ? "Saving..." : "Save"}
+          <Button type="submit"  color="primary" >
+            Upload
           </Button>
         </DialogActions>
         </Form>
