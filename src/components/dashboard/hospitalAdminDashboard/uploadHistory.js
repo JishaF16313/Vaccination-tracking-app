@@ -39,11 +39,17 @@ const useStyles = makeStyles((theme) => ({
 export default function UploadedHistory(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { bedUploadHistoryData } = useSelector(store => store.patientReducer)
-
-    // useEffect(() => {
-    //   dispatch(getUploadHistory())
-    // }, []);
+  const storeData = useSelector((store) => {        
+    return {
+        HistoryData: store.patientReducer,
+        loggedInUserData: store.auth
+    }
+});
+  let token = storeData.loggedInUserData.token;
+  let bedUploadHistoryData = storeData.HistoryData.bedUploadHistoryData;
+    useEffect(() => {
+      dispatch(getUploadHistory(token))
+    }, []);
 
   const handleCellClick = (param, event) => {
     if (param.colIndex === 2) {
@@ -56,7 +62,7 @@ export default function UploadedHistory(props) {
     {
       field: 'id',
       headerName: 'ID',
-      width: 200,
+      width: 400,
       editable: false,
     },
     {
@@ -74,6 +80,7 @@ export default function UploadedHistory(props) {
           <Paper>
             <ButtonGroup className={classes.buttons_wrapper} variant="text" color="primary" aria-label="text primary button group">
               <Button onClick={() => props.handelShowHide("dashboard")}>Dashboard</Button>
+              <Button onClick={() => props.handelShowHide("upload")}>Bulk Upload</Button>
               <Button>User Details</Button>
             </ButtonGroup>
           </Paper>
