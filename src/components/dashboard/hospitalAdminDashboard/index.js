@@ -2,12 +2,13 @@ import React, { useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import { useSelector, useDispatch } from "react-redux";
 
 import HospitalBedBulkUpload from './hospitalBedBulkUpload';
 import PatientSummaryTable from './patientSummaryTable';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
-import PatientTable from './patientTable';
+import UploadedHistory from './uploadHistory'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -65,20 +66,37 @@ const useStyles = makeStyles((theme) => ({
 
 export default function HospitalAdmin() {
     const classes = useStyles();
+    let [bookedBed, setBookedBed] = useState(0);
     let [showBulkUpload, setBulkUpload] = useState(false);
-    const handelShowHide = (val) => {
-       setBulkUpload(!val);
-    }
+    let [showUploadHistory, setUploadHistory] = useState(false);
+    const handelShowHide = (buttonVal) => {
 
+        if(buttonVal === "history"){
+            setUploadHistory(true);
+            setBulkUpload(false)
+        }else if (buttonVal === "upload"){
+            setUploadHistory(false);
+            setBulkUpload(true)
+        }else{
+            setUploadHistory(false)
+            setBulkUpload(false)
+        }
+    }
+    const storeData = useSelector((store) => {        
+        return {
+            data: store.bookedBed,
+            loggedInUserData: store.auth
+        }
+    });
     return (
         <div className={classes.root}>
-            {!showBulkUpload &&
+            {!showBulkUpload && !showUploadHistory &&
                 <Grid container spacing={1}>
                     <Grid item xs={12}>
                         <Paper>
                             <ButtonGroup className={classes.buttons_wrapper} variant="text" color="primary" aria-label="text primary button group">
-                                <Button>Upload History</Button>
-                                <Button onClick={() => handelShowHide(showBulkUpload)}>Bulk Upload</Button>
+                                <Button onClick={()=>handelShowHide("history")}>Upload History</Button>
+                                <Button onClick={()=>handelShowHide("upload")}>Bulk Upload</Button>
                                 <Button>User Details</Button>
                             </ButtonGroup>
                         </Paper>
@@ -100,6 +118,7 @@ export default function HospitalAdmin() {
                 
             }
             {showBulkUpload && <HospitalBedBulkUpload handelShowHide = {handelShowHide} showBulkUpload = {showBulkUpload}></HospitalBedBulkUpload>}
+            {showUploadHistory && <UploadedHistory handelShowHide = {handelShowHide}  showUploadHistory = {showUploadHistory}></UploadedHistory>}
         </div>
     );
 }

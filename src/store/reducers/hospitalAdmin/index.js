@@ -19,30 +19,31 @@ const initialState = {
         bedFacility: 'ventilator',
         admissionStatus: 'new',
         }
-    ]
+    ],
+    bedUploadHistoryData: [{
+        id: 1,
+        uploadStatus: "Success"
+      
+      },{
+        id: 2,
+        uploadStatus: "Success"
+        }
+    ],
+    bookedBed: 51
 }
 
 const patientReducer = ( state= initialState, {type, payload}) => {
     switch(type)
     {
-        case actions.GET_PATIENT_BED_LIST_INIT:
-            return {...state, hospitalBedData: [], loading: true}
-
-        case actions.GET_PATIENT_BED_LIST_SUCCESS:
-            return {...state, hospitalBedData: payload, loading: false}
-
-        case actions.GET_HOSPITAL_BED_LIST_FAIL:
-            return {...state, error: payload, loading: false}
-
-        case actions.UPDATE_PATIENT_BED_DETAIL_SUCCESS:{
-            let updatedList = [...state.hospitalBedData]
-            const updateIndex = updatedList.findIndex( detail => detail.id == payload.id)
-            updatedList[updateIndex] = {...payload}
-            return {...state, hospitalBedData: updatedList}
-        }
+        case actions.TYPES.ADD_BED :
+            return {...state, }
+        case actions.TYPES.POPULATE_PATIENT_LIST:
+            return { ...state, hospitalPatientData: payload };
+        case actions.TYPES.POPULATE_UPLOAD_HISTORY:
+            return { ...state, bedUploadHistoryData: payload };
+    
 
         default:
-            console.log("BBBBBBBBBB",state)
             return state
     }
 
