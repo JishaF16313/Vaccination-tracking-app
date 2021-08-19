@@ -14,6 +14,19 @@ const useStyles = makeStyles((theme) => ({
     },
     loaderMessage: {
         marginLeft: '10px'
+    },
+    overlay: {
+        position: 'fixed',
+        display: 'block',
+        width: '100%',
+        height: '100%',
+        top: '0px',
+        left: '0px',
+        right: '0px',
+        bottom: '0px',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        zIndex: '2',
+        cursor: 'pointer'
     }
 }));
 
@@ -24,13 +37,14 @@ function Loader({ message, ...props }) {
         }
     })
     const classes = useStyles();
-
     return (
         <div>
             {storeData.data.showLoader && (
-                <div className={classes.loaderDiv}>
-                    <CircularProgress color="secondary" />
-                    <div className={classes.loaderMessage}>{storeData.data.message}</div>
+                <div className={classes.overlay}>
+                    <div className={classes.loaderDiv}>
+                        <CircularProgress color="secondary" />
+                        <div className={classes.loaderMessage}>{storeData.data.message}</div>
+                    </div>
                 </div>
             )}
         </div>
