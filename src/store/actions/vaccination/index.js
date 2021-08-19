@@ -216,12 +216,16 @@ const vaccinationData = {
     ]
   }
 
-const vaccinationUploadHistory ={ uploads: [{
-    uploadId: "123",
-    status: "Success",
-},
-{
-    uploadId: "456",
-    status: "Success"
-}]}
+const vaccinationUploadHistory ={ 
+  uploads: [
+    {
+      uploadId: "123",
+      status: "Success",
+    },
+    {
+      uploadId: "456",
+      status: "Success"
+    }
+  ]
+}
 
