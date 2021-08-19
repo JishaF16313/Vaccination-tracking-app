@@ -93,7 +93,7 @@ export const uploadVaccinationData = (reqBody) => async(dispatch, getState) => {
         return response
     }
     catch (error){
-        dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+        dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: "Unable to upload vaccination data." }));
         console.log(error);
     }
 }

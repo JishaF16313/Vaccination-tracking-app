@@ -70,8 +70,8 @@ function ActionableTable(props) {
 
     //Funtion to get the display value
     const getDisplayValue = React.useCallback((row, field, type) => {
-      const value = getFromObject(row, field, "N/A")
-      if (value === "N/A" || value === "") return value
+      const value = getFromObject(row, field, "--")
+      if (value === "--" || value === "") return value
       switch(type)
       {
         case displayTypes.date:
