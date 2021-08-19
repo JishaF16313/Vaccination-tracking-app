@@ -2,14 +2,15 @@ import React, {useState, useCallback, useMemo, useEffect} from 'react'
 import { Typography  } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {makeStyles} from '@material-ui/core/styles'
-import Table from "../../table"
+import Table, {displayTypes} from "../../table"
 import EditVaccinationDetail from './editVaccinationDetail'
 import AddVaccinationData from './addVaccinationData';
 import {useSelector, useDispatch} from "react-redux"
-import {getVaccinationList, deleteVaccinationAppointment} from "../../../store/actions/vaccination"
+import {getVaccinationList, deleteVaccinationAppointment, updateVaccinationDetail} from "../../../store/actions/vaccination"
 import ConfirmDialog from "../../dialog/confirmation"
 import Button from "@material-ui/core/Button"
 import history from "../../../routes/history"
+import Loader from "../../loader"
 
 const useStyles = makeStyles({
     root: {
@@ -45,42 +46,117 @@ function VaccinationDashboard() {
     // State to show/hide modals
     const [modal, setmodal] = useState({
         type: null,
-        data: null
+        data: null,
+        title: null,
+        message: null,
+        onAgree: null,
+        onDisagree: null
     })
 
     // Closing the modal
-    const handleModalClose = useCallback(() => setmodal({type: null, data: null}),[])
+    const handleModalClose = useCallback(() => setmodal({
+        type: null, 
+        data: null, 
+        title: null,
+        message: null,
+        onAgree: null,
+        onDisagree: null}),[])
+
+    const setNotAllowedModal = useCallback(
+        (message) => {
+            setmodal({
+                type: "confirm",
+                title: "Action Not Allowed",
+                message,
+                onAgree: handleModalClose,
+                onDisagree: handleModalClose
+            })
+        },
+        [handleModalClose],
+    )
+
+    
+    // Dispatch vaccination appointment delete
+    const handleVaccinationDeleteDispatch = useCallback((appointment) => () => {
+        dispatch(deleteVaccinationAppointment(appointment["vaccine-booking-id"]))
+        handleModalClose()
+    },[dispatch, modal, handleModalClose])
+
+    // Dispatch vaccination appointment update
+    const handleUpdateVaccinationDispatch = useCallback(
+        (appointment) => () => {
+            dispatch(updateVaccinationDetail(appointment["vaccine-booking-id"]))
+            handleModalClose()
+        },
+        [dispatch, modal, handleModalClose],
+    )
 
     // Open Vaccination appointmrnt edit modal
-    const handleVaccinationEdit = useCallback( (details) => setmodal({type: "edit", data: details}), [])
+    const handleVaccinationEdit = useCallback( (appointment) => 
+        appointment.dose[appointment.dose.length-1].status !== "done" ?
+            setmodal({
+                type: "confirm", 
+                data: appointment,
+                title: "Update Vaccination Status",
+                message: "Are you sure the person is vaccinated for todays appointment?",
+                onAgree: handleUpdateVaccinationDispatch(appointment),
+                onDisagree: handleModalClose
+            })
+            :
+            setNotAllowedModal("Can't update vaccinated appoitnment.")
+            , [handleModalClose, handleUpdateVaccinationDispatch])
 
     // Open vaccination appointment delete modal
-    const handleVaccinationDelete = useCallback( details => setmodal({type: "delete", data: details}), [])
+    const handleVaccinationDelete = useCallback( appointment =>  
+        appointment.dose[appointment.dose.length-1].status !== "done" ?
+            setmodal({
+                type: "confirm", 
+                data: appointment,
+                title: "Delete Vaccination Appointment",
+                message: "Are you sure you want to delete the appointment?",
+                onAgree: handleVaccinationDeleteDispatch(appointment),
+                onDisagree: handleModalClose
+            })
+            :
+            setNotAllowedModal("Can't delete vaccinated appointment")
+            , [handleModalClose, handleVaccinationDeleteDispatch])
 
     // Open vaccination slots add modal
     const handleVaccinaionSlotsAdd = useCallback( () => setmodal({type: "add", data: null}), [])
 
-    // Dispatch vaccination appointment delete
-    const handleVaccinationDeleteDispatch = useCallback(() => {
-        dispatch(deleteVaccinationAppointment(modal.data)).then(() => handleModalClose())
-    },[modal, handleModalClose])
 
     // Column title mappings for vaccination details
-    const columnMap = useMemo(  () => [{
+    const columnMap = useMemo(  () => 
+    [{
         title: "Name",
-        field: "name"
+        field: "patient-name"
     },{
-        title: "ID",
-        field: "id"
+        title: "Aadhaar",
+        field: "patient-aadhar"
     },{
-        title: "Address",
-        field: "address"
+        title: "Booked On",
+        field: "vaccine_booked_date",
+        type: displayTypes.date
     },{
-        title: "Dose 1",
-        field: "dose1.status"
+        title: "Dose 1 Status",
+        field: "dose[0].status",
     },{
-        title: "Dose 2",
-        field: "dose2.status"
+        title: "Dose 1 Vaccine",
+        field: "dose[0].vaccine-type",
+    },{
+        title: "Dose 1 Date",
+        field: "dose[0].date",
+        type: displayTypes.date
+    },{
+        title: "Dose 2 Status",
+        field: "dose[1].status",
+    },{
+        title: "Dose 2 Vaccine",
+        field: "dose[1].vaccine-type",
+    },{
+        title: "Dose 2 Date",
+        field: "dose[1].date",
+        type: displayTypes.date
     }], [])
 
 
@@ -93,12 +169,12 @@ function VaccinationDashboard() {
                 </div>
             </Typography>
             <div className={classes.tableContainer}>
-            <Table columnMap={columnMap} rows={vaccinationList} onEdit={handleVaccinationEdit} onDelete={handleVaccinationDelete} loading={loading}/>
+            <Table columnMap={columnMap} rows={vaccinationList} onDone={handleVaccinationEdit} onDelete={handleVaccinationDelete} loading={loading} rowIdField={"vaccine-booking-id"}/>
             </div>
             {loading && <div className={classes.loader}><CircularProgress/></div>}
-            <EditVaccinationDetail open={modal.type === "edit"} details={modal.data} onClose={handleModalClose} />
-            <ConfirmDialog open={modal.type === "delete"} title="Delete Appointment" message="Are you sure you want to delete the appointment?" handleDisagree={handleModalClose} handleAgree={handleVaccinationDeleteDispatch} agreeButtonText="Delete" disagreeButtonText="Cancel" />
+            <ConfirmDialog open={modal.type === "confirm"} title={modal.title} message={modal.message} handleDisagree={modal.onDisagree} handleAgree={modal.onAgree} agreeButtonText="Confirm" disagreeButtonText="Cancel" />
             <AddVaccinationData open={modal.type === "add"} onClose={handleModalClose}/>
+            <Loader />
         </div>
     )
 }

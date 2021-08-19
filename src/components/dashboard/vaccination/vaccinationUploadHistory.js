@@ -2,7 +2,7 @@ import React, { useMemo, useEffect} from 'react'
 import { Typography  } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {makeStyles} from '@material-ui/core/styles'
-import Table from "../../table"
+import Table,{displayTypes} from "../../table"
 import {useSelector, useDispatch} from "react-redux"
 import {getVaccinationUploadHistory } from "../../../store/actions/vaccination"
 import IconButton from "@material-ui/core/IconButton"
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 function VaccinationUploadHistory() {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const {vaccinationUploadHistory, loading, error} = useSelector(store => store.vaccination)
+    const {vaccinationUploadHistory, loading,} = useSelector(store => store.vaccination)
 
     // Getting list of vaccination appointments
     useEffect(() => {
@@ -43,12 +43,12 @@ function VaccinationUploadHistory() {
     // Column title mappings for vaccination details
     const columnMap = useMemo(  () => [{
         title: "Upload ID",
-        field: "id"
+        field: "uploadId"
     },{
         title: "Upload Status",
-        field: "status"
+        field: "status",
+        type: displayTypes.BoolSuccessFailed
     }], [])
-
 
     return (
         <div className={classes.root}>
@@ -57,7 +57,7 @@ function VaccinationUploadHistory() {
                 Vaccination Upload History
             </Typography>
             <div className={classes.tableContainer}>
-            <Table columnMap={columnMap} rows={vaccinationUploadHistory} loading={loading}/>
+            <Table columnMap={columnMap} rows={vaccinationUploadHistory} loading={loading} rowIdField={"uploadId"}/>
             </div>
             {loading && <div className={classes.loader}><CircularProgress/></div>}
         </div>
