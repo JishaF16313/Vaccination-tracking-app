@@ -3,7 +3,6 @@ import {
     GET_VACCINATION_LIST_SUCCESS,
     GET_VACCINATION_LIST_FAIL,
     UPDATE_VACCINATION_DETAIL_SUCCESS,
-    UPDATE_VACCINATION_DETAIL_FAIL,
     DELETE_VACCINATION_APPOINTMENT,
     GET_VACCINATION_UPLOAD_HISTORY_INIT,
     GET_VACCINATION_UPLOAD_HISTORY_SUCCESS,
@@ -25,27 +24,27 @@ const vaccinationReducer = ( state= initialState, {type, payload}) => {
             return {...state, vaccinationList: [], loading: true}
 
         case GET_VACCINATION_LIST_SUCCESS:
-            return {...state, vaccinationList: payload, loading: false}
+            return {...state, vaccinationList: payload.Patients, loading: false}
 
         case GET_VACCINATION_LIST_FAIL:
             return {...state, error: payload, loading: false}
 
         case UPDATE_VACCINATION_DETAIL_SUCCESS:{
             let updatedList = [...state.vaccinationList]
-            const updateIndex = updatedList.findIndex( detail => detail.id === payload.id)
+            const updateIndex = updatedList.findIndex( detail => detail["vaccine-booking-id"] === payload["vaccine-booking-id"])
             updatedList[updateIndex] = {...payload}
             return {...state, vaccinationList: updatedList}
         }
 
         case DELETE_VACCINATION_APPOINTMENT: 
-            return {...state, vaccinationList: removeObjectFromArray(state.vaccinationList, "id", payload.id)}
+            return {...state, vaccinationList: removeObjectFromArray(state.vaccinationList, "vaccine-booking-id", payload)}
 
 
         case GET_VACCINATION_UPLOAD_HISTORY_INIT:
                 return {...state, vaccinationUploadHistory: [], loading: true}
     
         case GET_VACCINATION_UPLOAD_HISTORY_SUCCESS:
-                return {...state, vaccinationUploadHistory: payload, loading: false}
+                return {...state, vaccinationUploadHistory: payload.Uploads, loading: false}
     
         case GET_VACCINATION_UPLOAD_HISTORY_FAIL:
                 return {...state, error: payload, loading: false}
