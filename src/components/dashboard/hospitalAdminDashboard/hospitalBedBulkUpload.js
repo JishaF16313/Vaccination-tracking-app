@@ -7,10 +7,10 @@ import Paper from '@material-ui/core/Paper';
 import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 import { DataGrid } from '@material-ui/data-grid';
+import { useDispatch, useSelector } from 'react-redux';
+import { addBed } from '../../../store/actions/hospitalAdmin/index'
 
 import PatientSummaryTable from './patientSummaryTable';
-
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,18 +55,24 @@ const useStyles = makeStyles((theme) => ({
         color: '#23c83f'
     },
     upload_button: {
-        padding: '10px 22px',
-        cursor: 'pointer',
-        fontWeight: '900',
-        position: 'relative',
+        float: 'right',
+        margin: '20px'
 
     }
 }));
 
 const HospitalBedBulkUpload = (props) => {
-    const [bedCount, setBed] = useState(0);
-    const [row, setRow] = useState([]);
 
+    const storeData = useSelector((store) => {
+        return {
+            data: store.patientReducer,
+            loggedInUserData: store.auth
+        }
+    });
+
+    const [bedCount, setBed] = useState(0);
+    const [rows, setRows] = useState([]);
+    const dispatch = useDispatch();
     const classes = useStyles();
 
     const handleCellClick = (param, event) => {
@@ -80,10 +86,7 @@ const HospitalBedBulkUpload = (props) => {
             
             //setSelectedPatientArray(selectedPatientArray => [...selectedPatientArray, param.row.bookingId]);
           }
-      
     };
-
-
     const handleBedValueChange = (event) => {
         setBed(event.target.value);
     }
@@ -97,8 +100,53 @@ const HospitalBedBulkUpload = (props) => {
                 facility : ""
             })
         }
-        setRow(initialRow);
+        setRows(initialRow);
     }
+
+    const resetForm = () => {
+        setRows([]);
+        setBed(0);
+    }
+
+    const uploadBeds = () => {
+    const branchId =  JSON.parse(localStorage.getItem("user")).hospitalBranchId;
+        let postPayLoad = {
+                    "Beds": rows,
+                    "branchId" : branchId,
+                    //"branchName": "INS-1"
+                }
+        let token = storeData.loggedInUserData.token;
+        dispatch(addBed(postPayLoad, token));
+        resetForm();
+       
+
+    }
+
+    const handleCellEditCommit = React.useCallback(
+        ({ id, field, value }) => {
+          if (field === 'bedType') {
+            const bedType = value
+            const updatedRows = rows.map((row) => {
+              if (row.id === id) {
+                return { ...row, bedType };
+              }
+              return row;
+            });
+            setRows(updatedRows);
+          }
+          if (field === 'facility') {
+            const facility = value
+            const updatedRows = rows.map((row) => {
+              if (row.id === id) {
+                return { ...row, facility };
+              }
+              return row;
+            });
+            setRows(updatedRows);
+          }
+        },
+        [rows],
+      );
 
     const columnMap = [
         {
@@ -111,7 +159,7 @@ const HospitalBedBulkUpload = (props) => {
             field: 'bedType',
             headerName: 'Bed Type',
             width: 200,
-            editable: false,
+            editable: true,
         },
         {
             field: 'facility',
@@ -128,8 +176,8 @@ const HospitalBedBulkUpload = (props) => {
                 <Grid item xs={12}>
                     <Paper>
                         <ButtonGroup className={classes.buttons_wrapper} variant="text" color="primary" aria-label="text primary button group">
-                            <Button>Upload History</Button>
-                            <Button onClick={() => props.handelShowHide(props.showBulkUpload)}>Dashboard</Button>
+                            <Button onClick={() => props.handelShowHide("history")}>Upload History</Button>
+                            <Button onClick={() => props.handelShowHide("dashboard")}>Dashboard</Button>
                             <Button>User Details</Button>
                         </ButtonGroup>
                     </Paper>
@@ -146,14 +194,19 @@ const HospitalBedBulkUpload = (props) => {
                     <div style={{ height: 300, width: '100%' }}>
                         <DataGrid
                             className={classes.root}
-                            rows={row}
+                            rows={rows}
                             columns={columnMap}
                             pageSize={50}
-                            checkboxSelection
                             disableSelectionOnClick
                             onSelectionModelChange={handleRowClick}
+                            onCellEditCommit={handleCellEditCommit}
                         />
                     </div>
+                </Grid>
+                <Grid item xs={12}>
+                <Button className={classes.upload_button} onClick={uploadBeds} variant="contained" color="primary">
+                    UPLOAD
+                </Button>
                 </Grid>
             </Grid>
         </div>
