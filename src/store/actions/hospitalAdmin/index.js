@@ -10,6 +10,7 @@ export const TYPES = {
     ADD_BED: 'ADD_BED',
     CLEAR_ADD_BED: 'CLEAR_ADD_BED',
     RESET_TEMP_: 'GET_HOSPITAL_BED_LIST',
+    POPULATE_UPLOAD_HISTORY: 'POPULATE_UPLOAD_HISTORY'
  }
 
 //api call for create hospital bed
@@ -65,10 +66,15 @@ export function addBed(bodyObject, token) {
  export function getUploadHistory(token) {
     return async dispatch => {
        try {
-          await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}_allpatientList`, { headers: getHeaders(token) })
+          await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}uplaod/_status`, { headers: getHeaders(token) })
           .then((response) => {            
-                    
-             return onSuccess(response.data);
+            let successObj = response.data.map((item) => {
+               return { 
+                  id: item.id,
+                  uploadStatus: item.status ? 'success': 'fail'
+                };
+            });      
+             return onSuccess(successObj);
           });        
        } catch (error) {
           return onError(error);
@@ -76,11 +82,11 @@ export function addBed(bodyObject, token) {
  
        function onSuccess( uploadHistoryData) {
           dispatch({ type: TYPES.POPULATE_UPLOAD_HISTORY, payload: uploadHistoryData });
-          dispatch(stopLoading());
+         
        }
        function onError(error) {
           dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
-          dispatch(stopLoading());
+         
        }
     }
  }
