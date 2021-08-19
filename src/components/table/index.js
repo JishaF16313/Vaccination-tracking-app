@@ -77,6 +77,9 @@ function ActionableTable(props) {
         case displayTypes.date:
           return new Date(value).toLocaleDateString()
 
+        case displayTypes.BoolSuccessFailed:
+          return value ? "Success" : "Failed"
+
         default:
           return value
       }
@@ -136,7 +139,8 @@ ActionableTable.propTypes = {
 }
 
 export const displayTypes = {
-  date: "date"
+  date: "date",
+  BoolSuccessFailed: "booleanSuccessFailed"
 }
 
 export default withStyles(styles)(ActionableTable);

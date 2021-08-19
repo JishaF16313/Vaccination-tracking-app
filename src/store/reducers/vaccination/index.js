@@ -44,7 +44,7 @@ const vaccinationReducer = ( state= initialState, {type, payload}) => {
                 return {...state, vaccinationUploadHistory: [], loading: true}
     
         case GET_VACCINATION_UPLOAD_HISTORY_SUCCESS:
-                return {...state, vaccinationUploadHistory: payload.uploads, loading: false}
+                return {...state, vaccinationUploadHistory: payload.Uploads, loading: false}
     
         case GET_VACCINATION_UPLOAD_HISTORY_FAIL:
                 return {...state, error: payload, loading: false}

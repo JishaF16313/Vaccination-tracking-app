@@ -41,7 +41,7 @@ export const UPDATE_VACCINATION_DETAIL_FAIL = "UPDATE_VACCINATION_DETAIL_FAIL"
 
 export const updateVaccinationDetail = (bookingId) => async(dispatch, getState) => {
   const token = getState().auth.token
-  dispatch(startLoading())
+  dispatch(startLoading("Updating vaccination status"))
     try{
       const response = await API.API_PUT_SERVICE(`${API_HOST.VACCINATION_SERVICE}${bookingId}/updateVaccineStatus`,{},{headers: {"X-Token-ID" : token}})
       dispatch(updateVaccinationDetaitSuccess(response))
@@ -65,7 +65,7 @@ export const DELETE_VACCINATION_APPOINTMENT = "DELETE_VACCINATION_APPOINTMENT"
 
 export const deleteVaccinationAppointment = (bookingId) => async(dispatch,getStore) =>{
     const token = getStore().auth.token
-    dispatch(startLoading())
+    dispatch(startLoading("Deleting vaccination appointment"))
     try{
       const response = await API.API_DELETE_SERVICE(`${API_HOST.VACCINATION_SERVICE}${bookingId}/_deleteVaccinationBooingId`,{headers: {"X-Token-ID" : token}})
       dispatch(deleteVaccinationAppointmentSuccess(bookingId))
@@ -87,14 +87,15 @@ const deleteVaccinationAppointmentSuccess = response => ({
 // Vaccination Data Upload
 export const uploadVaccinationData = (reqBody) => async(dispatch, getState) => {
   const token = getState().auth.token
+  dispatch(startLoading("Uploading vaccination data"))
     try{
         const response = await API.API_POST_SERVICE(`${API_HOST.VACCINATION_SERVICE}uploadVaccinAvailablity`, reqBody, {headers: {"X-Token-ID" : token}})
         dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination bulk upload successful.' }));
-        return response
+        dispatch(stopLoading())
     }
     catch (error){
         dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: "Unable to upload vaccination data." }));
-        console.log(error);
+        dispatch(stopLoading())
     }
 }
 
@@ -108,8 +109,7 @@ export const getVaccinationUploadHistory = () => async(dispatch, getState) => {
   dispatch(getVaccinationUploadHistoryInit())
   const token = getState().auth.token
   try{
-    const response = vaccinationUploadHistory
-    //const response = await API.API_GET_SERVICE(`${API_HOST.VACCINATION_SERVICE}getUploadVaccineStatus`,{headers: {"X-Token-ID" : token}})
+    const response = await API.API_GET_SERVICE(`${API_HOST.VACCINATION_SERVICE}vaccine/getUploadVaccineStatus`,{headers: {"X-Token-ID" : token}})
     dispatch(getVaccinationUploadHistorySuccess(response))
   }
   catch (error)
@@ -216,16 +216,5 @@ const vaccinationData = {
     ]
   }
 
-const vaccinationUploadHistory ={ 
-  uploads: [
-    {
-      uploadId: "123",
-      status: "Success",
-    },
-    {
-      uploadId: "456",
-      status: "Success"
-    }
-  ]
-}
+
 
