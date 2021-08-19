@@ -16,11 +16,11 @@ export const TYPES = {
    SET_HOSPITAL_DDL_OPTIONS: 'SET_HOSPITAL_DDL_OPTIONS'
 }
 
-export function getHospitalList(token) {
+export function getHospitalList(token) {      
    return async dispatch => {
       try {
          await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}_allHospitals`, { headers: getHeaders(token) })
-         .then((response) => {            
+         .then((response) => {             
             let hospitalList = response.data.map((item) => {
                   return { label: item.hospitalName , value: item.hospitalId };
             });           

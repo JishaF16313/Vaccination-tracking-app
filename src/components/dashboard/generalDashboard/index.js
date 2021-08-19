@@ -57,8 +57,10 @@ export default function GeneralDashboard({ hideBookBedAction, ...props }) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(startLoading(loaderText));
-        dispatch(getAllReport());
+        if (storeData.data.getAllReportData === null) {
+            dispatch(startLoading(loaderText));
+            dispatch(getAllReport());
+        }
     }, []);
 
     const onBookBedClick = (event) => {
@@ -75,34 +77,32 @@ export default function GeneralDashboard({ hideBookBedAction, ...props }) {
                         </div>
                     </Grid>
                 )}
-                {storeData.data.getAllReportData && (
-                    <React.Fragment>
-                        <Grid item xs={12} sm={6}>
-                            <Paper className={classes.paper}>{totalPatientText}</Paper>
-                            <Paper className={classes.numbers}>
-                                {storeData.data.getAllReportData.numberOfPatient}
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Paper className={classes.paper}>{bedsAvailableText}</Paper>
-                            <Paper className={classes.numbers}>
-                                {storeData.data.getAllReportData.noOfBedAvailable}
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Paper className={classes.paper}>{peopleVaccinatedText}</Paper>
-                            <Paper className={classes.available_number}>
-                                {storeData.data.getAllReportData.vaccinatedPeople}
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Paper className={classes.paper}>{vaccineAvailableText}</Paper>
-                            <Paper className={classes.available_number}>
-                                {storeData.data.getAllReportData.vaccineAvailable}
-                            </Paper>
-                        </Grid>
-                    </React.Fragment>
-                )}
+                <React.Fragment>
+                    <Grid item xs={12} sm={6}>
+                        <Paper className={classes.paper}>{totalPatientText}</Paper>
+                        <Paper className={classes.numbers}>
+                            {storeData.data.getAllReportData ? storeData.data.getAllReportData.numberOfPatient : 0}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Paper className={classes.paper}>{bedsAvailableText}</Paper>
+                        <Paper className={classes.numbers}>
+                            {storeData.data.getAllReportData ? storeData.data.getAllReportData.noOfBedAvailable : 0}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Paper className={classes.paper}>{peopleVaccinatedText}</Paper>
+                        <Paper className={classes.available_number}>
+                            {storeData.data.getAllReportData ? storeData.data.getAllReportData.vaccinatedPeople : 0}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Paper className={classes.paper}>{vaccineAvailableText}</Paper>
+                        <Paper className={classes.available_number}>
+                            {storeData.data.getAllReportData ? storeData.data.getAllReportData.vaccineAvailable : 0}
+                        </Paper>
+                    </Grid>
+                </React.Fragment>
             </Grid>
         </div>
     );

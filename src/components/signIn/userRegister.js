@@ -68,7 +68,7 @@ export default function SignUp() {
 
   }
   const validate = Yup.object({
-    userLoginId: Yup.string().min(16).required(userAadharIdValidationText),
+    userLoginId: Yup.string().min(12).required(userAadharIdValidationText),
     pwd: Yup.string().min(8, passwordMinLengthValidationText).max(100).required(passwordValidationText),
     confirmPwd: Yup.string().when("pwd", {
         is: val => (val && val.length > 0 ? true : false),
