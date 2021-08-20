@@ -15,6 +15,7 @@ import PatientDetailsForm from '../patientDetailsForm';
 import HospitalDataTable from '../hospitalDataTable';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import ScheduleVaccination from './schedulevaccination';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -155,7 +156,8 @@ function UserDashboard() {
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-        <Typography component="h4" variant="h5" className={classes.title}> Vaccine Slots:</Typography>
+        <ScheduleVaccination />
+        {/* <Typography component="h4" variant="h5" className={classes.title}> Vaccine Slots:</Typography>
         <form className={classes.container} noValidate>
           <TextField
             id="datetime-local"
@@ -179,7 +181,7 @@ function UserDashboard() {
           <Box className={classes.BtnHolder}>
             <Button variant="contained" color="primary" className={classes.cnfrmBtn}>Schedule</Button>
           </Box>
-        </form>
+        </form> */}
       </TabPanel>
 
       {/* <TabPanel value={value} index={2}>
