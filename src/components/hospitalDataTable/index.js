@@ -7,7 +7,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import ConfirmBedBookingDetails from '../userDashboard/handleBedBookingConfirmModal';
-import { SetPatientBedBookingDetails }from '../../store/actions/patientDetails/index';
+import { SetPatientBedBookingDetails, GetBookingStatus } from '../../store/actions/patientDetails/index';
+
+
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
         margin: theme.spacing(6)
@@ -29,6 +31,12 @@ const useStyles = makeStyles((theme) => ({
     },
     divStyle: {
         paddingTop: theme.spacing(2)
+    },
+    field: {
+        marginTop: theme.spacing(1)
+    },
+    btnDiv: {
+        marginTop: theme.spacing(2)
     }
 }))
 const HospitalDataTable = (props) => {
@@ -46,7 +54,7 @@ const HospitalDataTable = (props) => {
     }
 
     // Confirm bed detail handler
-    const handleConfirmBedBooking = useCallback((details) => setmodal({ type: "edit", data: details }), []);
+    const handleConfirmBedBooking = useCallback((details) => setmodal({ type: "open", data: details }), []);
 
     // State to show/hide modals
     const [modal, setmodal] = useState({
@@ -54,34 +62,56 @@ const HospitalDataTable = (props) => {
         data: null
     });
     const dispatch = useDispatch();
-    
-    
+
+
     // Closing the modal
     const handleModalClose = useCallback(() => setmodal({ type: null, data: null }), []);
-    const [select, setSelection] = React.useState([]);
+    const [selectData, setSelection] = useState(null);
     let token = storeData.loggedInUserData.token;
+
     const confirmBookingDetails = (data) => {
-        let bookingData = {
-            "hospital-name" : "Appollo",
-            "hospital-id": "9f3c716d-6efc-43a7-9752-616d9f65bfca",
-            "hospital-branch-id": "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
-            "LocationDetail": {
-              "city_name": "Bengaluru",
-              "pin_number": "560017"
-            },
-            "Bed": {
-              "bed-id": "244fec7a-474b-484e-baa7-69867a7b2324",
-              "bed-type": "Single",
-              "bed-facility": "Oxygen"
+        let requestData = {
+            "bookingId": storeData.data.hospitalAvailableBedList.bookingResponseData[0].bookingID,
+            "bookingData": selectData
+        }
+        dispatch(startLoading("Please wait..."));
+        dispatch(SetPatientBedBookingDetails(requestData, token));
+        let details = {
+            "bookingId": storeData.data.hospitalAvailableBedList.bookingResponseData[0].bookingID,
+            "bookingStatus": storeData.data.hospitalAvailableBedList.bookingResponseData[0].bookingStatus,
+        }
+    }
+
+
+
+    const handleRowClick = (params) => {
+        let selectedRowData;
+        if (storeData.data.hospitalAvailableBedList.bedAvailabilityData)
+            selectedRowData = storeData.data.hospitalAvailableBedList.bedAvailabilityData.filter((row) => {
+                return params.includes(row.id.toString());
+            });
+        if (selectedRowData && selectedRowData.length > 0) {
+            for (let i = 0; i < selectedRowData.length; i++) {
+                let bookingData = {
+                    "hospital-name": selectedRowData[i].hospitalName,
+                    "hospital-id": selectedRowData[i].hospitalId,
+                    "hospital-branch-id": selectedRowData[i].branchId,
+                }
+                let bedData = {
+                    "bed-id": selectedRowData[i].bedId,
+                    "bed-type": selectedRowData[i].bedType,
+                    "bed-facility": selectedRowData[i].bedFacility
+                }
+                let locationDetail = {
+                    "city_name": "",
+                    "pin_number": ""
+                }
+                bookingData.Bed = bedData;
+                bookingData.LocationDetail = locationDetail;
+                setSelection(bookingData);
             }
         }
-        let requestData = {
-            "bookingId": "6bd02a27-7fc9-4046-91c4-5020354d9e85",
-            "bookingData": bookingData
-        }
-        dispatch(SetPatientBedBookingDetails(requestData,token));
     }
-    
     // Column title mappings for hospital bed details
     const columnMap = useMemo(() => [{
         headerName: "Hospital Name",
@@ -116,47 +146,35 @@ const HospitalDataTable = (props) => {
     ], [])
     return (
         /***change the class name to show for development and testing className={storeData.hospitalAvailableBedList ? classes.show : classes.hidden} */
-       <div>
-        {storeData.data.hospitalAvailableBedList && (
-        <div className={classes.mainDiv} className={storeData.data.hospitalAvailableBedList ? classes.show : classes.hidden}> 
-            <div>
-                <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
-                <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
-                    <DataGrid
-                        rows={storeData.data.hospitalAvailableBedList ? storeData.data.hospitalAvailableBedList.bedAvailabilityData : null}
-                        columns={columnMap}
-                        pageSize={5}
-                        checkboxSelection
-                        disableMultipleSelection={true}
-                        onChange={handleChange}
-                        onSelectionChange={(newSelection) => {
-                            setSelection(newSelection.rows);
-                            console.log("data==",newSelection);
-                        }}
-                       
-                    />
+        <div>
+            {storeData.data.hospitalAvailableBedList && (
+                <div className={classes.mainDiv} className={storeData.data.hospitalAvailableBedList ? classes.show : classes.hidden}>
+                    <div>
+                        <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
+                        <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
+                            <DataGrid
+                                rows={storeData.data.hospitalAvailableBedList ? storeData.data.hospitalAvailableBedList.bedAvailabilityData : null}
+                                columns={columnMap}
+                                pageSize={5}
+                                checkboxSelection
+                                disableMultipleSelection={true}
+                                onChange={handleChange}
+                                onSelectionModelChange={handleRowClick}
+
+                            />
+                        </div>
+
+                    </div>
+
+                    <Box className={classes.BtnHolder}>
+                        <Button variant="contained" color="primary" onClick={confirmBookingDetails} className={classes.cnfrmBtn}>Confirm</Button>
+                    </Box>
+                    <ConfirmBedBookingDetails open={storeData.data.openModal} details={storeData.data.confirmStatus} onClose={handleModalClose} />
+                    <h1>{ }</h1>
                 </div>
-            </div>
-            <Box className={classes.BtnHolder}>
-                <Button variant="contained" color="primary" onClick={confirmBookingDetails} className={classes.cnfrmBtn}>Confirm</Button>
-            </Box>
-            <ConfirmBedBookingDetails open={modal.type === "edit"} details={modal.data} onClose={handleModalClose} />
-            <h1>{select}</h1>
-        </div>
-        )}
+            )}
         </div>
     )
 };
-
-const data = [{
-    bedFacility: "Oxygen",
-    bedId: "244fec7a-474b-484e-baa7-69867a7b2324",
-    bedType: "Single",
-    branchId: "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
-    branchName: "Indira Nagar",
-    hospitalId: "9f3c716d-6efc-43a7-9752-616d9f65bfca",
-    hospitalName: "Appollo",
-    id: "1"
-}]
 
 export default HospitalDataTable;

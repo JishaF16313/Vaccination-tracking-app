@@ -16,6 +16,13 @@ import HospitalDataTable from '../hospitalDataTable';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import ScheduleVaccination from './schedulevaccination';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import InputField from '../inputfield/index';
+import { GetBookingStatus } from '../../store/actions/patientDetails/index';
+import { useDispatch, useSelector } from 'react-redux';
+import { startLoading } from '../../store/actions/loader/index';
+import ConfirmBedBookingDetails from '../userDashboard/handleBedBookingConfirmModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,13 +48,41 @@ const useStyles = makeStyles((theme) => ({
   },
   hidden: {
     display: 'none'
+  },
+  field: {
+    marginTop: theme.spacing(1)
+  },
+  btnDiv: {
+    marginTop: theme.spacing(2)
   }
 }));
+
+const validate = Yup.object({
+  bookingStatus: Yup.string().max(100).required("Add Booking ID")
+});
+
 
 function UserDashboard() {
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+
+  const storeData = useSelector((store) => {
+    return {
+      loggedInUserData: store.auth,
+      data: store.patientdetails
+    }
+  });
+  const dispatch = useDispatch();
+
+  const submitForm = (values) => {
+    console.log("values", values);
+    let token = storeData.loggedInUserData.token;
+    dispatch(startLoading('Please wait...'));
+    dispatch(GetBookingStatus(values, token));
+    // console.log("store",storeData);
+    // handleConfirmBedBooking(data);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -60,6 +95,7 @@ function UserDashboard() {
     type: null,
     data: null
   });
+
 
   // Column title mappings for hospital bed details
   const columnMap = useMemo(() => [{
@@ -135,6 +171,7 @@ function UserDashboard() {
     { id: 2, branchName: 'KukatPally', hospitalName: 'Care Hospital', vaccineType: 'Covaxin', slots: 20 }
   ];
 
+
   return (
     // <div>User Dashboard</div>
     <Paper className={classes.root}>
@@ -147,7 +184,7 @@ function UserDashboard() {
       >
         <Tab className="customStyle" label="Book A Bed" icon={<AddToQueueIcon />} />
         <Tab className="customStyle" label="Schedule Vaccine" icon={<CalendarTodayIcon />} />
-        {/* <Tab className="customStyle" label="Vaccination Details" icon={<CheckCircleIcon />} /> */}
+        <Tab className="customStyle" label="Booking Status" icon={<CheckCircleIcon />} />
 
       </Tabs>
       <TabPanel value={value} index={0}>
@@ -184,9 +221,38 @@ function UserDashboard() {
         </form> */}
       </TabPanel>
 
-      {/* <TabPanel value={value} index={2}>
-        <Typography component="h4" variant="h5" className={classes.title}> Booking Details:</Typography>
-      </TabPanel> */}
+      <TabPanel value={value} index={2}>
+        <Typography component="h4" variant="h5" className={classes.title}> Get Booking Details:</Typography>
+        <div className={classes.bookingTextField}>
+          <Formik initialValues={{ bookingStatus: '' }} validationSchema={validate} onSubmit={values => submitForm(values)}>
+            {formik => (
+              <Form>
+                <div className={classes.field}>
+                  <InputField label="Get Booking Status" onChange={(e) => formik.setFieldValue('bookingStatus', e.target.value)} name="bookingStatus" type="text" classes={classes} />
+                </div>
+
+                <div className={classes.btnDiv}>
+                  <Button variant="contained" color="primary" size="medium" type="submit">Get Status</Button>
+                </div>
+                <ConfirmBedBookingDetails open={storeData.data.openModal} details={storeData.data.bookingDetails} onClose={handleModalClose} />
+              </Form>
+            )}
+          </Formik>
+        </div>
+
+        {/* {storeData.data.bookingDetails && (
+          <div>
+          <p>Booking ID : {storeData.data.bookingDetails[0].bookingId} </p>
+          <p>Booking Status : {storeData.data.bookingDetails[0].bookingStatus} </p>
+          <p>Hospital ID : {storeData.data.bookingDetails[0].Hospital["hospital-id"]} </p>
+          <p>Branch Name : {storeData.data.bookingDetails[0].Hospital["hospital-branch-id"]} </p>
+          <p>City : {storeData.data.bookingDetails[0].Hospital.LocationDetail.city_name} </p>
+          <p>Pincode : {storeData.data.bookingDetails[0].Hospital.LocationDetail.pin_number} </p>
+          <p>Bed Type : {storeData.data.bookingDetails[0].Hospital.Bed['bed-type']} </p>
+          <p>Facility : {storeData.data.bookingDetails[0].Hospital.Bed['bed-facility']} </p>
+        </div>
+        )} */}
+      </TabPanel>
     </Paper>
   )
 }
