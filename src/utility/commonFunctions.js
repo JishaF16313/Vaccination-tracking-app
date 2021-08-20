@@ -23,3 +23,22 @@ export const parseJwt = (token) => {
 
     return JSON.parse(jsonPayload);
 };
+
+export const dateNow = () => {
+    let now = new Date();
+    let year = now.getFullYear();
+    let month = ("0" + (now.getMonth() + 1)).slice(-2);
+    let date = ("0" + now.getDate()).slice(-2);
+    now = `${date}-${month}-${year}`;
+    return now;
+}
+
+export const getHeaders = (token) => {
+    const headers = {
+       'Content-Type': 'application/json',
+       'X-Token-ID': token
+    }
+    return headers;
+ }
+
+ 

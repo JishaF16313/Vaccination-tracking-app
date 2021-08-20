@@ -81,25 +81,25 @@ export default function GeneralDashboard({ hideBookBedAction, ...props }) {
                     <Grid item xs={12} sm={6}>
                         <Paper className={classes.paper}>{totalPatientText}</Paper>
                         <Paper className={classes.numbers}>
-                            {storeData.data.getAllReportData ? storeData.data.getAllReportData.numberOfPatient : 0}
+                            {storeData.data.getAllReportData ? (storeData.data.getAllReportData.numberOfPatient ? storeData.data.getAllReportData.numberOfPatient : 0) : 0}
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Paper className={classes.paper}>{bedsAvailableText}</Paper>
                         <Paper className={classes.numbers}>
-                            {storeData.data.getAllReportData ? storeData.data.getAllReportData.noOfBedAvailable : 0}
+                            {storeData.data.getAllReportData ? (storeData.data.getAllReportData.noOfBedAvailable ? storeData.data.getAllReportData.noOfBedAvailable : 0) : 0}
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Paper className={classes.paper}>{peopleVaccinatedText}</Paper>
                         <Paper className={classes.available_number}>
-                            {storeData.data.getAllReportData ? storeData.data.getAllReportData.vaccinatedPeople : 0}
+                            {storeData.data.getAllReportData ? (storeData.data.getAllReportData.vaccinatedPeople ? storeData.data.getAllReportData.vaccinatedPeople : 0) : 0}
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Paper className={classes.paper}>{vaccineAvailableText}</Paper>
                         <Paper className={classes.available_number}>
-                            {storeData.data.getAllReportData ? storeData.data.getAllReportData.vaccineAvailable : 0}
+                            {storeData.data.getAllReportData ? (storeData.data.getAllReportData.vaccineAvailable ? storeData.data.getAllReportData.vaccineAvailable : 0) : 0}
                         </Paper>
                     </Grid>
                 </React.Fragment>

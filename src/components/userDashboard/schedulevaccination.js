@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAvailableVaccineByDate } from '../../store/actions/schedulevaccination/index';
+import { dateNow } from '../../utility/commonFunctions';
+import { startLoading } from '../../store/actions/loader';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,73 +28,81 @@ const useStyles = makeStyles((theme) => ({
     },
     container: {
         marginTop: '10px'
+    },
+    noDataDiv: {
+        textAlign: 'center',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginTop: '20px'
     }
 }));
 
 function ScheduleVaccination() {
     const classes = useStyles();
 
+    const storeData = useSelector((store) => {       
+        return {
+            data: store.schedulevaccination,
+            loggedInUserData: store.auth,
+        }
+    });
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(startLoading('Please wait...'));
+        let date = dateNow();
+        let token = storeData.loggedInUserData.token;
+        dispatch(getAvailableVaccineByDate(date, token));
+    }, []);
+
     const columns = [
         {
             field: 'id',
             headerName: 'ID',
-            width: 100
+            hide: true
+        },
+        {
+            field: 'branch-id',
+            headerName: 'Branch ID',
+            hide: true
         },
         {
             field: 'hospitalName',
             headerName: 'Hospital Name',
-            width: 180,
-            editable: true,
+            width: 250
         },
         {
-            field: 'branchName',
+            field: 'branch-name',
             headerName: 'Branch name',
-            width: 180,
-            editable: true,
+            width: 250
         },
         {
-            field: 'vaccineType',
+            field: 'vaccine-type',
             headerName: 'Vaccine Type',
-            width: 150,
-            editable: true,
+            width: 200
         },
         {
-            field: 'slots',
+            field: 'no-of-slot-available',
             headerName: 'Slots',
-            type: 'number',
-            width: 110,
-            editable: true,
-        },
-        {
-            field: 'address',
-            headerName: 'Address',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: false,
-            width: 160,
-            valueGetter: (params) =>
-                `${params.getValue(params.id, 'hospitalName') || ''} ${params.getValue(params.id, 'branchName') || ''
-                }`,
-        },
+            width: 200
+        }
     ];
 
-    const rows1 = [
-        { id: 1, branchName: 'K R Puram', hospitalName: 'MaxCure', vaccineType: 'Covishield', slots: 10 },
-        { id: 2, branchName: 'KukatPally', hospitalName: 'Care Hospital', vaccineType: 'Covaxin', slots: 20 }
-    ];
-
-    const dateTimeNow = (e) => {
+    const setCurrentDate = () => {
         let now = new Date();
         let year = now.getFullYear();
         let month = ("0" + (now.getMonth() + 1)).slice(-2);
         let date = ("0" + now.getDate()).slice(-2);
-        let hour = ("0" + now.getHours()).slice(-2);
-        let minute = ("0" + now.getMinutes()).slice(-2);
-        now = `${year}-${month}-${date}T${hour}:${minute}`;
+        now = `${year}-${month}-${date}`;
         return now;
     }
 
     const dateChanged = (event) => {
-        let val = event.target.value;
+        let val = (event.target.value).split('-');
+        let selectedDate = `${val[2]}-${val[1]}-${val[0]}`;
+        let token = storeData.loggedInUserData.token;
+        dispatch(getAvailableVaccineByDate(selectedDate, token));
     }
 
     return (
@@ -98,22 +110,28 @@ function ScheduleVaccination() {
             <Typography component="h4" variant="h5" className={classes.title}> Vaccine Slots</Typography>
             <form className={classes.container} noValidate>
                 <TextField
-                    id="datetime-local"
                     label="Date of Booking"
-                    type="datetime-local"
-                    defaultValue={dateTimeNow()}
+                    type="date"
+                    defaultValue={setCurrentDate()}
                     className={classes.textField}
                     InputLabelProps={{
                         shrink: true,
                     }}
                     onChange={(event) => dateChanged(event)}
                 />
-                <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
-                    <DataGrid rows={rows1} columns={columns} pageSize={5} checkboxSelection />
-                </div>
-                <Box className={classes.BtnHolder}>
-                    <Button variant="contained" color="primary" className={classes.cnfrmBtn}>Schedule</Button>
-                </Box>
+                {storeData.data.availableVaccineList && storeData.data.availableVaccineList.length > 0 && (
+                    <React.Fragment>
+                        <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
+                            <DataGrid rows={storeData.data.availableVaccineList} columns={columns} pageSize={5} checkboxSelection />
+                        </div>
+                        <Box className={classes.BtnHolder}>
+                            <Button variant="contained" color="primary" className={classes.cnfrmBtn}>Schedule</Button>
+                        </Box>
+                    </React.Fragment>
+                )}
+                {(!storeData.data.availableVaccineList || storeData.data.availableVaccineList.length <= 0) && (
+                    <div className={classes.noDataDiv}>No data to display...</div>
+                )}
             </form>
         </React.Fragment>
     )
