@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Typography, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -38,11 +38,16 @@ const useStyles = makeStyles((theme) => ({
     dateField: {
         marginTop: '20px',
         marginBottom: '20px'
+    },
+    doseTypeRadioGroup: {
+        marginTop: '3vh',
+        marginLeft: '5vw'
     }
 }));
 
 function ScheduleVaccination() {
-    const [selectedDate, setSelectedDate] = useState();
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [doseValue, setDoseType] = useState("first");
     const [selectedRow, setSelectedRow] = useState();
 
     const classes = useStyles();
@@ -102,7 +107,6 @@ function ScheduleVaccination() {
         let month = ("0" + (now.getMonth() + 1)).slice(-2);
         let date = ("0" + now.getDate()).slice(-2);
         now = `${year}-${month}-${date}`;
-        //setSelectedDate(now);
         return now;
     }
 
@@ -115,9 +119,9 @@ function ScheduleVaccination() {
     }
 
     const rowSelected = (event) => {
-        let selectedRow = event.row;        
+        let selectedRow = event.row;
         let token = storeData.loggedInUserData.token;
-        let userInfo = parseJwt(token);
+        let userInfo = parseJwt(token);        
         let obj = {
             "hospital-name": selectedRow["hospitalName"],
             "city": userInfo.cityName,
@@ -125,11 +129,22 @@ function ScheduleVaccination() {
             "branch_id": selectedRow["branch-id"],
             "adhar": userInfo.sub,
             "vaccination-type": selectedRow["vaccine-type"],
-            "firstDoseDate": selectedDate,
-            "date": selectedDate
-        }
+            "firstDoseDate": (doseValue === "first" ? (selectedDate ? selectedDate : dateNow()) : null),
+            "date": selectedDate ? selectedDate : dateNow(),      
+            "secondDoseDate": (doseValue === "second" ? (selectedDate ? selectedDate : dateNow()) : null),
+            "secondVaccinationType": (doseValue === "second" ? selectedRow["vaccine-type"] : null)
+        }        
         setSelectedRow(obj);
-        //dispatch(scheduleVaccination(obj, token));
+    }
+
+    const handleDoseTypeChange = (event) => {
+        setDoseType(event.target.value);
+    }
+
+    const handleScheduleClick = (event) => {
+        dispatch(startLoading('Please wait...'));
+        let token = storeData.loggedInUserData.token;
+        dispatch(scheduleVaccination(selectedRow, token));
     }
 
     return (
@@ -145,13 +160,20 @@ function ScheduleVaccination() {
                 }}
                 onChange={(event) => dateChanged(event)}
             />
+            <FormControl component="fieldset" className={classes.doseTypeRadioGroup}>
+                <FormLabel component="legend">Select Dose Type</FormLabel>
+                <RadioGroup row value={doseValue} onChange={(e) => handleDoseTypeChange(e)}>
+                    <FormControlLabel value="first" control={<Radio color="primary" />} label="First Dose" />
+                    <FormControlLabel value="second" control={<Radio color="primary" />} label="Second Dose" />
+                </RadioGroup>
+            </FormControl>
             {storeData.data.availableVaccineList && storeData.data.availableVaccineList.length > 0 && (
                 <React.Fragment>
                     <div className={classes.divStyle} style={{ height: 300, width: '100%' }}>
                         <DataGrid onRowClick={(event) => rowSelected(event)} disableMultipleSelection={true} rows={storeData.data.availableVaccineList} columns={columns} pageSize={5} />
                     </div>
                     <div className={classes.BtnHolder}>
-                        <Button variant="contained" color="primary" className={classes.cnfrmBtn}>Schedule</Button>
+                        <Button variant="contained" color="primary" className={classes.cnfrmBtn} onClick={(e) => handleScheduleClick(e)}>Schedule</Button>
                     </div>
                 </React.Fragment>
             )}

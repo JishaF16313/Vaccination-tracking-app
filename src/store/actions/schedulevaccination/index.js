@@ -9,19 +9,26 @@ export const TYPES = {
     SCHEDULE_VACCINATION: 'SCHEDULE_VACCINATION'
 }
 
-export function getAvailableVaccineByDate(selectedDate, token) {
+export function getAvailableVaccineByDate(selectedDate, token) {    
     const data = parseJwt(token);
     return async dispatch => {
         try {
             await axios.get(`${API_HOST.VACCINATION_SERVICE}${data.cityName}/${selectedDate}/_getVaccineAvailableInformation`, { headers: getHeaders(token) })
                 .then((response) => {
-                    let data = response.data.Hospital.map((item) => {
-                        return {
-                            "id": item["branch-id"],
-                            ...item
+                    let modifiedData = [];
+                    for (let i = 0; i < response.data.Hospital.length; i++) {
+                        let item = data[i];                       
+                        let obj = {
+                            "id": Number(i) + 1,
+                            "branch-id": item["branch-id"],
+                            "hospitalName": item["hospitalName"],
+                            "branch-name": item["branch-name"],
+                            "vaccine-type": item["vaccine-type"],
+                            "no-of-slot-available": item["no-of-slot-available"]
                         }
-                    })
-                    return onSuccess(data);
+                        modifiedData.push(obj);
+                    }                    
+                    return onSuccess(modifiedData);
                 })
         } catch (error) {
             return onError(error);
