@@ -6,18 +6,22 @@ import { parseJwt, getHeaders } from '../../../utility/commonFunctions';
 
 export const TYPES = {
     GET_AVAILABLE_VACCINE_BY_DATE: 'GET_AVAILABLE_VACCINE_BY_DATE',
-    SCHEDULE_VACCINATION: 'SCHEDULE_VACCINATION'
+    SCHEDULE_VACCINATION: 'SCHEDULE_VACCINATION',
+    OPEN_SCHEDULE_VACCINATION_SUCCESS_POPUP: 'OPEN_SCHEDULE_VACCINATION_SUCCESS_POPUP'
 }
 
-export function getAvailableVaccineByDate(selectedDate, token) {    
-    const data = parseJwt(token);
+export function getAvailableVaccineByDate(selectedDate, token) {
+    let data;
+    if (token) {
+        data = parseJwt(token);
+    }
     return async dispatch => {
         try {
             await axios.get(`${API_HOST.VACCINATION_SERVICE}${data.cityName}/${selectedDate}/_getVaccineAvailableInformation`, { headers: getHeaders(token) })
                 .then((response) => {
                     let modifiedData = [];
                     for (let i = 0; i < response.data.Hospital.length; i++) {
-                        let item = data[i];                       
+                        let item = response.data.Hospital[i];
                         let obj = {
                             "id": Number(i) + 1,
                             "branch-id": item["branch-id"],
@@ -27,7 +31,7 @@ export function getAvailableVaccineByDate(selectedDate, token) {
                             "no-of-slot-available": item["no-of-slot-available"]
                         }
                         modifiedData.push(obj);
-                    }                    
+                    }
                     return onSuccess(modifiedData);
                 })
         } catch (error) {
@@ -57,7 +61,7 @@ export function scheduleVaccination(bodyObject, token) {
 
         function onSuccess(response) {
             dispatch({ type: TYPES.SCHEDULE_VACCINATION, payload: response.data });
-            dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination scheduled successfully.' }));
+            dispatch(setVaccinationSuccessModalState(true));
             dispatch(stopLoading());
         }
         function onError(error) {
@@ -66,4 +70,8 @@ export function scheduleVaccination(bodyObject, token) {
         }
     }
 }
+
+export const setVaccinationSuccessModalState = (value) => ({
+    type: TYPES.OPEN_SCHEDULE_VACCINATION_SUCCESS_POPUP, payload: value
+});
 

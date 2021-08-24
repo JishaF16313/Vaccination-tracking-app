@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAvailableVaccineByDate, scheduleVaccination } from '../../store/actions/schedulevaccination/index';
 import { dateNow, parseJwt } from '../../utility/commonFunctions';
 import { startLoading } from '../../store/actions/loader';
-
+import ScheduleVaccinationConfirmModal from './schedulevaccinationconfirmmodal';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,15 +40,18 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: '20px'
     },
     doseTypeRadioGroup: {
-        marginTop: '3vh',
-        marginLeft: '5vw'
+        marginTop: '21px',
+        marginLeft: '70px'
+    },
+    doseLabel: {
+        fontSize: '16px'
     }
 }));
 
 function ScheduleVaccination() {
     const [selectedDate, setSelectedDate] = useState(null);
     const [doseValue, setDoseType] = useState("first");
-    const [selectedRow, setSelectedRow] = useState();
+    const [selectedRow, setSelectedRow] = useState(null);
 
     const classes = useStyles();
 
@@ -121,24 +124,39 @@ function ScheduleVaccination() {
     const rowSelected = (event) => {
         let selectedRow = event.row;
         let token = storeData.loggedInUserData.token;
-        let userInfo = parseJwt(token);        
-        let obj = {
-            "hospital-name": selectedRow["hospitalName"],
-            "city": userInfo.cityName,
-            "pincode": userInfo.pinCode,
-            "branch_id": selectedRow["branch-id"],
-            "adhar": userInfo.sub,
-            "vaccination-type": selectedRow["vaccine-type"],
-            "firstDoseDate": (doseValue === "first" ? (selectedDate ? selectedDate : dateNow()) : null),
-            "date": selectedDate ? selectedDate : dateNow(),      
-            "secondDoseDate": (doseValue === "second" ? (selectedDate ? selectedDate : dateNow()) : null),
-            "secondVaccinationType": (doseValue === "second" ? selectedRow["vaccine-type"] : null)
-        }        
-        setSelectedRow(obj);
+        if (token) {
+            let userInfo = parseJwt(token);
+            let obj = {
+                "hospital-name": selectedRow["hospitalName"],
+                "city": userInfo.cityName,
+                "pincode": userInfo.pinCode,
+                "branch_id": selectedRow["branch-id"],
+                "adhar": userInfo.sub,
+                "vaccination-type": selectedRow["vaccine-type"],
+                "firstDoseDate": (doseValue === "first" ? (selectedDate ? selectedDate : dateNow()) : ""),
+                "date": selectedDate ? selectedDate : dateNow(),
+                "secondDoseDate": (doseValue === "second" ? (selectedDate ? selectedDate : dateNow()) : ""),
+                "secondVaccinationType": (doseValue === "second" ? selectedRow["vaccine-type"] : "")
+            }
+            setSelectedRow(obj);
+        }
     }
 
     const handleDoseTypeChange = (event) => {
         setDoseType(event.target.value);
+        let data = selectedRow;
+        if (data) {
+            if (event.target.value === "first") {
+                data.secondDoseDate = "";
+                data.secondVaccinationType = "";
+                data.firstDoseDate = selectedDate ? selectedDate : dateNow();
+            } else {
+                data.secondDoseDate = selectedDate ? selectedDate : dateNow();
+                data.secondVaccinationType = selectedRow["vaccine-type"];
+                data.firstDoseDate = "";
+            }
+            setSelectedRow(data);
+        }
     }
 
     const handleScheduleClick = (event) => {
@@ -161,7 +179,7 @@ function ScheduleVaccination() {
                 onChange={(event) => dateChanged(event)}
             />
             <FormControl component="fieldset" className={classes.doseTypeRadioGroup}>
-                <FormLabel component="legend">Select Dose Type</FormLabel>
+                <FormLabel component="legend" className={classes.doseLabel}>Select Dose Type</FormLabel>
                 <RadioGroup row value={doseValue} onChange={(e) => handleDoseTypeChange(e)}>
                     <FormControlLabel value="first" control={<Radio color="primary" />} label="First Dose" />
                     <FormControlLabel value="second" control={<Radio color="primary" />} label="Second Dose" />
@@ -180,6 +198,10 @@ function ScheduleVaccination() {
             {(!storeData.data.availableVaccineList || storeData.data.availableVaccineList.length <= 0) && (
                 <div className={classes.noDataDiv}>No data to display...</div>
             )}
+            {storeData.data.scheduledVaccinationData && (
+                <ScheduleVaccinationConfirmModal open={storeData.data.openeVaccinationConfirmPopup} data={storeData.data.scheduledVaccinationData} />
+            )}
+            {/* <ScheduleVaccinationConfirmModal open={true} data1={"abc"}/> */}
         </React.Fragment>
     )
 }
