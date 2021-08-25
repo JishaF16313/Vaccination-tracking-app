@@ -7,7 +7,7 @@ import { setVaccinationSuccessModalState } from '../../store/actions/schedulevac
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
-        width: '400px',
+        width: '480px',
         marginLeft: 'auto',
         marginRight: 'auto',
         borderBottom: '2px solid black'
@@ -52,24 +52,6 @@ function ScheduleVaccinationConfirmModal({ data, open }) {
     const handleClose = () => {
         dispatch(setVaccinationSuccessModalState(false));
     }
-
-    // const data = {
-    //     "PatientAdhar": "string",
-    //     "PatientName": "string",
-    //     "branch-name": "string",
-    //     "cityName": "string",
-    //     "dose": [
-    //         {
-    //             "date": "string",
-    //             "dose-name": "string",
-    //             "status": "string",
-    //             "vaccine-type": "string"
-    //         }
-    //     ],
-    //     "hospital-name": "string",
-    //     "vaccine-booking-id": "string",
-    //     "vaccine_booked_date": "string"
-    // }
 
     return (
         <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth="sm">
