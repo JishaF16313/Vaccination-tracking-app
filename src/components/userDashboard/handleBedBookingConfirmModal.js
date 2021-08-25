@@ -31,7 +31,6 @@ function ConfirmBedBookingDetails(props) {
 
   // Updating the local state on change of the props
   useEffect(() => {
-    debugger;
     if (details)
       setlocalDetails({ ...details })
   }, [details])
