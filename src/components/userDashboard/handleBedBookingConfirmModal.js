@@ -53,7 +53,7 @@ function ConfirmBedBookingDetails(props) {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth="sm">
       <DialogTitle icon={<InfoIcon />}>Bed Booking Confirmation Detail</DialogTitle>
-      {details && (
+      {details && details.bookingStatus == 'confirmed' && (
         <DialogContent>
           <p>Booking ID : <strong>{details.bookingId}</strong> </p>
           <p>Booking Status : <strong>{details.bookingStatus} </strong></p>
@@ -69,6 +69,12 @@ function ConfirmBedBookingDetails(props) {
           )}
         </DialogContent>
       )}
+      {details && details.bookingStatus == 'pending' && (
+        <DialogContent>
+        <p>Booking ID : <strong>{details.bookingId}</strong> </p>
+        <p>Booking Status : <strong>{details.bookingStatus} </strong></p>
+        </DialogContent>
+      )}
       <DialogActions>
         <Button onClick={handleClose} color="primary" disabled={saving}>
           OK
@@ -82,3 +88,4 @@ function ConfirmBedBookingDetails(props) {
 }
 
 export default ConfirmBedBookingDetails;
+
