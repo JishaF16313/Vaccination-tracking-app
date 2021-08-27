@@ -109,17 +109,22 @@ const HospitalBedBulkUpload = (props) => {
     }
 
     const uploadBeds = () => {
+    const Beds = []
     const branchId =  JSON.parse(localStorage.getItem("user")).hospitalBranchId;
-        let postPayLoad = {
-                    "Beds": rows,
-                    "branchId" : branchId,
-                    //"branchName": "INS-1"
-                }
-        let token = storeData.loggedInUserData.token;
-        dispatch(addBed(postPayLoad, token));
-        resetForm();
-       
-
+    rows.map((bed)=>{
+        Beds.push({
+            "bed-facility": bed.facility,
+            "bed-type": bed.bedType
+        })
+    })
+    let postPayLoad = {
+                "Beds": Beds,
+                "branchId" : branchId,
+                //"branchName": "INS-1"
+            }
+    let token = storeData.loggedInUserData.token;
+    dispatch(addBed(postPayLoad, token));
+    resetForm();
     }
 
     const handleCellEditCommit = React.useCallback(
@@ -184,7 +189,7 @@ const HospitalBedBulkUpload = (props) => {
                 </Grid>
                 <Grid item xs={12} style={{"display" : "flex"}}>
                     <Paper className={classes.paper}>
-                        Bed Available <TextField type="number" onChange={(event) => handleBedValueChange(event)} name="normal" value={bedCount} className={classes.inputField} id="all-bed" />
+                        Bed Available <TextField type="number"  InputProps={{ inputProps: { min: 0, max: 100 } }} onChange={(event) => handleBedValueChange(event)} name="normal" value={bedCount} className={classes.inputField} id="all-bed" />
                     </Paper>
                     <Paper className={classes.paper}>
                         Add Bed<Button className={classes.numbers}><AddIcon onClick={(event) => createTempTable(event)}></AddIcon></Button>
