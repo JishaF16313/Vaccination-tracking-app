@@ -17,7 +17,6 @@ export const getAllReport = () => {
         } catch (error) {
             return onError(error);
         }
-
         function onSuccess(response) {
             dispatch({ type: TYPES.GET_ALL_REPORT, payload: response.data });
             dispatch(stopLoading());

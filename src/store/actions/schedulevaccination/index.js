@@ -53,10 +53,15 @@ export function scheduleVaccination(bodyObject, token) {
         try {
             await axios.post(`${API_HOST.VACCINATION_SERVICE}/bookVaccine`, bodyObject, { headers: getHeaders(token) })
                 .then((response) => {
-                    return onSuccess(response);
+                    if(response.data.message){
+                        dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: response.data.message }));
+                        dispatch(stopLoading());
+                    }else{
+                        return onSuccess(response);
+                    }                    
                 })
         } catch (error) {
-            return onError(error);
+           return onError(error);
         }
 
         function onSuccess(response) {
