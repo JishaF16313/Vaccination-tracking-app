@@ -12,7 +12,6 @@ export const getVaccinationList = () => async(dispatch, getState) => {
   dispatch(getVaccinationListInit())
   const token = getState().auth.token
     try {
-      //const response = vaccinationData
       const response = await API.API_GET_SERVICE(`${API_HOST.VACCINATION_SERVICE}getVaccineSchdeuledInformationForDay`,{headers: {"X-Token-ID" : token}})
       dispatch(getVaccinationListSuccess(response))
     }
@@ -130,91 +129,4 @@ const getVaccinationUploadHistoryFail = (response) => ({
     type: GET_VACCINATION_UPLOAD_HISTORY_FAIL,
     payload: response
 })
-
-const vaccinationData = {
-    "Patients": [
-      {
-        "vaccine-booking-id": "1234",
-        "patient-name": "Patient 1",
-        "patient-aadhar": "389847829478",
-        "hospital-name": "Hosp1",
-        "branch-name": "Branch1",
-        "vaccine_booked_date": new Date(Date.now()).toISOString(),
-        "cityName": "City1",
-        "dose": [
-          {
-            "dose-name": "dose1",
-            "vaccine-type": "",
-            "status": "pending",
-            "date": "",
-          }
-        ]
-      },
-      {
-        "vaccine-booking-id": "4698",
-        "patient-name": "Patient 2",
-        "patient-aadhar": "479563027856",
-        "hospital-name": "Hosp1",
-        "branch-name": "Branch1",
-        "vaccine_booked_date": new Date(Date.now()).toISOString(),
-        "cityName": "City1",
-        "dose": [
-          {
-            "dose-name": "dose1",
-            "vaccine-type": "Covishield",
-            "status": "done",
-            "date": new Date(Date.now()).toISOString(),
-          },
-        ]
-      },
-      {
-        "vaccine-booking-id": "910111",
-        "patient-name": "Patient 3",
-        "patient-aadhar": "489382674937",
-        "hospital-name": "Hosp1",
-        "branch-name": "Branch1",
-        "vaccine_booked_date": new Date(Date.now()).toISOString(),
-        "cityName": "City1",
-        "dose": [
-          {
-            "dose-name": "dose1",
-            "vaccine-type": "Covishield",
-            "status": "done",
-            "date": new Date(Date.now()).toISOString(),
-          },
-          {
-            "dose-name": "dose2",
-            "vaccine-type": "",
-            "status": "pending",
-            "date": "",
-          }
-        ]
-      },
-      {
-        "vaccine-booking-id": "910145",
-        "patient-name": "Patient 4",
-        "patient-aadhar": "4782984467283",
-        "hospital-name": "Hosp1",
-        "branch-name": "Branch1",
-        "vaccine_booked_date": new Date(Date.now()).toISOString(),
-        "cityName": "City1",
-        "dose": [
-          {
-            "dose-name": "dose1",
-            "vaccine-type": "Covishield",
-            "status": "done",
-            "date": new Date(Date.now()).toISOString(),
-          },
-          {
-            "dose-name": "dose2",
-            "vaccine-type": "Covishield",
-            "status": "done",
-            "date": new Date(Date.now()).toISOString(),
-          }
-        ]
-      }
-    ]
-  }
-
-
 
