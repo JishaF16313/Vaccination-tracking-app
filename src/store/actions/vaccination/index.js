@@ -43,7 +43,7 @@ export const updateVaccinationDetail = (bookingId) => async(dispatch, getState) 
   const token = getState().auth.token
   dispatch(startLoading("Updating vaccination status"))
     try{
-      const response = await API.API_PUT_SERVICE(`${API_HOST.VACCINATION_SERVICE}${bookingId}/updateVaccineStatus`,null,{headers: {"X-Token-ID" : token}})
+      const response = await API.API_PUT_SERVICE(`${API_HOST.VACCINATION_SERVICE}/vaccine/${bookingId}/updateVaccineStatus`,null,{headers: {"X-Token-ID" : token}})
       dispatch(updateVaccinationDetaitSuccess(response))
       dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination status update successful.' }));
       dispatch(stopLoading())
@@ -67,7 +67,7 @@ export const deleteVaccinationAppointment = (bookingId) => async(dispatch,getSto
     const token = getStore().auth.token
     dispatch(startLoading("Deleting vaccination appointment"))
     try{
-      const response = await API.API_DELETE_SERVICE(`${API_HOST.VACCINATION_SERVICE}${bookingId}/_deleteVaccinationBooingId`,{headers: {"X-Token-ID" : token}})
+      const response = await API.API_DELETE_SERVICE(`${API_HOST.VACCINATION_SERVICE}${bookingId}/_deleteVaccinationBookingId`,{headers: {"X-Token-ID" : token}})
       dispatch(deleteVaccinationAppointmentSuccess(bookingId))
       dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination deleted successfully.' }));
       dispatch(stopLoading())

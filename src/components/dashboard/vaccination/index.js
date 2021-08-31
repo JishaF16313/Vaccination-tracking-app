@@ -134,23 +134,17 @@ function VaccinationDashboard() {
         title: "Aadhaar",
         field: "PatientAdhar"
     },{
+        title: "Status",
+        field: "dose[0].status",
+    },{
         title: "Booked On",
         field: "vaccine_booked_date",
     },{
-        title: "Dose 1 Status",
-        field: "dose[0].status",
-    },{
-        title: "Dose 1 Vaccine",
+        title: "Vaccine",
         field: "dose[0].vaccine-type",
     },{
         title: "Dose 1 Date",
         field: "dose[0].date",
-    },{
-        title: "Dose 2 Status",
-        field: "dose[1].status",
-    },{
-        title: "Dose 2 Vaccine",
-        field: "dose[1].vaccine-type",
     },{
         title: "Dose 2 Date",
         field: "dose[1].date",
