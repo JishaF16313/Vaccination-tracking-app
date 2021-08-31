@@ -12,8 +12,8 @@ export const getVaccinationList = () => async(dispatch, getState) => {
   dispatch(getVaccinationListInit())
   const token = getState().auth.token
     try {
-      const response = vaccinationData
-      //const response = await API.API_GET_SERVICE(`${API_HOST.VACCINATION_SERVICE}getVaccineSchdeuledInformationForDay`,{headers: {"X-Token-ID" : token}})
+      //const response = vaccinationData
+      const response = await API.API_GET_SERVICE(`${API_HOST.VACCINATION_SERVICE}getVaccineSchdeuledInformationForDay`,{headers: {"X-Token-ID" : token}})
       dispatch(getVaccinationListSuccess(response))
     }
     catch(error)
@@ -43,7 +43,7 @@ export const updateVaccinationDetail = (bookingId) => async(dispatch, getState) 
   const token = getState().auth.token
   dispatch(startLoading("Updating vaccination status"))
     try{
-      const response = await API.API_PUT_SERVICE(`${API_HOST.VACCINATION_SERVICE}${bookingId}/updateVaccineStatus`,{},{headers: {"X-Token-ID" : token}})
+      const response = await API.API_PUT_SERVICE(`${API_HOST.VACCINATION_SERVICE}${bookingId}/updateVaccineStatus`,null,{headers: {"X-Token-ID" : token}})
       dispatch(updateVaccinationDetaitSuccess(response))
       dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination status update successful.' }));
       dispatch(stopLoading())

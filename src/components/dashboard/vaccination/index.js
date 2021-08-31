@@ -129,14 +129,13 @@ function VaccinationDashboard() {
     const columnMap = useMemo(  () => 
     [{
         title: "Name",
-        field: "patient-name"
+        field: "PatientName"
     },{
         title: "Aadhaar",
-        field: "patient-aadhar"
+        field: "PatientAdhar"
     },{
         title: "Booked On",
         field: "vaccine_booked_date",
-        type: displayTypes.date
     },{
         title: "Dose 1 Status",
         field: "dose[0].status",
@@ -146,7 +145,6 @@ function VaccinationDashboard() {
     },{
         title: "Dose 1 Date",
         field: "dose[0].date",
-        type: displayTypes.date
     },{
         title: "Dose 2 Status",
         field: "dose[1].status",
@@ -156,7 +154,6 @@ function VaccinationDashboard() {
     },{
         title: "Dose 2 Date",
         field: "dose[1].date",
-        type: displayTypes.date
     }], [])
 
 
