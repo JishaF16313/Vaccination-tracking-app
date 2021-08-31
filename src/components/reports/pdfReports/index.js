@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useCallback} from 'react'
 import {makeStyles} from '@material-ui/core/styles'
 import { Button, FormControl, Paper, Typography } from '@material-ui/core'
 import { Form, Formik } from 'formik'
@@ -6,16 +6,23 @@ import InputField from '../../inputfield'
 import {cityDdlList} from "../../../utility/commonTexts"
 import {useSelector, useDispatch} from "react-redux"
 import {getHospitalList} from "../../../store/actions/hospitals"
-import {getReportPDF} from "../../../store/actions/reports"
+import {getReport, getReportAll} from "../../../store/actions/reports"
 
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: "2%",
     },
-    title: {
+    paper:{
+        padding: "15px"
+    },
+    titleContainer: {
         margin: "10px 0px 20px 0px",
         display: "flex",
+        width: "100%",
         justifyContent: "space-between"
+    },
+    title:{
+        flexGrow:1,
     },
     form:{
       width: "100%"
@@ -31,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
         color: 'red',
         marginTop: theme.spacing(1)
     },
+    caption:{
+        fontStyle: "italic"
+    }
 }))
 
 function PDFReports() {
@@ -48,7 +58,7 @@ function PDFReports() {
         Hospital: ""
     }
 
-    const handleSubmit = (values) => {
+    const handleSubmit = useCallback((values) => {
         let filters = []
         for(let filter in values)
         {
@@ -61,20 +71,36 @@ function PDFReports() {
             }
         }
         const reqBody = {filters}
-        console.log(reqBody);
-        dispatch(getReportPDF(reqBody))
-    }
+        dispatch(getReport(reqBody))
+    },[dispatch])
+
+    const handleDownloadAll = useCallback(() => {
+        dispatch(getReportAll())
+    },[])
 
 
     return (
         <div className={classes.root}>
+            <div className={classes.titleContainer}>
             <Typography component="h4" variant="h5" className={classes.title}>
                 Reports
             </Typography>
+            <div> 
+                <Button variant="contained" color="primary" size="small" onClick={handleDownloadAll}>
+                    All Cities
+                </Button>
+                </div>
+            </div>
+            
             <div>
                 <Formik initialValues={initFilters} onSubmit={handleSubmit}>
                 {
-                    () => <Form className={classes.form}>
+                    () =>
+                    <Paper className={classes.paper} elevation={3}>
+                        <Typography variant="h6" component="h6">
+                            Filters:    
+                        </Typography> 
+                        <Form className={classes.form}>
                         <FormControl className={classes.field}>
                             <InputField
                                 type="select"
@@ -101,6 +127,10 @@ function PDFReports() {
                             </Button>
                         </div>
                     </Form>
+                    <Typography variant="caption" className={classes.caption}>
+                        *Empty filters will generate report based upon user's city.
+                    </Typography>
+                    </Paper>
                 }
                 </Formik>
             </div>
