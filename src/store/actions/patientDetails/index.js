@@ -218,3 +218,33 @@ export const confirmBedBooking = (value) => ({
 export const setModalState = (value) => ({
   type: TYPES.OPEN_MODAL, payload: value
 })
+
+/**Bed Avilability hospital filter*/
+export function hospitalAvailbleBedListFilter_Pin (pinCode,token) { 
+return async dispatch => {
+     try {
+        await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}${pinCode}/_getBedAvailableByPinCode`, { headers: getHeaders(token) })
+        .then((response) => {            
+          let hospitalAvailableBedList = parseHospitalBedData(response);
+          dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));          
+        }); 
+     } catch (error) {
+          dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+     }
+  }
+}
+
+export function hospitalAvailbleBedListFilter_Hospital (hospital,token) { 
+  return async dispatch => {
+     try {
+        await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}${hospital}/_getBedAvailableByHospitalName`, { headers: getHeaders(token) })
+        .then((response) => {            
+          let hospitalAvailableBedList = parseHospitalBedData(response);
+          dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));          
+        }); 
+     } catch (error) {
+          dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+     }
+  }
+}
+

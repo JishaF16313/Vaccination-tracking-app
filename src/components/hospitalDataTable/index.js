@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import ConfirmBedBookingDetails from '../userDashboard/handleBedBookingConfirmModal';
 import { SetPatientBedBookingDetails, GetBookingStatus } from '../../store/actions/patientDetails/index';
-
+import Filter from './filter';
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
@@ -151,6 +151,7 @@ const HospitalDataTable = (props) => {
                 <div className={classes.mainDiv} className={storeData.data.hospitalAvailableBedList ? classes.show : classes.hidden}>
                     <div>
                         <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
+                        <Filter />
                         <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
                             <DataGrid
                                 rows={storeData.data.hospitalAvailableBedList ? storeData.data.hospitalAvailableBedList.bedAvailabilityData : null}
