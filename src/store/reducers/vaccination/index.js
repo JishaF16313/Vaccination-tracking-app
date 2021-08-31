@@ -31,8 +31,10 @@ const vaccinationReducer = ( state= initialState, {type, payload}) => {
 
         case UPDATE_VACCINATION_DETAIL_SUCCESS:{
             let updatedList = [...state.vaccinationList]
-            const updateIndex = updatedList.findIndex( detail => detail["vaccine-booking-id"] === payload["vaccine-booking-id"])
-            updatedList[updateIndex] = {...payload}
+            const updatedAppointment = payload.Patients
+            const updateIndex = updatedList.findIndex( detail => detail["vaccine-booking-id"] === updatedAppointment["vaccine-booking-id"])
+            if(updateIndex >= 0)
+                updatedList[updateIndex] = {...updatedAppointment}
             return {...state, vaccinationList: updatedList}
         }
 
