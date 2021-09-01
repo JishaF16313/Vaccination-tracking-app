@@ -1,12 +1,12 @@
 import React from "react"
-import { Redirect } from "react-router-dom"
-import { useSelector } from "react-redux"
+import {Redirect} from "react-router-dom"
+import {useSelector} from "react-redux"
 import Role from "../lib/roles";
 
 const Redirects = () => {
-    const { role } = useSelector(store => store.auth)
+    const {role} = useSelector(store => store.auth)
     let redirectUrl = ""
-    switch (role) {
+    switch(role){
         case Role.Admin:
             redirectUrl = "/admindashboard"
             break
@@ -19,10 +19,8 @@ const Redirects = () => {
         case Role.User:
             redirectUrl = "/userdashboard"
             break
-        default:
-            redirectUrl = "/signIn"
     }
-    return <Redirect from="/redirect" to={redirectUrl} />
+    return <Redirect from="/redirect" to={redirectUrl}/>
 }
 
 export default Redirects

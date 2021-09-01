@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -9,6 +9,8 @@ import TextField from '@material-ui/core/TextField';
 import { DataGrid } from '@material-ui/data-grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { addBed } from '../../../store/actions/hospitalAdmin/index'
+
+import PatientSummaryTable from './patientSummaryTable';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -73,9 +75,16 @@ const HospitalBedBulkUpload = (props) => {
     const dispatch = useDispatch();
     const classes = useStyles();
 
+    const handleCellClick = (param, event) => {
+        if (param.colIndex === 2) {
+            event.stopPropagation();
+        }
+    };
+
     const handleRowClick = (param) => {
         if (param && param.length) {
-           
+            
+            //setSelectedPatientArray(selectedPatientArray => [...selectedPatientArray, param.row.bookingId]);
           }
     };
     const handleBedValueChange = (event) => {

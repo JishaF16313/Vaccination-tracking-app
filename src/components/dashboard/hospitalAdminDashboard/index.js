@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import { useSelector, useDispatch } from "react-redux";
+
 import HospitalBedBulkUpload from './hospitalBedBulkUpload';
 import PatientSummaryTable from './patientSummaryTable';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -59,8 +61,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+
+
+
 export default function HospitalAdmin() {
     const classes = useStyles();
+    let [bookedBed, setBookedBed] = useState(0);
     let [showBulkUpload, setBulkUpload] = useState(false);
     let [showUploadHistory, setUploadHistory] = useState(false);
     const handelShowHide = (buttonVal) => {
@@ -76,7 +82,12 @@ export default function HospitalAdmin() {
             setBulkUpload(false)
         }
     }
-  
+    const storeData = useSelector((store) => {        
+        return {
+            data: store.bookedBed,
+            loggedInUserData: store.auth
+        }
+    });
     return (
         <div className={classes.root}>
             {!showBulkUpload && !showUploadHistory &&

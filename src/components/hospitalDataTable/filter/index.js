@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import {  hospitalAvailbleBedListFilter_Pin } from '../../../store/actions/patientDetails';
+import {  hospitalAvailbleBedListFilter } from '../../../store/actions/patientDetails';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,11 +31,18 @@ export default function Filter() {
 });
 
   const filterSubmit = () => {
-    let token = storeData.loggedInUserData.token;   
-    if(pincode){
-      dispatch(hospitalAvailbleBedListFilter_Pin(pincode,token));
+    let token = storeData.loggedInUserData.token; 
+    let val = [];
+      if(pincode){
+      val.push({"name":"pinCode","value":pincode})      
       }
-    }
+      if(hospitalName)
+      {
+        val.push({"name":"hospitalName","value":hospitalName})      
+      }   
+      let param= { "filters": val}
+      dispatch(hospitalAvailbleBedListFilter(param,token));      
+  }
   
   
   return (

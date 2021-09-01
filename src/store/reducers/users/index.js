@@ -1,5 +1,6 @@
 import {
     USER_REGISTER_INIT,
+    USER_REGISTER_SUCCESS,
     USER_REGISTER_FAIL    
 } from "../../actions/users/"
 

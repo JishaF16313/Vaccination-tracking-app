@@ -2,7 +2,8 @@ import React, {useState, useCallback, useMemo, useEffect} from 'react'
 import { Typography  } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {makeStyles} from '@material-ui/core/styles'
-import Table from "../../table"
+import Table, {displayTypes} from "../../table"
+import EditVaccinationDetail from './editVaccinationDetail'
 import AddVaccinationData from './addVaccinationData';
 import {useSelector, useDispatch} from "react-redux"
 import {getVaccinationList, deleteVaccinationAppointment, updateVaccinationDetail} from "../../../store/actions/vaccination"
@@ -35,7 +36,7 @@ const useStyles = makeStyles({
 function VaccinationDashboard() {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const {vaccinationList, loading } = useSelector(store => store.vaccination)
+    const {vaccinationList, loading, error} = useSelector(store => store.vaccination)
 
     // Getting list of vaccination appointments
     useEffect(() => {

@@ -23,7 +23,7 @@ const Reducer = (state = initialState, { type, payload }) => {
             return { ...state, editedHospitalUserData: payload };
         case actions.TYPES.UPDATE_HOSPITAL_USER:
             let updatedList = [...state.userList];
-            const updateIndex = updatedList.findIndex(detail => detail.id === state.editedHospitalUserData.id);
+            const updateIndex = updatedList.findIndex(detail => detail.id == state.editedHospitalUserData.id);
             updatedList[updateIndex] = { ...payload };
             return { ...state, userList: updatedList }
         case actions.TYPES.SET_DELETING_HOSPITAL_USER_ID:

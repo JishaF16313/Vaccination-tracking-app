@@ -5,7 +5,7 @@ import { Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import { cancelText, addBranchText, updateBranchText, hospitalZipLabelText, hospitalCityLabelText, } from '../../utility/commonTexts';
 import InputField from '../inputfield/index';
-import { branchNameValidationText, zipValidationText, cityValidationText, invalidZipValidationText, zipValidationRegExp } from '../../utility/validationMessages';
+import { branchNameValidationText, hospitalNameValidationText, zipValidationText, cityValidationText, invalidZipValidationText, zipValidationRegExp } from '../../utility/validationMessages';
 import history from '../../routes/history';
 import { useDispatch, useSelector } from 'react-redux';
 import { addHospitalBranch, updateHospitalBranch } from '../../store/actions/hospitalbranch/index';

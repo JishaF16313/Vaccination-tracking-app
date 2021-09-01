@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import ConfirmBedBookingDetails from '../userDashboard/handleBedBookingConfirmModal';
-import { SetPatientBedBookingDetails } from '../../store/actions/patientDetails/index';
+import { SetPatientBedBookingDetails, GetBookingStatus } from '../../store/actions/patientDetails/index';
 import Filter from './filter';
 
 const useStyles = makeStyles((theme) => ({
@@ -59,12 +59,16 @@ const HospitalDataTable = (props) => {
         props.onChange(event.target.value);
     }
 
+    // Confirm bed detail handler
+    const handleConfirmBedBooking = useCallback((details) => setmodal({ type: "open", data: details }), []);
+
     // State to show/hide modals
     const [modal, setmodal] = useState({
         type: null,
         data: null
     });
     const dispatch = useDispatch();
+
 
     // Closing the modal
     const handleModalClose = useCallback(() => setmodal({ type: null, data: null }), []);
@@ -78,7 +82,13 @@ const HospitalDataTable = (props) => {
         }
         dispatch(startLoading("Please wait..."));
         dispatch(SetPatientBedBookingDetails(requestData, token));
+        let details = {
+            "bookingId": storeData.data.hospitalAvailableBedList.bookingResponseData[0].bookingID,
+            "bookingStatus": storeData.data.hospitalAvailableBedList.bookingResponseData[0].bookingStatus,
+        }
     }
+
+
 
     const handleRowClick = (params) => {
         let selectedRowData;
@@ -149,10 +159,10 @@ const HospitalDataTable = (props) => {
 
                     <div>
                         <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
-
+                        <Filter />
                         {storeData.data.hospitalAvailableBedList.bedAvailabilityData.length > 0 && (
                             <div>
-                                <Filter />
+                                
                                 <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
                                     <DataGrid
                                         rows={storeData.data.hospitalAvailableBedList ? storeData.data.hospitalAvailableBedList.bedAvailabilityData : null}

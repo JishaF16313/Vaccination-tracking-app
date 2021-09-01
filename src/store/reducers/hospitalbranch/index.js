@@ -21,7 +21,7 @@ const Reducer = (state = initialState, { type, payload }) => {
             return { ...state, editedHospitalBranchData: payload };
         case actions.TYPES.UPDATE_HOSPITAL_BRANCH:
             let updatedList = [...state.branchList];
-            const updateIndex = updatedList.findIndex(detail => detail.id === state.editedHospitalBranchData.id);
+            const updateIndex = updatedList.findIndex(detail => detail.id == state.editedHospitalBranchData.id);
             updatedList[updateIndex] = { ...payload };
             return { ...state, userList: updatedList };
         default:

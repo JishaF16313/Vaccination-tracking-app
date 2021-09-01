@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { setAlert } from '../alert/index';
 import { stopLoading } from '../loader/index';
+import history from '../../../routes/history';
 import * as API_HOST from '../../../env-config';
 
 
