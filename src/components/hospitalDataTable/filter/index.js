@@ -4,13 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import { hospitalAvailbleBedListFilter } from '../../../store/actions/patientDetails';
+import {  hospitalAvailbleBedListFilter } from '../../../store/actions/patientDetails';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,8 +41,7 @@ export default function Filter() {
         val.push({"name":"hospitalName","value":hospitalName})      
       }   
       let param= { "filters": val}
-      dispatch(hospitalAvailbleBedListFilter(param,token));
-      
+      dispatch(hospitalAvailbleBedListFilter(param,token));      
   }
   
   
