@@ -43,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 600,
         color: '#7b81ce',
         marginLeft: theme.spacing(4)
+    },
+    infoText: {
+        fontStyle: 'italic',
+        fontWeight: 600,
+        color: '#7b81ce',
+        fontSize: 14
     }
 }))
 const HospitalDataTable = (props) => {
@@ -159,16 +165,15 @@ const HospitalDataTable = (props) => {
 
                     <div>
                         <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
-                        <Filter />
                         {storeData.data.hospitalAvailableBedList.bedAvailabilityData.length > 0 && (
                             <div>
-                                
-                                <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
+                                <Filter />
+                                <p className={classes.infoText}>Please select hospital to confirm booking</p>
+                                <div className={classes.divStyle} style={{ height: 300, width: '100%' }}>
                                     <DataGrid
                                         rows={storeData.data.hospitalAvailableBedList ? storeData.data.hospitalAvailableBedList.bedAvailabilityData : null}
                                         columns={columnMap}
                                         pageSize={5}
-                                        checkboxSelection
                                         disableMultipleSelection={true}
                                         onChange={handleChange}
                                         onSelectionModelChange={handleRowClick}

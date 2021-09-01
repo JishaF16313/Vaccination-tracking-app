@@ -29,14 +29,16 @@ export function SetPatientDetails (value,token) {
        }
  
        function onSuccess(response, hospitalAvailableBedList) {
-        let message = "Booking for Patient Confirmed.Please check available beds and find booking details.'Booking ID -"+ " "+ response.data.bookingId + " Booking Status - " + response.data.bookingStatus;
+        let message = "Booking for Patient Confirmed.Please check available beds below and find booking details.'Booking ID -"+ " "+ response.data.bookingId + " Booking Status - " + response.data.bookingStatus;
       // let message = "Booking for Patient Confirmed.Please check available beds and find booking details.'Booking ID -"+ " "+ response.bookingId + " Booking Status - " + response.bookingStatus;
         dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: message }));
         dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));
         dispatch(stopLoading());
+        history.push('/userDashboard');
        }
        function onError(error) {
-        dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+         let message = "Something Went Wrong."
+        dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
         dispatch(stopLoading());
 
        }
@@ -172,7 +174,8 @@ export function SetPatientBedBookingDetails (value,token){
         dispatch(setModalState(true));
        }
        function onError(error) {
-          dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+          let message = "Something Went Wrong."
+          dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
           dispatch(stopLoading());
        }
     }
@@ -200,7 +203,8 @@ export function GetBookingStatus (value , token) {
        dispatch(setModalState(true));
       }
       function onError(error) {
-         dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+         let message = "Something Went Wrong."
+         dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
          dispatch(stopLoading());
       }
    }

@@ -54,11 +54,15 @@ const useStyles = makeStyles((theme) => ({
   },
   btnDiv: {
     marginTop: theme.spacing(2)
+  },
+  errorField: {
+    color: 'red',
+    marginTop: theme.spacing(1)
   }
 }));
 
 const validate = Yup.object({
-  bookingStatus: Yup.string().max(100).required("Add Booking ID")
+  bookingStatus: Yup.string().max(100).required("Booking ID is required")
 });
 
 
@@ -173,7 +177,6 @@ function UserDashboard() {
 
 
   return (
-    // <div>User Dashboard</div>
     <Paper className={classes.root}>
       <Tabs
         value={value}
@@ -228,7 +231,7 @@ function UserDashboard() {
             {formik => (
               <Form>
                 <div className={classes.field}>
-                  <InputField label="Get Booking Status" onChange={(e) => formik.setFieldValue('bookingStatus', e.target.value)} name="bookingStatus" type="text" classes={classes} />
+                  <InputField label="Add Booking ID" onChange={(e) => formik.setFieldValue('bookingStatus', e.target.value)} name="bookingStatus" type="text" classes={classes} />
                 </div>
 
                 <div className={classes.btnDiv}>
