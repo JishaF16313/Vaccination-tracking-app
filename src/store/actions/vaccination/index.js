@@ -66,7 +66,7 @@ export const deleteVaccinationAppointment = (bookingId) => async(dispatch,getSto
     const token = getStore().auth.token
     dispatch(startLoading("Deleting vaccination appointment"))
     try{
-      const response = await API.API_DELETE_SERVICE(`${API_HOST.VACCINATION_SERVICE}${bookingId}/_deleteVaccinationBookingId`,{headers: {"X-Token-ID" : token}})
+      await API.API_DELETE_SERVICE(`${API_HOST.VACCINATION_SERVICE}${bookingId}/_deleteVaccinationBookingId`,{headers: {"X-Token-ID" : token}})
       dispatch(deleteVaccinationAppointmentSuccess(bookingId))
       dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination deleted successfully.' }));
       dispatch(stopLoading())
@@ -88,7 +88,7 @@ export const uploadVaccinationData = (reqBody) => async(dispatch, getState) => {
   const token = getState().auth.token
   dispatch(startLoading("Uploading vaccination data"))
     try{
-        const response = await API.API_POST_SERVICE(`${API_HOST.VACCINATION_SERVICE}uploadVaccinAvailablity`, reqBody, {headers: {"X-Token-ID" : token}})
+        await API.API_POST_SERVICE(`${API_HOST.VACCINATION_SERVICE}uploadVaccinAvailablity`, reqBody, {headers: {"X-Token-ID" : token}})
         dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Vaccination bulk upload successful.' }));
         dispatch(stopLoading())
     }

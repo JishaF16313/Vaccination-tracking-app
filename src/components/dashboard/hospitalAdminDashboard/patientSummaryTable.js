@@ -1,11 +1,8 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import EditBedModel from './editBedDetails';
-import Table from '../../table'
 import { Button } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,27 +18,16 @@ const useStyles = makeStyles((theme) => ({
   upload_button: {
     float: 'right',
     margin: '20px'
-
   },
-
 }));
 
 export default function BedForm() {
   const classes = useStyles();
   const { hospitalPatientData } = useSelector(store => store.patientReducer)
 
-  const [selectedPatientArray, setSelectedPatientArray] = useState([]);
-  
-
-  const handleCellClick = (param, event) => {
-    if (param.colIndex === 2) {
-      event.stopPropagation();
-    }
-  };
-
   const handleRowClick = (param) => {
     if (param && param.length) {
-      //setSelectedPatientArray(selectedPatientArray => [...selectedPatientArray, param.row.bookingId]);
+      
     }
   };
 
@@ -108,13 +94,10 @@ export default function BedForm() {
         />
       </div>
 
-      {/* <Table columnMap={columnMap} rows={hospitalPatientData} onEdit={handleBedEdit} onDelete={handleBedDelete} /> */}
       <Button className={classes.upload_button} variant="contained" color="primary">
         DISCHARGE
       </Button>
-	   {/* <EditBedModel open={modal.type === "edit"} details={modal.data} onClose={handleModalClose}></EditBedModel>*/}
-
-    </div>
+	  </div>
   );
 }
 

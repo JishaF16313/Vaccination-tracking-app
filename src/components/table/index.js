@@ -62,12 +62,6 @@ function ActionableTable(props) {
     // Row done handler
     const handleRowDone = React.useCallback((row) => () => onDone(row), [onDone]) 
     
-
-    //Row Click Handler
-    const handleCellClick = (row) => {
-      console.log("row",row);
-  }
-
     //Funtion to get the display value
     const getDisplayValue = React.useCallback((row, field, type) => {
       const value = getFromObject(row, field, "--")
@@ -103,7 +97,7 @@ function ActionableTable(props) {
         </TableHead>
         <TableBody>
           {rows.map((row, index) =>(
-            <TableRow key={`row-${index}`} hover
+            <TableRow hover
             key={row[rowID]}
             onClick={() => {
               setSelectedID(row[rowID])

@@ -4,13 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import {  hospitalAvailbleBedListFilter_Pin , hospitalAvailbleBedListFilter_Hospital } from '../../../store/actions/patientDetails';
+import {  hospitalAvailbleBedListFilter_Pin } from '../../../store/actions/patientDetails';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,11 +35,7 @@ export default function Filter() {
     if(pincode){
       dispatch(hospitalAvailbleBedListFilter_Pin(pincode,token));
       }
-      // if(hospitalName)
-      // {
-      //   dispatch(hospitalAvailbleBedListFilter_Hospital(hospitalName,token)); 
-      // }   
-  }
+    }
   
   
   return (

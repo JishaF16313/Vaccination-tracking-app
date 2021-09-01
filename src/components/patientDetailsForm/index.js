@@ -1,17 +1,14 @@
+import React from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import { hospitalDdlList, hospitalUserTypes, cancelText, addPatientText, cityDdlList, stateDdlList } from '../../utility/commonTexts';
+import { cancelText, addPatientText, cityDdlList, stateDdlList } from '../../utility/commonTexts';
 import InputField from '../inputfield/index';
-import {
-    hospitalUserNameValidationText, dateOfBirthValidationText, invalidDateValidationText, zipValidationText, contactNumberValidationText, emailValidationText, stateValidationText, cityValidationText, aadharCardValidationText
-} from '../../utility/validationMessages';
+import { hospitalUserNameValidationText, dateOfBirthValidationText, invalidDateValidationText, zipValidationText, contactNumberValidationText, emailValidationText, stateValidationText, cityValidationText, aadharCardValidationText } from '../../utility/validationMessages';
 import { SetPatientDetails } from '../../store/actions/patientDetails/index';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { useMemo, useCallback, useState } from 'react';
 import { startLoading } from '../../store/actions/loader/index';
-
 
 const useStyles = makeStyles((theme) => ({
     mainDiv: {
@@ -104,42 +101,8 @@ const PatientDetailsForm = () => {
         patientDetails.patient_IdentificationDetail.aadhar_card = values.aadharNumber;
 
         dispatch(SetPatientDetails(patientDetails,token));
-    }
+    }   
 
-    // Column title mappings for hospital bed details
-    const columnMap = useMemo(() => [{
-        headerName: "Hospital Name",
-        field: "hospitalName",
-        width: 180
-    }, {
-        headerName: "Hospital ID",
-        field: "hospitalId",
-        width: 180
-    }, {
-        headerName: "Branch Name",
-        field: "branchName",
-        width: 180
-    }, {
-        headerName: "Branch ID",
-        field: "branchId",
-        width: 180
-    }, {
-        headerName: "Beds Type",
-        field: "bedType",
-        width: 180
-    }, {
-        headerName: "Bed Facility",
-        field: "bedFacility",
-        width: 180
-    },
-    {
-        headerName: "Bed ID",
-        field: "bedId",
-        width: 180
-    }
-    ], [])
-
-    const rows = data;
     return (
         <div className={classes.mainDiv}>
             <h3>{title}</h3>
@@ -187,16 +150,5 @@ const PatientDetailsForm = () => {
 
     )
 }
-
-const data = [{
-    bedFacility: "Oxygen",
-    bedId: "244fec7a-474b-484e-baa7-69867a7b2324",
-    bedType: "Single",
-    branchId: "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
-    branchName: "Indira Nagar",
-    hospitalId: "9f3c716d-6efc-43a7-9752-616d9f65bfca",
-    hospitalName: "Appollo",
-    id: "1"
-}]
 
 export default PatientDetailsForm;

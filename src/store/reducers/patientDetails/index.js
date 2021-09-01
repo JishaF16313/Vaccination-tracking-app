@@ -1,4 +1,3 @@
-import SETPATIENTDETAILS from '../../actions/patientDetails/index';
 import * as actions from '../../actions/patientDetails/index';
 
 const initialState = {
