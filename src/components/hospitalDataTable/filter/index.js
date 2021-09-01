@@ -10,7 +10,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import {  hospitalAvailbleBedListFilter_Pin , hospitalAvailbleBedListFilter_Hospital } from '../../../store/actions/patientDetails';
+import { hospitalAvailbleBedListFilter } from '../../../store/actions/patientDetails';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,14 +37,18 @@ export default function Filter() {
 });
 
   const filterSubmit = () => {
-    let token = storeData.loggedInUserData.token;   
-    if(pincode){
-      dispatch(hospitalAvailbleBedListFilter_Pin(pincode,token));
+    let token = storeData.loggedInUserData.token; 
+    let val = [];
+      if(pincode){
+      val.push({"name":"pinCode","value":pincode})      
       }
-      // if(hospitalName)
-      // {
-      //   dispatch(hospitalAvailbleBedListFilter_Hospital(hospitalName,token)); 
-      // }   
+      if(hospitalName)
+      {
+        val.push({"name":"hospitalName","value":hospitalName})      
+      }   
+      let param= { "filters": val}
+      dispatch(hospitalAvailbleBedListFilter(param,token));
+      
   }
   
   

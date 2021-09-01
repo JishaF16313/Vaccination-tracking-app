@@ -220,24 +220,10 @@ export const setModalState = (value) => ({
 })
 
 /**Bed Avilability hospital filter*/
-export function hospitalAvailbleBedListFilter_Pin (pinCode,token) { 
-return async dispatch => {
-     try {
-        await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}${pinCode}/_getBedAvailableByPinCode`, { headers: getHeaders(token) })
-        .then((response) => {            
-          let hospitalAvailableBedList = parseHospitalBedData(response);
-          dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));          
-        }); 
-     } catch (error) {
-          dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
-     }
-  }
-}
-
-export function hospitalAvailbleBedListFilter_Hospital (hospital,token) { 
+export function hospitalAvailbleBedListFilter(value,token) { 
   return async dispatch => {
      try {
-        await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}${hospital}/_getBedAvailableByHospitalName`, { headers: getHeaders(token) })
+        await axios.post(`${API_HOST.BED_AVAILABILITY_SERVICE}/getBedDetailsByCityOrHospital`,value, { headers: getHeaders(token) })
         .then((response) => {            
           let hospitalAvailableBedList = parseHospitalBedData(response);
           dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));          
@@ -247,4 +233,3 @@ export function hospitalAvailbleBedListFilter_Hospital (hospital,token) {
      }
   }
 }
-

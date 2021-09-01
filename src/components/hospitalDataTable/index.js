@@ -159,10 +159,10 @@ const HospitalDataTable = (props) => {
 
                     <div>
                         <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
-
+                        <Filter />
                         {storeData.data.hospitalAvailableBedList.bedAvailabilityData.length > 0 && (
                             <div>
-                                <Filter />
+                                
                                 <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
                                     <DataGrid
                                         rows={storeData.data.hospitalAvailableBedList ? storeData.data.hospitalAvailableBedList.bedAvailabilityData : null}
