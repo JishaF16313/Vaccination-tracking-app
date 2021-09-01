@@ -165,9 +165,9 @@ const HospitalDataTable = (props) => {
 
                     <div>
                         <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
+                          <Filter />
                         {storeData.data.hospitalAvailableBedList.bedAvailabilityData.length > 0 && (
                             <div>
-                                <Filter />
                                 <p className={classes.infoText}>Please select hospital to confirm booking</p>
                                 <div className={classes.divStyle} style={{ height: 300, width: '100%' }}>
                                     <DataGrid
