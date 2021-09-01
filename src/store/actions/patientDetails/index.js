@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { setAlert } from '../alert/index';
 import { stopLoading } from '../loader/index';
-import history from '../../../routes/history';
 import * as API_HOST from '../../../env-config';
 
 export const TYPES = {
@@ -30,7 +29,6 @@ export function SetPatientDetails (value,token) {
  
        function onSuccess(response, hospitalAvailableBedList) {
         let message = "Booking for Patient Confirmed.Please check available beds and find booking details.'Booking ID -"+ " "+ response.data.bookingId + " Booking Status - " + response.data.bookingStatus;
-      // let message = "Booking for Patient Confirmed.Please check available beds and find booking details.'Booking ID -"+ " "+ response.bookingId + " Booking Status - " + response.bookingStatus;
         dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: message }));
         dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));
         dispatch(stopLoading());
@@ -51,50 +49,7 @@ export function SetPatientDetails (value,token) {
     return headers;
  }
 
- export const parseHospitalBedData = (response) => {
-   //dummy data
-    let dummyData={
-      "bookingId": "6bd02a27-7fc9-4046-91c4-5020354d9e85",
-      "bookingStatus": "pending",
-      "waitingNumber": "18",
-      "Hospitals": [
-        {
-            "hospitalName": "Appollo",
-          "hospitalId": "9f3c716d-6efc-43a7-9752-616d9f65bfca",
-          "Branches": [
-            {
-              "branchName": "Indira Nagar",
-              "branchId": "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
-              "Beds": [
-                {
-                  "bed-type": "Single",
-                  "bed-facility": "Oxygen",
-                  "bed-id": "244fec7a-474b-484e-baa7-69867a7b2324"
-                }
-              ]
-            }
-          ]
-        },
-        {
-         "hospitalName": "Appollo",
-       "hospitalId": "9f3c716d-6efc-43a7-9752-616d9f65bfca",
-       "Branches": [
-         {
-           "branchName": "Indira Nagar",
-           "branchId": "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
-           "Beds": [
-             {
-               "bed-type": "Single",
-               "bed-facility": "Oxygen",
-               "bed-id": "244fec7a-474b-484e-baa7-69867a7b2324"
-             }
-           ]
-         }
-       ]
-     }
-      ]
-    }
-    let parsedResponseArr = [];
+ export const parseHospitalBedData = (response) => {    
     if(response.data){
        let data = response.data;
        let finalResponseData = [];
@@ -123,23 +78,7 @@ export function SetPatientDetails (value,token) {
        }
        finalResponseData.bookingResponseData = bookingResponseData;
        finalResponseData.bedAvailabilityData = parsedResponseArr;
-      // data['Hospitals'].forEach(element => {
-      //    element['Branch'].forEach(elem => {
-      //       elem['Beds'].forEach(ele => {
-      //          parsedResponseArr.push({
-      //             "hospitalName" : element.hospitalName,
-      //             "hospitalId" : element.hospitalId,
-      //             "branchName" : elem.branchName,
-      //             "branchId" : elem.branchId,
-      //             "bedType" : ele['bed-Type'],
-      //             "bedFacility" : ele['bed-facility'],
-      //             "bedId" : ele['bed-id']
-      //          })
-      //       })
-      //    })
-      // });
-      // console.log("data",finalResponseData);
-      return finalResponseData;
+       return finalResponseData;
     }
  }
 /***setting Available Bed Data */
@@ -148,11 +87,8 @@ export function SetPatientDetails (value,token) {
 });
 /**Confirm Bed Booking of Patient */
 export function SetPatientBedBookingDetails (value,token){
-   // console.log("Hitting API");
-  //  token = token ? token : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTYiLCJyb2xlIjpbeyJhdXRob3JpdHkiOiJDSVRJWkVOIn1dLCJjaXR5TmFtZSI6IlB1bmUiLCJob3NwaXRhbElkIjpudWxsLCJwaW5Db2RlIjoiMTIzNDU2IiwiaG9zcGl0YWxCcmFuY2hJZCI6bnVsbCwiZXhwIjoxNjI5NDQ1OTM2LCJpYXQiOjE2Mjk0Mzg3MzZ9.ov4xVtCcR4xhoooYbHblykKimiNrVPq-pUn4uvZ32Fk";
    let bookingId = value.bookingId;
    let requestData = value.bookingData;
-   console.log("request data--", bookingId);
     return async dispatch => {
        try {
           await axios.put(`${API_HOST.BEDBOOKING_SERVICE}/`+bookingId+`/_confirm`, requestData , { headers: getHeaders(token) })
@@ -164,7 +100,6 @@ export function SetPatientBedBookingDetails (value,token){
        }
  
        function onSuccess(response) { 
-        // console.log("response==",response);
         let message = "Booking for Patient Confirmed.Booking ID : " + response.data.bookingId + "Bed Booking Status is : " + response.data.bookingStatus;
         dispatch(confirmBedBooking(response.data));
         dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: message }));
@@ -180,9 +115,7 @@ export function SetPatientBedBookingDetails (value,token){
 
 export function GetBookingStatus (value , token) {
   var bookingID = value.bookingStatus;
-  // console.log("bookingID==",bookingID)
-  // token = token ? token : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTYiLCJyb2xlIjpbeyJhdXRob3JpdHkiOiJDSVRJWkVOIn1dLCJjaXR5TmFtZSI6IlB1bmUiLCJob3NwaXRhbElkIjpudWxsLCJwaW5Db2RlIjoiMTIzNDU2IiwiaG9zcGl0YWxCcmFuY2hJZCI6bnVsbCwiZXhwIjoxNjI5NDQ1OTM2LCJpYXQiOjE2Mjk0Mzg3MzZ9.ov4xVtCcR4xhoooYbHblykKimiNrVPq-pUn4uvZ32Fk";
-   return async dispatch => {
+  return async dispatch => {
       try {
         await axios.get(`${API_HOST.BEDBOOKING_SERVICE}${bookingID}/_status/` , { headers: getHeaders(token) })
          .then((response) => {         
