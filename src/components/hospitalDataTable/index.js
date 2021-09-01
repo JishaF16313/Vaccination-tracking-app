@@ -37,6 +37,12 @@ const useStyles = makeStyles((theme) => ({
     },
     btnDiv: {
         marginTop: theme.spacing(2)
+    },
+    textDisplay: {
+        fontStyle: 'italic',
+        fontWeight: 600,
+        color: '#7b81ce',
+        marginLeft: theme.spacing(4)
     }
 }))
 const HospitalDataTable = (props) => {
@@ -149,30 +155,41 @@ const HospitalDataTable = (props) => {
         <div>
             {storeData.data.hospitalAvailableBedList && (
                 <div className={classes.mainDiv} className={storeData.data.hospitalAvailableBedList ? classes.show : classes.hidden}>
+
+
                     <div>
                         <Typography component="h4" variant="h5" className={classes.title} > Hospital Details:</Typography>
-                        <Filter />
-                        <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
-                            <DataGrid
-                                rows={storeData.data.hospitalAvailableBedList ? storeData.data.hospitalAvailableBedList.bedAvailabilityData : null}
-                                columns={columnMap}
-                                pageSize={5}
-                                checkboxSelection
-                                disableMultipleSelection={true}
-                                onChange={handleChange}
-                                onSelectionModelChange={handleRowClick}
 
-                            />
-                        </div>
+                        {storeData.data.hospitalAvailableBedList.bedAvailabilityData.length > 0 && (
+                            <div>
+                                <Filter />
+                                <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
+                                    <DataGrid
+                                        rows={storeData.data.hospitalAvailableBedList ? storeData.data.hospitalAvailableBedList.bedAvailabilityData : null}
+                                        columns={columnMap}
+                                        pageSize={5}
+                                        checkboxSelection
+                                        disableMultipleSelection={true}
+                                        onChange={handleChange}
+                                        onSelectionModelChange={handleRowClick}
+
+                                    />
+                                </div>
+                                <Box className={classes.BtnHolder}>
+                                    <Button variant="contained" color="primary" onClick={confirmBookingDetails} className={classes.cnfrmBtn}>Confirm</Button>
+                                </Box>
+                            </div>
+                        )}
 
                     </div>
-
-                    <Box className={classes.BtnHolder}>
-                        <Button variant="contained" color="primary" onClick={confirmBookingDetails} className={classes.cnfrmBtn}>Confirm</Button>
-                    </Box>
+                    <div>
+                        {storeData.data.hospitalAvailableBedList.bedAvailabilityData.length <= 0 && (
+                            <p className={classes.textDisplay}>No beds Available</p>
+                        )}
+                    </div>
                     <ConfirmBedBookingDetails open={storeData.data.openModal} details={storeData.data.confirmStatus} onClose={handleModalClose} />
-                    <h1>{ }</h1>
                 </div>
+
             )}
         </div>
     )
