@@ -68,7 +68,7 @@ const PatientDetailsForm = () => {
             loggedInUserData: store.auth
         }
     });
-    
+
     const validate = Yup.object({
         firstName: Yup.string().max(100).required(hospitalUserNameValidationText),
         lastName: Yup.string().max(100).required(hospitalUserNameValidationText),
@@ -85,12 +85,12 @@ const PatientDetailsForm = () => {
     });
 
     const dispatch = useDispatch();
-
+    const initialValues = { firstName: '', lastName: '', contactNumber: '', emailID: '', city: '', pincode: '', state: '', panNumber: '', aadharNumber: '' };
     const submitForm = (values) => {
         console.log("values", values);
         let token = storeData.loggedInUserData.token;
         dispatch(startLoading('Please wait...'));
-        
+
         var patientDetails = {};
         patientDetails.patient_first_name = values.firstName;
         patientDetails.patient_last_name = values.lastName;
@@ -103,7 +103,7 @@ const PatientDetailsForm = () => {
         patientDetails.patient_IdentificationDetail.pan_number = values.panNumber;
         patientDetails.patient_IdentificationDetail.aadhar_card = values.aadharNumber;
 
-        dispatch(SetPatientDetails(patientDetails,token));
+        dispatch(SetPatientDetails(patientDetails, token));
     }
 
     // Column title mappings for hospital bed details
@@ -143,7 +143,7 @@ const PatientDetailsForm = () => {
     return (
         <div className={classes.mainDiv}>
             <h3>{title}</h3>
-            <Formik initialValues={{ firstName: '', lastName: '', contactNumber: '', emailID: '' }} validationSchema={validate} onSubmit={values => submitForm(values)} className={storeData.hospitalAvailableBedList ? classes.hidden : classes.show}>
+            <Formik initialValues={initialValues} validationSchema={validate} onSubmit={values => submitForm(values)} className={storeData.hospitalAvailableBedList ? classes.hidden : classes.show}>
                 {formik => (
                     <Form>
                         <div className={classes.field}>
@@ -168,7 +168,7 @@ const PatientDetailsForm = () => {
                             <InputField label="City" onChange={(e) => formik.setFieldValue('city', e.target.value)} name="city" type="select" options={cityDdlList} classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="State" onChange={(e) => formik.setFieldValue('state', e.target.value)} name="city" type="select" options={stateDdlList} classes={classes} />
+                            <InputField label="State" onChange={(e) => formik.setFieldValue('state', e.target.value)} name="state" type="select" options={stateDdlList} classes={classes} />
                         </div>
                         <div className={classes.field}>
                             <InputField label="Pan Number" onChange={(e) => formik.setFieldValue('panNumber', e.target.value)} name="panNumber" type="text" classes={classes} />
