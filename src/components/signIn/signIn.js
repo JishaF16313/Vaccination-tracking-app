@@ -88,18 +88,7 @@ const submitForm = (values) => {
             {authError}
           </Typography>
         }
-        
-          </Paper>
-
-          <Paper className={classes.paper} elevation={3} >
-          <div style={{marginTop: "12px"}}>
-          <Typography component="ul">Users:</Typography>
-          <li>Admin : admin@gmail.com</li>
-          <li>Hospital Admin: hoadmin@gmail.com</li>
-          <li>Vaccination Admin: vcadmin@gmail.com</li>
-          <li>Citizen: user@gmail.com</li>
-        </div>
-          </Paper>
+        </Paper>
     </Container>
   );
 }
