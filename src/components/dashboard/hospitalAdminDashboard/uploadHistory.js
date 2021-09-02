@@ -1,8 +1,6 @@
-import React, { useEffect,  useCallback, useState, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
-import EditBedModel from './editBedDetails';
-import Table from '../../table'
 import { DataGrid } from '@material-ui/data-grid';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';

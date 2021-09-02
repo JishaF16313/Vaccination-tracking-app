@@ -1,8 +1,6 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import EditBedModel from './editBedDetails';
-import Table from '../../table'
 import { Button } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 
