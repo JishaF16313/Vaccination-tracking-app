@@ -2,7 +2,7 @@ import * as API_HOST from "../../../env-config"
 import * as API from "../../../lib/api"
 import {startLoading, stopLoading} from "../loader"
 import {setAlert} from "../alert"
-import {triggerDownloadFromData, triggerDownloadFromUrl} from "../../../utility/commonFunctions"
+import {triggerDownloadFromData} from "../../../utility/commonFunctions"
 
 export const getReport = (reqBody) => async(dispatch, getState) =>
 {
@@ -34,3 +34,4 @@ export const getReportAll = () => async(dispatch) =>
         dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: "Unable to download report." }));
     }
 }
+

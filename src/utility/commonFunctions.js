@@ -60,8 +60,5 @@ export const triggerDownloadFromData = (blob, filename) =>{
   
       // Clean up and remove the link
       link.parentNode.removeChild(link);
-    }
+}
 
-
-
- 
