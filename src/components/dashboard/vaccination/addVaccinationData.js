@@ -78,7 +78,10 @@ function AddVaccinationData(props) {
     const handleSubmit = (data) => {
         const reqBody = {
           branchId: hospitalBranchId,
-          Vaccines: [...data.slots]
+          Vaccines: data.slots.map(slot => ({
+            ...slot,
+            dateOfAvailablity: slot.dateOfAvailablity.split("-").reverse().join("-")
+          }))
         }
         dispatch(uploadVaccinationData(reqBody))
         handleClose();
