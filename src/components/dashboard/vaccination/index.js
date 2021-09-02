@@ -75,6 +75,18 @@ function VaccinationDashboard() {
         [handleModalClose],
     )
 
+    // Function to determine if an appointment can be updated or deleted
+    const isActionAllowed = (appointment) => {
+        const statusString = appointment.dose[0].status && appointment.dose[0].status.toLowerCase()
+        if(statusString)
+        {
+            if(statusString === "booked" || ( statusString === "partially vaccinated" && appointment.dose[1] && appointment.dose[1].date))
+                return true
+            else 
+                return false 
+        }
+    }
+
     
     // Dispatch vaccination appointment delete
     const handleVaccinationDeleteDispatch = useCallback((appointment) => () => {
@@ -93,7 +105,7 @@ function VaccinationDashboard() {
 
     // Open Vaccination appointmrnt edit modal
     const handleVaccinationEdit = useCallback( (appointment) => 
-        appointment.dose[appointment.dose.length-1].status !== "done" ?
+        isActionAllowed(appointment) ?
             setmodal({
                 type: "confirm", 
                 data: appointment,
@@ -108,7 +120,7 @@ function VaccinationDashboard() {
 
     // Open vaccination appointment delete modal
     const handleVaccinationDelete = useCallback( appointment =>  
-        appointment.dose[appointment.dose.length-1].status !== "done" ?
+        isActionAllowed(appointment) ?
             setmodal({
                 type: "confirm", 
                 data: appointment,
