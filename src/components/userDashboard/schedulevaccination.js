@@ -181,7 +181,7 @@ function ScheduleVaccination() {
             <Typography component="h3" variant="h5">Slots Available</Typography>
             <FormControl>
                 <FormLabel component="legend" className={classes.dateLabel}>Date of Booking</FormLabel>
-                <TextField type="date" defaultValue={setCurrentDate()} className={classes.dateField} InputLabelProps={{ shrink: true }} onChange={(event) => dateChanged(event)} />
+                <TextField type="date" inputProps={{min: setCurrentDate()}} defaultValue={setCurrentDate()} className={classes.dateField} InputLabelProps={{ shrink: true }} onChange={(event) => dateChanged(event)} />
             </FormControl>
             <FormControl component="fieldset" className={classes.doseTypeRadioGroup}>
                 <FormLabel component="legend" className={classes.doseLabel}>Select Dose Type</FormLabel>
