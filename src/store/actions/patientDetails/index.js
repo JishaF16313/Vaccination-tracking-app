@@ -34,7 +34,7 @@ export function SetPatientDetails (value,token) {
         dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: message }));
         dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));
         dispatch(stopLoading());
-        history.push('/userDashboard');
+        // history.push('/userDashboard');
        }
        function onError(error) {
          let message = "Something Went Wrong."
