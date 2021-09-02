@@ -23,6 +23,8 @@ import { GetBookingStatus } from '../../store/actions/patientDetails/index';
 import { useDispatch, useSelector } from 'react-redux';
 import { startLoading } from '../../store/actions/loader/index';
 import ConfirmBedBookingDetails from '../userDashboard/handleBedBookingConfirmModal';
+import AssessmentIcon from '@material-ui/icons/Assessment';
+import PDFReports from '../reports/pdfReports';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -188,6 +190,7 @@ function UserDashboard() {
         <Tab className="customStyle" label="Book A Bed" icon={<AddToQueueIcon />} />
         <Tab className="customStyle" label="Schedule Vaccine" icon={<CalendarTodayIcon />} />
         <Tab className="customStyle" label="Booking Status" icon={<CheckCircleIcon />} />
+        <Tab className="customStyle" label="Reports" icon={<AssessmentIcon />} />
 
       </Tabs>
       <TabPanel value={value} index={0}>
@@ -256,6 +259,11 @@ function UserDashboard() {
         </div>
         )} */}
       </TabPanel>
+  
+      <TabPanel value={value} index={3}>
+        <PDFReports/>
+      </TabPanel>
+  
     </Paper>
   )
 }
