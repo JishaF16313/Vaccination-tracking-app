@@ -77,10 +77,11 @@ function VaccinationDashboard() {
 
     // Function to determine if an appointment can be updated or deleted
     const isActionAllowed = (appointment) => {
+        const today = new Date(Date.now()).toISOString().split("T")[0].split("-").reverse().join("-")
         const statusString = appointment.dose[0].status && appointment.dose[0].status.toLowerCase()
         if(statusString)
         {
-            if(statusString === "booked" || ( statusString === "partially vaccinated" && appointment.dose[1] && appointment.dose[1].date))
+            if(statusString === "booked" || ( statusString === "partially vaccinated" && appointment.dose[1] && appointment.dose[1].date === today))
                 return true
             else 
                 return false 
