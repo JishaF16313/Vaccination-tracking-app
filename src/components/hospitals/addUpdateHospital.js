@@ -27,11 +27,15 @@ const useStyles = makeStyles((theme) => ({
     errorField: {
         color: 'red',
         marginTop: theme.spacing(1)
+    },
+    asterisk: {
+        color: 'red',
+        fontSize: '20px'
     }
 }));
 
 function AddUpdateHospital() {
-    const storeData = useSelector((store) => {        
+    const storeData = useSelector((store) => {
         return {
             data: store.hospitals,
             loggedInUserData: store.auth
@@ -45,19 +49,19 @@ function AddUpdateHospital() {
     const title = storeData.data.addOrUpdate === "add" ? addHospitalText : updateHospitalText;
 
     const validate = Yup.object({
-        name: Yup.string().max(100).required(hospitalNameValidationText)     
+        name: Yup.string().max(100).required(hospitalNameValidationText)
     });
 
-    const submitForm = (values) => {        
+    const submitForm = (values) => {
         dispatch(startLoading('Please wait...'));
-        if (storeData.data.addOrUpdate === "add") {           
-            let obj = { hospitalName : values.name };
+        if (storeData.data.addOrUpdate === "add") {
+            let obj = { hospitalName: values.name };
             let token = storeData.loggedInUserData.token;
             dispatch(addHospital(obj, token));
         } else {
-            let obj = { id: storeData.data.editedHospitalData.id , ...values }
+            let obj = { id: storeData.data.editedHospitalData.id, ...values }
             dispatch(updateHospital(obj));
-        }       
+        }
     }
 
     const onCancelClicked = (e) => {
@@ -68,7 +72,7 @@ function AddUpdateHospital() {
 
     useEffect(() => {
         if (storeData.data.addOrUpdate === "update") {
-            initialValues.name = storeData.data.editedHospitalData.name;        
+            initialValues.name = storeData.data.editedHospitalData.name;
         }
     }, []);
 
@@ -80,8 +84,8 @@ function AddUpdateHospital() {
                     return (
                         <Form>
                             <div className={classes.field}>
-                                <InputField onChange={(e) => formik.setFieldValue('name', e.target.value)} label={hospitalNameLabelText} name="name" type="text" classes={classes} />
-                            </div>                     
+                                <InputField onChange={(e) => formik.setFieldValue('name', e.target.value)} label={hospitalNameLabelText} name="name" type="text" classes={classes} required />
+                            </div>
                             <div className={classes.btnDiv}>
                                 <Button variant="contained" color="primary" size="medium" type="submit">{storeData.data.addOrUpdate === "add" ? addHospitalText : updateHospitalText}</Button>
                                 <Button onClick={(e) => onCancelClicked(e)} className={classes.cancelBtn} variant="contained" size="medium">{cancelText}</Button>

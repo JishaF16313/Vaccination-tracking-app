@@ -31,6 +31,15 @@ const useStyles = makeStyles((theme) => ({
     },
     autocompleteField: {
         width: '25ch'
+    },
+    asterisk: {
+        color: 'red',
+        fontSize: '20px'
+    },
+    ddlAsterisk: {
+        color: 'red',
+        fontSize: '20px',
+        marginLeft: '6px'
     }
 }));
 
@@ -114,7 +123,7 @@ function AddUpdateHospitalBranch() {
             setHospitalNameValue(newValue);
         }
     }
-
+  
     return (
         <div className={classes.mainDiv}>
             <h3>{title}</h3>
@@ -122,16 +131,16 @@ function AddUpdateHospitalBranch() {
                 {formik => (
                     <Form>
                         <div className={classes.field}>
-                            <InputField label="Name" onChange={(e) => formik.setFieldValue('name', e.target.value)} name="name" type="text" classes={classes} />
+                            <InputField label="Name" onChange={(e) => formik.setFieldValue('name', e.target.value)} name="name" type="text" classes={classes} required/>
                         </div>
                         <div className={classes.field}>
-                            <InputField value={hospitalNameValue} label="Hospital Name" onChange={(e, formik) => hospitalNameChange(e, formik)} name="hospitalName" type="autocomplete" options={storeData.hospitalData.hospitalDdlOptions ? storeData.hospitalData.hospitalDdlOptions : []} classes={classes} />
+                            <InputField value={hospitalNameValue} label="Hospital Name" onChange={(e, formik) => hospitalNameChange(e, formik)} name="hospitalName" type="autocomplete" options={storeData.hospitalData.hospitalDdlOptions ? storeData.hospitalData.hospitalDdlOptions : []} classes={classes} required/>
                         </div>
                         <div className={classes.field}>
-                            <InputField label={hospitalZipLabelText} name="zip" onChange={(e) => formik.setFieldValue('zip', e.target.value)} type="text" classes={classes} />
+                            <InputField label={hospitalZipLabelText} name="zip" onChange={(e) => formik.setFieldValue('zip', e.target.value)} type="text" classes={classes} required/>
                         </div>
                         <div className={classes.field}>
-                            <InputField label={hospitalCityLabelText} name="city" onChange={(e) => formik.setFieldValue('city', e.target.value)} type="text" classes={classes} />
+                            <InputField label={hospitalCityLabelText} name="city" onChange={(e) => formik.setFieldValue('city', e.target.value)} type="text" classes={classes} required/>
                         </div>
                         <div className={classes.btnDiv}>
                             <Button variant="contained" color="primary" size="medium" type="submit">{storeData.data.addOrUpdate === "add" ? addBranchText : updateBranchText}</Button>

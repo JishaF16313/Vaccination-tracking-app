@@ -39,6 +39,15 @@ const useStyles = makeStyles((theme) => ({
     },
     ddl: {
         width: '22ch'
+    },
+    asterisk: {
+        color: 'red',
+        fontSize: '20px'
+    },
+    ddlAsterisk: {
+        color: 'red',
+        fontSize: '20px',
+        marginLeft: '6px'
     }
 }));
 
@@ -145,31 +154,31 @@ function AddUpdateUser() {
                 {formik => (
                     <Form>
                         <div className={classes.field}>
-                            <InputField label="Username" onChange={(e) => formik.setFieldValue('userName', e.target.value)} name="userName" type="text" classes={classes} />
+                            <InputField label="Username" onChange={(e) => formik.setFieldValue('userName', e.target.value)} name="userName" type="text" classes={classes} required />
                         </div>
                         {storeData.data.addOrUpdate === "add" && (
                             <React.Fragment>
                                 <div className={classes.field}>
-                                    <InputField label="Password" onChange={(e) => formik.setFieldValue('password', e.target.value)} name="password" type="password" classes={classes} />
+                                    <InputField label="Password" onChange={(e) => formik.setFieldValue('password', e.target.value)} name="password" type="password" classes={classes} required />
                                 </div>
                                 <div className={classes.field}>
-                                    <InputField label="Confirm Password" onChange={(e) => formik.setFieldValue('confirmPassword', e.target.value)} name="confirmPassword" classes={classes} type="password" />
+                                    <InputField label="Confirm Password" onChange={(e) => formik.setFieldValue('confirmPassword', e.target.value)} name="confirmPassword" classes={classes} type="password" required />
                                 </div></React.Fragment>
                         )}
                         <div className={classes.field}>
-                            <InputField label="City" onChange={(e) => formik.setFieldValue('city', e.target.value)} name="city" type="text" classes={classes} />
+                            <InputField label="City" onChange={(e) => formik.setFieldValue('city', e.target.value)} name="city" type="text" classes={classes} required />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Zip" onChange={(e) => formik.setFieldValue('zip', e.target.value)} name="zip" type="text" classes={classes} />
+                            <InputField label="Zip" onChange={(e) => formik.setFieldValue('zip', e.target.value)} name="zip" type="text" classes={classes} required />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Hospital Name" value={selectedHospitalId} onChange={(e) => onHospitalNameChanged(e.target.value)} name="hospitalName" type="select" options={storeData.hospitalData.hospitalDdlOptions ? storeData.hospitalData.hospitalDdlOptions : []} classes={classes} />
+                            <InputField label="Hospital Name" value={selectedHospitalId} onChange={(e) => onHospitalNameChanged(e.target.value)} name="hospitalName" type="select" options={storeData.hospitalData.hospitalDdlOptions ? storeData.hospitalData.hospitalDdlOptions : []} classes={classes} required />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Branch Name" onChange={(e) => formik.setFieldValue('branchName', e.target.value)} name="branchName" type="select" options={storeData.HospitalBranchData.hospitalBranchDdlOptions ? storeData.HospitalBranchData.hospitalBranchDdlOptions : []} classes={classes} />
+                            <InputField label="Branch Name" onChange={(e) => formik.setFieldValue('branchName', e.target.value)} name="branchName" type="select" options={storeData.HospitalBranchData.hospitalBranchDdlOptions ? storeData.HospitalBranchData.hospitalBranchDdlOptions : []} classes={classes} required/>
                         </div>
                         <div className={classes.field}>
-                            <InputField defaultValue={initialValues.userType} label="User Type" onChange={(e) => formik.setFieldValue('userType', e.target.value)} name="userType" type="select" options={hospitalUserTypes} classes={classes} />
+                            <InputField defaultValue={initialValues.userType} label="User Type" onChange={(e) => formik.setFieldValue('userType', e.target.value)} name="userType" type="select" options={hospitalUserTypes} classes={classes} required/>
                         </div>
                         <div className={classes.btnDiv}>
                             <Button variant="contained" color="primary" size="medium" type="submit">{storeData.data.addOrUpdate === "add" ? addUserText : updateUserText}</Button>

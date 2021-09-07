@@ -8,7 +8,12 @@ function InputField({ label, classes, ...props }) {
 
     const textBoxField = () => {
         return (
-            <TextField label={label} onChange={props.onChange} className={`form-control ${meta.touched && meta.error && 'is-valid'}`} {...field} {...props} autoComplete="off" />
+            <TextField label={label} onChange={props.onChange} className={`form-control ${meta.touched && meta.error && 'is-valid'}`} {...field} {...props} autoComplete="off"
+             InputLabelProps={{
+                classes: {
+                  asterisk: classes.asterisk
+                }
+              }}/>
         )
     };
 
@@ -21,7 +26,7 @@ function InputField({ label, classes, ...props }) {
     const selectField = () => {
         return (
             <FormControl>
-                <InputLabel id="select-label">{label}</InputLabel>
+                <InputLabel id="select-label">{label}{props.required ? <span className={classes.ddlAsterisk}>*</span> : null} </InputLabel>
                 <Select labelId="select-label" className={classes.ddl} onChange={props.onChange} {...field} {...props} autocomplete="off">
                     {props.options.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
@@ -60,7 +65,7 @@ function InputField({ label, classes, ...props }) {
                 renderOption={(option) => option.label}
                 freeSolo
                 renderInput={(params) => (
-                    <TextField {...params} label={label} />
+                    <TextField {...params} label={props.required ? <div>{label}<span className={classes.ddlAsterisk}>*</span></div> : label}/>
                 )}
             />
         )
