@@ -10,7 +10,9 @@ export const TYPES = {
     ADD_BED: 'ADD_BED',
     CLEAR_ADD_BED: 'CLEAR_ADD_BED',
     RESET_TEMP_: 'GET_HOSPITAL_BED_LIST',
-    POPULATE_UPLOAD_HISTORY: 'POPULATE_UPLOAD_HISTORY'
+    POPULATE_UPLOAD_HISTORY: 'POPULATE_UPLOAD_HISTORY',
+    POPULATE_PATIENT_LIST:'POPULATE_PATIENT_LIST',
+    TOTAL_PATIENT_COUNT:'TOTAL_PATIENT_COUNT' 
  }
 
 //api call for create hospital bed
@@ -38,22 +40,33 @@ export function addBed(bodyObject, token) {
     }
  };
 
+  //API CALL FOR PATIENT LISTING
  export function getPatientList(token) {
     return async dispatch => {
        try {
-          await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}_allpatientList`, { headers: getHeaders(token) })
+          await axios.get(`${API_HOST.BED_AVAILABILITY_SERVICE}_getAllPatientsDetailsByBranch`, { headers: getHeaders(token) })
           .then((response) => {            
-             let patientList = response.data
-                   
-            //  });           
-             return onSuccess( patientList);
+            const totalPatients = response.data.length; //TOTAL PATIENTS
+            let patientList = response.data.map((item,k) => {
+                 return { 
+                    id: k+1,
+                    bookingId: item.bookingId,
+                    patientName: item.patientName,
+                    aadharCard: item.aadharCard,
+                    bedType: item.bedType,
+                    bedFacility: item.bedFacility,
+                    admissionStatus: item.admissionStatus,
+                  };
+              });        
+              return onSuccess(patientList,totalPatients);
           });        
        } catch (error) {
           return onError(error);
        }
  
-       function onSuccess( patientList) {
+       function onSuccess( patientList,totalPatients) {
           dispatch({ type: TYPES.POPULATE_PATIENT_LIST, payload: patientList });
+          dispatch({ type: TYPES.TOTAL_PATIENT_COUNT, payload: totalPatients });
           dispatch(stopLoading());
        }
        function onError(error) {

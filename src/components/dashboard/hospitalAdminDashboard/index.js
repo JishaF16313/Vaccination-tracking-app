@@ -85,9 +85,11 @@ export default function HospitalAdmin() {
     const storeData = useSelector((store) => {        
         return {
             data: store.bookedBed,
-            loggedInUserData: store.auth
+            loggedInUserData: store.auth,
+            PatientList: store.patientReducer
         }
     });
+    let patientcount = storeData.PatientList.bookedBed;
     return (
         <div className={classes.root}>
             {!showBulkUpload && !showUploadHistory &&
@@ -106,7 +108,7 @@ export default function HospitalAdmin() {
                             Beds booked in the hospital
                         </Paper>
                         <Paper className={classes.numbers}>
-                            50
+                        {patientcount}
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
