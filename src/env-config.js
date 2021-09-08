@@ -6,3 +6,4 @@ export const VACCINATION_SERVICE = process.env.REACT_APP_VACCINATION_SERVICE || 
 export const BEDBOOKING_SERVICE = process.env.REACT_APP_BEDBOOKING_SERVICE || 'http://covid-bbs-svc8-sssonikasingh-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/bbs/'
 export const REPORT_SERVICE = process.env.REACT_APP_REPORT_SERVICE || 'http://report-svc-6-hariji2310-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/report/';
 
+

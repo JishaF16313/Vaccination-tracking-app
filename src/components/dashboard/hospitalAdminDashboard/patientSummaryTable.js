@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState ,useEffect} from 'react';
+import { useSelector,useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
+import { startLoading } from '../../../store/actions/loader/index';
+import { loaderText } from '../../../utility/commonTexts';
+import {getPatientList} from '../../../store/actions/hospitalAdmin/index';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +29,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BedForm() {
   const classes = useStyles();
-  const { hospitalPatientData } = useSelector(store => store.patientReducer)
+  const dispatch = useDispatch();
+ const storeData = useSelector((store) => {        
+   return {
+       PatientList: store.patientReducer,
+       loggedInUserData: store.auth,
+   }
+});
+ let token = storeData.loggedInUserData.token; 
+ let hospitalPatientData = storeData.PatientList.hospitalPatientData;
+
+   useEffect(() => {
+     dispatch(startLoading(loaderText));
+     dispatch(getPatientList(token));
+   }, []);
 
   const [selectedPatientArray, setSelectedPatientArray] = useState([]);
   
