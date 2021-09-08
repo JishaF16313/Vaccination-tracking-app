@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { hospitalDdlList, hospitalUserTypes, cancelText, addPatientText, cityDdlList, stateDdlList } from '../../utility/commonTexts';
 import InputField from '../inputfield/index';
 import {
-    hospitalUserNameValidationText, dateOfBirthValidationText, invalidDateValidationText, zipValidationText, contactNumberValidationText, emailValidationText, stateValidationText, cityValidationText, aadharCardValidationText
+    hospitalUserNameValidationText, dateOfBirthValidationText, invalidDateValidationText, zipValidationText, contactNumberValidationText, emailValidationText, stateValidationText, cityValidationText, aadharCardValidationText, userPanCardValidationText
 } from '../../utility/validationMessages';
 import { SetPatientDetails } from '../../store/actions/patientDetails/index';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,6 +29,15 @@ const useStyles = makeStyles((theme) => ({
     errorField: {
         color: 'red',
         marginTop: theme.spacing(1)
+    },
+    asterisk: {
+        color: 'red',
+        fontSize: '20px'
+    },
+    ddlAsterisk: {
+        color: 'red',
+        fontSize: '20px',
+        marginLeft: '6px'
     },
     addressField: {
         width: '25ch'
@@ -80,7 +89,7 @@ const PatientDetailsForm = () => {
         city: Yup.string().required(cityValidationText),
         pincode: Yup.number().required(zipValidationText),
         state: Yup.string().required(stateValidationText),
-        panNumber: Yup.string(),
+        panNumber: Yup.string().required(userPanCardValidationText),
         aadharNumber: Yup.string().required(aadharCardValidationText)
     });
 
@@ -147,34 +156,34 @@ const PatientDetailsForm = () => {
                 {formik => (
                     <Form>
                         <div className={classes.field}>
-                            <InputField label="First Name" onChange={(e) => formik.setFieldValue('firstName', e.target.value)} name="firstName" type="text" classes={classes} />
+                            <InputField label="First Name" onChange={(e) => formik.setFieldValue('firstName', e.target.value)} name="firstName" type="text" required classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Last Name" onChange={(e) => formik.setFieldValue('lastName', e.target.value)} name="lastName" type="text" classes={classes} />
+                            <InputField label="Last Name" onChange={(e) => formik.setFieldValue('lastName', e.target.value)} name="lastName" type="text" required classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Date of Birth" onChange={(e) => formik.setFieldValue('dob', e.target.value)} name="dob" type="text" classes={classes} />
+                            <InputField label="Date of Birth" onChange={(e) => formik.setFieldValue('dob', e.target.value)} name="dob" type="text" required classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Contact Number" onChange={(e) => formik.setFieldValue('contactNumber', e.target.value)} name="contactNumber" type="text" classes={classes} />
+                            <InputField label="Contact Number" onChange={(e) => formik.setFieldValue('contactNumber', e.target.value)} name="contactNumber" type="text" required classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Email ID" onChange={(e) => formik.setFieldValue('emailID', e.target.value)} name="emailID" type="text" classes={classes} />
+                            <InputField label="Email ID" onChange={(e) => formik.setFieldValue('emailID', e.target.value)} name="emailID" type="text" required classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Zip Code" onChange={(e) => formik.setFieldValue('pincode', e.target.value)} name="pincode" type="text" classes={classes} />
+                            <InputField label="Zip Code" onChange={(e) => formik.setFieldValue('pincode', e.target.value)} name="pincode" type="text" required classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="City" onChange={(e) => formik.setFieldValue('city', e.target.value)} name="city" type="select" options={cityDdlList} classes={classes} />
+                            <InputField label="City" onChange={(e) => formik.setFieldValue('city', e.target.value)} name="city" type="select" options={cityDdlList} required classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="State" onChange={(e) => formik.setFieldValue('state', e.target.value)} name="state" type="select" options={stateDdlList} classes={classes} />
+                            <InputField label="State" onChange={(e) => formik.setFieldValue('state', e.target.value)} name="state" type="select" options={stateDdlList} required classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Pan Number" onChange={(e) => formik.setFieldValue('panNumber', e.target.value)} name="panNumber" type="text" classes={classes} />
+                            <InputField label="Pan Number" onChange={(e) => formik.setFieldValue('panNumber', e.target.value)} name="panNumber" type="text" required classes={classes} />
                         </div>
                         <div className={classes.field}>
-                            <InputField label="Aadhar Number" onChange={(e) => formik.setFieldValue('aadharNumber', e.target.value)} name="aadharNumber" type="text" classes={classes} />
+                            <InputField label="Aadhar Number" onChange={(e) => formik.setFieldValue('aadharNumber', e.target.value)} name="aadharNumber" required type="text" classes={classes} />
                         </div>
                         <div className={classes.btnDiv}>
                             <Button variant="contained" color="primary" size="medium" type="submit">{addPatientText}</Button>
@@ -200,3 +209,4 @@ const data = [{
 }]
 
 export default PatientDetailsForm;
+

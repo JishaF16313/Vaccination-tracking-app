@@ -22,4 +22,6 @@ export const contactNumberValidationText = "Contact Number is required";
 export const emailValidationText = "Email ID is required";
 export const aadharCardValidationText = "Aadhar Card number is required";
 export const userAadharIdValidationText = "Aadhar Number is required.";
+export const userPanCardValidationText = "Pancard is required";
+
 
