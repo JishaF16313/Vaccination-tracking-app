@@ -1,12 +1,11 @@
-import React, { useState ,useEffect} from 'react';
-import { useSelector,useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import { startLoading } from '../../../store/actions/loader/index';
 import { loaderText } from '../../../utility/commonTexts';
-import {getPatientList} from '../../../store/actions/hospitalAdmin/index';
-
+import { deleteBedBooking, getPatientList } from '../../../store/actions/hospitalAdmin/index';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,22 +29,23 @@ const useStyles = makeStyles((theme) => ({
 export default function BedForm() {
   const classes = useStyles();
   const dispatch = useDispatch();
- const storeData = useSelector((store) => {        
-   return {
-       PatientList: store.patientReducer,
-       loggedInUserData: store.auth,
-   }
-});
- let token = storeData.loggedInUserData.token; 
- let hospitalPatientData = storeData.PatientList.hospitalPatientData;
+  const [DischargePatient, selectDischargePatient] = useState([])
+  const storeData = useSelector((store) => {
+    return {
+      PatientList: store.patientReducer,
+      loggedInUserData: store.auth,
+    }
+  });
+  let token = storeData.loggedInUserData.token;
+  let hospitalPatientData = storeData.PatientList.hospitalPatientData;
 
-   useEffect(() => {
-     dispatch(startLoading(loaderText));
-     dispatch(getPatientList(token));
-   }, []);
-
-  const [selectedPatientArray, setSelectedPatientArray] = useState([]);
+  useEffect(() => {
+    dispatch(startLoading(loaderText));
+    dispatch(getPatientList(token));
+  }, []);
   
+  const [selectedPatientArray, setSelectedPatientArray] = useState([]);
+
 
   const handleCellClick = (param, event) => {
     if (param.colIndex === 2) {
@@ -53,11 +53,23 @@ export default function BedForm() {
     }
   };
 
-  const handleRowClick = (param) => {
-    if (param && param.length) {
-      //setSelectedPatientArray(selectedPatientArray => [...selectedPatientArray, param.row.bookingId]);
-    }
-  };
+  const SelectPatientRow = (row) => {
+    const BookingIdArray = hospitalPatientData.filter((el) => {
+      return row.includes(el.id);
+    }).map((element)=>{
+      return element.bookingId;
+    });
+    console.log(BookingIdArray)
+    selectDischargePatient(BookingIdArray);
+  }
+
+  const DischargeHandler = (SelectedRowArray) => {
+    console.log(DischargePatient);
+    dispatch(deleteBedBooking(DischargePatient));
+    
+  }
+
+
 
   const columnMap = [
     {
@@ -108,6 +120,8 @@ export default function BedForm() {
     },
   ];
 
+  
+
   return (
     <div className={classes.root}>
       <div style={{ height: 300, width: '100%' }}>
@@ -118,15 +132,15 @@ export default function BedForm() {
           pageSize={50}
           checkboxSelection
           disableSelectionOnClick
-          onSelectionModelChange={handleRowClick}
+          onSelectionModelChange={SelectPatientRow}
         />
       </div>
 
       {/* <Table columnMap={columnMap} rows={hospitalPatientData} onEdit={handleBedEdit} onDelete={handleBedDelete} /> */}
-      <Button className={classes.upload_button} variant="contained" color="primary">
+      <Button className={`${classes.upload_button}`} disabled={DischargePatient.length<1 ? true : false}  onClick={DischargeHandler} variant="contained" color="primary">
         DISCHARGE
       </Button>
-	   {/* <EditBedModel open={modal.type === "edit"} details={modal.data} onClose={handleModalClose}></EditBedModel>*/}
+      {/* <EditBedModel open={modal.type === "edit"} details={modal.data} onClose={handleModalClose}></EditBedModel>*/}
 
     </div>
   );

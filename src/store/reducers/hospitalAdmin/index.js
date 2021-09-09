@@ -2,6 +2,7 @@ import * as actions from "../../actions/hospitalAdmin";
 
 const initialState = {
     hospitalPatientData: [
+       
     ],
     bedUploadHistoryData: [{
         id: 1,
@@ -16,6 +17,7 @@ const initialState = {
 }
 
 const patientReducer = ( state= initialState, {type, payload}) => {
+    console.log(state);
     switch(type)
     {
         case actions.TYPES.ADD_BED :
@@ -26,8 +28,10 @@ const patientReducer = ( state= initialState, {type, payload}) => {
             return { ...state, bedUploadHistoryData: payload };
         case actions.TYPES.TOTAL_PATIENT_COUNT:
             return { ...state, bookedBed: payload };
-    
-
+        case actions.TYPES.DELETE_PATIENT_BED:
+            return { ...state,hospitalPatientData:state.hospitalPatientData.filter((element)=>{
+                return !payload.includes(element.bookingId);
+            })};
         default:
             return state
     }
