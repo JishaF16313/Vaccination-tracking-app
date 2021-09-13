@@ -59,12 +59,10 @@ export default function BedForm() {
     }).map((element)=>{
       return element.bookingId;
     });
-    console.log(BookingIdArray)
     selectDischargePatient(BookingIdArray);
   }
 
   const DischargeHandler = (SelectedRowArray) => {
-    console.log(DischargePatient);
     dispatch(deleteBedBooking(DischargePatient));
     dispatch({ type: TYPES.TOTAL_PATIENT_COUNT, payload: hospitalPatientData.length-DischargePatient.length });
   }
@@ -130,7 +128,7 @@ export default function BedForm() {
           rows={hospitalPatientData}
           columns={columnMap}
           pageSize={50}
-        
+          checkboxSelection={true}
           onSelectionModelChange={SelectPatientRow}
         />
       </div>
