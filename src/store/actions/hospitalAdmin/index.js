@@ -48,10 +48,10 @@ export function addBed(bodyObject, token) {
 
 export const deleteBedBooking = (bookingId) => async(dispatch,getStore) =>{
     const token = getStore().auth.token;
-    console.log(token)
+    console.log(bookingId,"BOOKING ID");
     dispatch(startLoading("Deleting Bed booking"))
     try{
-      const response = await API.API_DELETE_SERVICE(`${API_HOST.BED_AVAILABILITY_SERVICE}/${bookingId}/_discharge`,{headers: {"X-Token-ID" : token}})
+      const response = await API.API_DELETE_SERVICE(`${API_HOST.BED_AVAILABILITY_SERVICE}${bookingId}/_discharge`,{headers: {"X-Token-ID" : token}})
       dispatch(deletePatientBedSuccess(bookingId))
       dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Bed discharge successfully.' }));
       dispatch(stopLoading())
