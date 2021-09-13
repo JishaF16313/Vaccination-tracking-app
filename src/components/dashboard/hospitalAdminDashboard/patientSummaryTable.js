@@ -5,7 +5,7 @@ import { Button } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import { startLoading } from '../../../store/actions/loader/index';
 import { loaderText } from '../../../utility/commonTexts';
-import { deleteBedBooking, getPatientList } from '../../../store/actions/hospitalAdmin/index';
+import { deleteBedBooking, getPatientList, TYPES } from '../../../store/actions/hospitalAdmin/index';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +42,7 @@ export default function BedForm() {
   useEffect(() => {
     dispatch(startLoading(loaderText));
     dispatch(getPatientList(token));
-  }, []);
+  }, [token==null]);
   
   const [selectedPatientArray, setSelectedPatientArray] = useState([]);
 
@@ -66,7 +66,7 @@ export default function BedForm() {
   const DischargeHandler = (SelectedRowArray) => {
     console.log(DischargePatient);
     dispatch(deleteBedBooking(DischargePatient));
-    
+    dispatch({ type: TYPES.TOTAL_PATIENT_COUNT, payload: hospitalPatientData.length-DischargePatient.length });
   }
 
 
@@ -130,8 +130,7 @@ export default function BedForm() {
           rows={hospitalPatientData}
           columns={columnMap}
           pageSize={50}
-          checkboxSelection
-          disableSelectionOnClick
+        
           onSelectionModelChange={SelectPatientRow}
         />
       </div>
