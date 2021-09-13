@@ -3,6 +3,9 @@ import { setAlert } from '../alert/index';
 import { stopLoading } from '../loader/index';
 import history from '../../../routes/history';
 import * as API_HOST from '../../../env-config';
+import * as API from "../../../lib/api"
+import {startLoading} from "../loader"
+
 
 
 export const TYPES = {
@@ -12,7 +15,8 @@ export const TYPES = {
     RESET_TEMP_: 'GET_HOSPITAL_BED_LIST',
     POPULATE_UPLOAD_HISTORY: 'POPULATE_UPLOAD_HISTORY',
     POPULATE_PATIENT_LIST:'POPULATE_PATIENT_LIST',
-    TOTAL_PATIENT_COUNT:'TOTAL_PATIENT_COUNT' 
+    TOTAL_PATIENT_COUNT:'TOTAL_PATIENT_COUNT',
+    DELETE_PATIENT_BED : "DELETE_PATIENT_BED" 
  }
 
 //api call for create hospital bed
@@ -39,6 +43,30 @@ export function addBed(bodyObject, token) {
        }
     }
  };
+
+ // START PATIENT BED DISCHARGE ACTION 
+
+export const deleteBedBooking = (bookingId) => async(dispatch,getStore) =>{
+    const token = getStore().auth.token;
+    console.log(token)
+    dispatch(startLoading("Deleting Bed booking"))
+    try{
+      const response = await API.API_DELETE_SERVICE(`${API_HOST.BED_AVAILABILITY_SERVICE}/${bookingId}/_discharge`,{headers: {"X-Token-ID" : token}})
+      dispatch(deletePatientBedSuccess(bookingId))
+      dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: 'Bed discharge successfully.' }));
+      dispatch(stopLoading())
+    }
+    catch (error)
+    {
+      dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: "Bed discharge failed" }));
+      dispatch(stopLoading())
+    }
+}
+const deletePatientBedSuccess = response => ({
+    type: TYPES.DELETE_PATIENT_BED,
+    payload: response
+})
+// END PATIENT BED DISCHARGE ACTION
 
   //API CALL FOR PATIENT LISTING
  export function getPatientList(token) {
