@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 function AddUpdateHospitalBranch() {
     const [hospitalNameValue, setHospitalNameValue] = useState(null);
+    const [showHospitalNameValidation, setShowHospitalNameValidation] = useState(false);
     
     const storeData = useSelector((store) => {
         return {
@@ -74,6 +75,12 @@ function AddUpdateHospitalBranch() {
     });
 
     const submitForm = (values) => {
+        if(!hospitalNameValue){
+            setShowHospitalNameValidation(true);
+            return;
+        }else{
+            setShowHospitalNameValidation(false);
+        }
         dispatch(startLoading('Please wait...'));
         if (storeData.data.addOrUpdate === "add") {
             let obj = {
@@ -135,6 +142,9 @@ function AddUpdateHospitalBranch() {
                         </div>
                         <div className={classes.field}>
                             <InputField value={hospitalNameValue} label="Hospital Name" onChange={(e, formik) => hospitalNameChange(e, formik)} name="hospitalName" type="autocomplete" options={storeData.hospitalData.hospitalDdlOptions ? storeData.hospitalData.hospitalDdlOptions : []} classes={classes} required/>
+                            {showHospitalNameValidation && (
+                                <div className={classes.errorField}>Please enter hospital name.</div>
+                            )}
                         </div>
                         <div className={classes.field}>
                             <InputField label={hospitalZipLabelText} name="zip" onChange={(e) => formik.setFieldValue('zip', e.target.value)} type="text" classes={classes} required/>
