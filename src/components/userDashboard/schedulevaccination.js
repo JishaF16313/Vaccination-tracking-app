@@ -76,6 +76,7 @@ function ScheduleVaccination() {
         dispatch(startLoading('Please wait...'));
         let date = dateNow();
         let token = storeData.loggedInUserData.token;
+        setSelectedDate(date);
         dispatch(getAvailableVaccineByDate(date, token));
     }, []);
 
@@ -170,7 +171,7 @@ function ScheduleVaccination() {
         if (selectedRow) {
             dispatch(startLoading('Please wait...'));
             let token = storeData.loggedInUserData.token;
-            dispatch(scheduleVaccination(selectedRow, token));
+            dispatch(scheduleVaccination(selectedRow, token, selectedDate));
         } else {
             dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: "Please select a row from the list of available slots." }));
         }
