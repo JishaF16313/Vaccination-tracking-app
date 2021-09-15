@@ -20,10 +20,17 @@ export function SetPatientDetails(value, token) {
   return async dispatch => {
     try {
       await axios.post(`${API_HOST.BEDBOOKING_SERVICE}_book`, value, { headers: getHeaders(token) })
-        .then((response) => {
-          let hospitalAvailableBedList = parseHospitalBedData(response);
-          return onSuccess(response, hospitalAvailableBedList);
-        });
+      .then((response) => {
+        
+        if(response.data.message){
+          dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: response.data.message }));
+          dispatch(stopLoading());
+      } else {
+        let hospitalAvailableBedList = parseHospitalBedData(response);
+        return onSuccess(response, hospitalAvailableBedList);
+      }
+        
+      });
     } catch (error) {
       return onError(error);
     }
@@ -37,9 +44,9 @@ export function SetPatientDetails(value, token) {
       // history.push('/userDashboard');
     }
     function onError(error) {
-      let message = "Something Went Wrong."
-      dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
-      // dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+     // let message = "Something Went Wrong."
+     // dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
+       dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
       dispatch(stopLoading());
 
     }
@@ -131,6 +138,7 @@ export const parseHospitalBedData = (response) => {
 }
 /***setting Available Bed Data */
 export const hospitalAvailbleBedList = (value) => ({
+
   type: TYPES.SET_HOSPITAL_AVAIALBLE_BED_LIST, payload: value
 });
 /**Confirm Bed Booking of Patient */
@@ -144,7 +152,12 @@ export function SetPatientBedBookingDetails(value, token) {
     try {
       await axios.put(`${API_HOST.BEDBOOKING_SERVICE}/` + bookingId + `/_confirm`, requestData, { headers: getHeaders(token) })
         .then((response) => {
+          if(response.data.message){
+            dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: response.data.message }));
+            dispatch(stopLoading());
+        } else {
           return onSuccess(response);
+        }
         });
     } catch (error) {
       return onError(error);
@@ -159,9 +172,9 @@ export function SetPatientBedBookingDetails(value, token) {
       dispatch(setModalState(true));
     }
     function onError(error) {
-      let message = "Something Went Wrong."
-      dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
-      // dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+      //let message = "Something Went Wrong."
+      //dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
+       dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
       dispatch(stopLoading());
     }
   }
@@ -175,7 +188,12 @@ export function GetBookingStatus(value, token) {
     try {
       await axios.get(`${API_HOST.BEDBOOKING_SERVICE}${bookingID}/_status/`, { headers: getHeaders(token) })
         .then((response) => {
+          if(response.data.message){
+            dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: response.data.message }));
+            dispatch(stopLoading());
+        } else {
           return onSuccess(response);
+        }
         });
     } catch (error) {
       return onError(error);
@@ -189,9 +207,9 @@ export function GetBookingStatus(value, token) {
       dispatch(setModalState(true));
     }
     function onError(error) {
-      let message = "Something Went Wrong."
-      dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
-      // dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+     // let message = "Something Went Wrong."
+     // dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
+      dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
       dispatch(stopLoading());
     }
   }
@@ -217,6 +235,7 @@ export function hospitalAvailbleBedListFilter(value, token) {
       await axios.post(`${API_HOST.BED_AVAILABILITY_SERVICE}/getBedDetailsByCityOrHospital`, value, { headers: getHeaders(token) })
         .then((response) => {
           let hospitalAvailableBedList = parseHospitalBedData(response);
+          console.log(hospitalAvailableBedList,"ddddddddddddd");
           dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));
         });
     } catch (error) {

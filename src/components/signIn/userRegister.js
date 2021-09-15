@@ -106,7 +106,7 @@ const submitForm = async (values) => {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        <Formik initialValues={{userLoginId: '', pwd: ''}} validationSchema={validate} onSubmit={values => submitForm(values)}>
+        <Formik initialValues={{userLoginId: '', pwd: '', cityName: '', pinCode: ''}} validationSchema={validate} onSubmit={values => submitForm(values)}>
                 {formik => (
                     <Form className={classes.form}>
                         <div className={classes.field}>
