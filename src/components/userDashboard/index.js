@@ -12,6 +12,7 @@ import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import { DataGrid } from '@material-ui/data-grid';
 import TextField from '@material-ui/core/TextField';
 import PatientDetailsForm from '../patientDetailsForm';
+import PatientList from "../patientList";
 import HospitalDataTable from '../hospitalDataTable';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
@@ -25,6 +26,10 @@ import { startLoading } from '../../store/actions/loader/index';
 import ConfirmBedBookingDetails from '../userDashboard/handleBedBookingConfirmModal';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import PDFReports from '../reports/pdfReports';
+import PatientCreateForm from "../patientCreate/index";
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+
+//import logo from "./logo192.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,7 +91,7 @@ function UserDashboard() {
     let token = storeData.loggedInUserData.token;
     dispatch(startLoading('Please wait...'));
     dispatch(GetBookingStatus(values, token));
-    // console.log("store",storeData);
+      // console.log("store",storeData);
     // handleConfirmBedBooking(data);
   };
 
@@ -176,7 +181,7 @@ function UserDashboard() {
     { id: 1, branchName: 'K R Puram', hospitalName: 'MaxCure', vaccineType: 'Covishield', slots: 10 },
     { id: 2, branchName: 'KukatPally', hospitalName: 'Care Hospital', vaccineType: 'Covaxin', slots: 20 }
   ];
-
+ 
 
   return (
     <Paper className={classes.root}>
@@ -187,6 +192,8 @@ function UserDashboard() {
         textColor="primary"
         centered
       >
+         <Tab className="customStyle" label="Patients" icon={<AddCircleOutlineIcon />} />
+
         <Tab className="customStyle" label="Book A Bed" icon={<AddToQueueIcon />} />
         <Tab className="customStyle" label="Schedule Vaccine" icon={<CalendarTodayIcon />} />
         <Tab className="customStyle" label="Booking Status" icon={<CheckCircleIcon />} />
@@ -194,13 +201,17 @@ function UserDashboard() {
 
       </Tabs>
       <TabPanel value={value} index={0}>
-        <PatientDetailsForm></PatientDetailsForm>
+        <PatientList></PatientList>
+      </TabPanel>
+      
+      <TabPanel value={value} index={1}>
+      <PatientDetailsForm></PatientDetailsForm>
         <HospitalDataTable></HospitalDataTable>
       </TabPanel>
 
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={2}>
         <ScheduleVaccination />
-        {/* <Typography component="h4" variant="h5" className={classes.title}> Vaccine Slots:</Typography>
+              {/* <Typography component="h4" variant="h5" className={classes.title}> Vaccine Slots:</Typography>
         <form className={classes.container} noValidate>
           <TextField
             id="datetime-local"
@@ -225,9 +236,9 @@ function UserDashboard() {
             <Button variant="contained" color="primary" className={classes.cnfrmBtn}>Schedule</Button>
           </Box>
         </form> */}
-      </TabPanel>
+              </TabPanel>
 
-      <TabPanel value={value} index={2}>
+      <TabPanel value={value} index={3}>
         <Typography component="h4" variant="h5" className={classes.title}> Get Booking Details:</Typography>
         <div className={classes.bookingTextField}>
           <Formik initialValues={{ bookingStatus: '' }} validationSchema={validate} onSubmit={values => submitForm(values)}>
@@ -246,7 +257,7 @@ function UserDashboard() {
           </Formik>
         </div>
 
-        {/* {storeData.data.bookingDetails && (
+      {/* {storeData.data.bookingDetails && (
           <div>
           <p>Booking ID : {storeData.data.bookingDetails[0].bookingId} </p>
           <p>Booking Status : {storeData.data.bookingDetails[0].bookingStatus} </p>
@@ -257,10 +268,10 @@ function UserDashboard() {
           <p>Bed Type : {storeData.data.bookingDetails[0].Hospital.Bed['bed-type']} </p>
           <p>Facility : {storeData.data.bookingDetails[0].Hospital.Bed['bed-facility']} </p>
         </div>
-        )} */}
-      </TabPanel>
+        )} */}      
+        </TabPanel>
   
-      <TabPanel value={value} index={3}>
+      <TabPanel value={value} index={4}>
         <PDFReports/>
       </TabPanel>
   
