@@ -13,6 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DoneIcon from '@material-ui/icons/Done';
 import {get as getFromObject} from "lodash"
+import TablePagination from "@material-ui/core/TablePagination";
 
 const useStyles = makeStyles({
   table: {
@@ -46,10 +47,13 @@ const styles = theme => ({
 });
 
 function ActionableTable(props) {
+
     const {columnMap, rows, onEdit, onDelete, onDone, rowIdField } = props
 
     const classes = useStyles()
     const [selectedID, setSelectedID] = useState(0);
+    const [page, setPage] =useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     // Flag to show/hide the actions column
     const haveActions = onEdit || onDelete || onDone
 
@@ -87,6 +91,18 @@ function ActionableTable(props) {
 
     // ID field for table rows
     const rowID = rowIdField || "id"
+    // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+const handleChangePage = (event, newPage) => {
+  setPage(newPage);
+};
+
+const handleChangeRowsPerPage = (event) => {
+  setRowsPerPage(parseInt(event.target.value, 10));
+  setPage(0);
+};
 
     return (
       <TableContainer component={Paper} elevation={3}>
@@ -102,7 +118,9 @@ function ActionableTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, index) =>(
+          {rows
+          .slice(page*rowsPerPage,page*rowsPerPage+rowsPerPage)
+          .map((row, index) =>(
             <TableRow key={`row-${index}`} hover
             key={row[rowID]}
             onClick={() => {
@@ -127,7 +145,18 @@ function ActionableTable(props) {
           ))}
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+        colSpan={3}
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+       
+      />
     </TableContainer>
+       
     )
 }
 
