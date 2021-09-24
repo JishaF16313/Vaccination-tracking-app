@@ -127,6 +127,7 @@ let currentLength=0;
   ];
 
   const handlePatientEdit = (row) => {
+    return false;
     setEditOpen(true);
     setPdata(row);
     
@@ -137,6 +138,7 @@ let currentLength=0;
   };
 
   const handlePatientDelete = (row) => {
+    return false;
     dispatch(setDeletingPatientUserId(row.id));
     dispatch(setOpenPatientUserDeleteDialog(true));
   };
