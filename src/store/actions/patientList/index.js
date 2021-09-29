@@ -7,31 +7,59 @@ import * as API from "../../../lib/api";
 import { startLoading } from "../loader";
 
 export const TYPES = {
-  UPDATE_PATIENTS: "UPDATE_PATIENTS",
   POPULATE_PATIENTS: "POPULATE_PATIENTS",
   SET_DELETING_PATIENT_USER_ID: "SET_DELETING_PATIENT_USER_ID",
   OPEN_PATIENT_USER_DELETE_DIALOG: "OPEN_PATIENT_USER_DELETE_DIALOG",
   DELETE_SELECTED_PATIENT_USER: "DELETE_SELECTED_PATIENT_USER",
+
+  GET_PATIENT_BY_ID: "GET_PATIENT_BY_ID",
+
+  UPDATE_PATIENTS: "UPDATE_PATIENTS",
   SET_EDITED_PATIENT_USER_DATA: "SET_EDITED_PATIENT_USER_DATA",
   ADD_UPDATE: "ADD_UPDATE",
-  GET_PATIENT_BY_ID: "GET_PATIENT_BY_ID",
 };
 
 export const updatePatientsUser = (value) => ({
   type: TYPES.UPDATE_PATIENTS,
   payload: value,
 });
-export const setEditedPatientUserData = (value) => ({
-  type: TYPES.SET_EDITED_PATIENT_USER_DATA,
-  payload: value,
-});
+
 export const setAddOrUpdate = (value) => ({
   type: TYPES.ADD_UPDATE,
   payload: value,
 });
-export const setDeletingPatientUserId = (value) => ({
+export const setDeletingPatientUserId =
+  (patientId) => async (dispatch, getStore) => {
+    const token = getStore().auth.token;
+    dispatch(startLoading("Deleting Patient"));
+    try {
+      const response = await API.API_DELETE_SERVICE(
+        `${API_HOST.PATIENT_SERVICE}${patientId}/_delete`,
+        { headers: { "X-Token-ID": token } }
+      );
+      dispatch(deletePatientSuccess(patientId));
+      dispatch(
+        setAlert({
+          alertType: "success",
+          alertTitle: "Success",
+          alertMessage: "Patient deleted successfully.",
+        })
+      );
+      dispatch(stopLoading());
+    } catch (error) {
+      dispatch(
+        setAlert({
+          alertType: "error",
+          alertTitle: "Error",
+          alertMessage: "Patient deletion failed",
+        })
+      );
+      dispatch(stopLoading());
+    }
+  };
+const deletePatientSuccess = (patientId) => ({
   type: TYPES.SET_DELETING_PATIENT_USER_ID,
-  payload: value,
+  payload: patientId,
 });
 
 export const setOpenPatientUserDeleteDialog = (value) => ({
@@ -39,41 +67,31 @@ export const setOpenPatientUserDeleteDialog = (value) => ({
   payload: value,
 });
 
-export const deleteSelectedPatientUser = () => ({
+export const deleteSelectedPatientUser = (value) => ({
   type: TYPES.DELETE_SELECTED_PATIENT_USER,
+  payload: value,
 });
+
 //API for get patient by ID
 export function getPatientById(pidId, token) {
   return async (dispatch) => {
+    dispatch(startLoading("Loading Patient"));
     try {
       await axios
-        .get(`${API_HOST.BED_AVAILABILITY_SERVICE}${pidId}/pdetails`, {
+        .get(`${API_HOST.PATIENT_SERVICE}${pidId}/_getPatient`, {
           headers: getHeaders(token),
         })
         .then((response) => {
-          let patientData = response.data.map((item) => {
-            return {
-              patientId: item.patientId,
-              patientFName: item.patientFirstName,
-              patientLName: item.patientLastName,
-              patientDob: item.patientFName,
-              patientCnum: item.patientContactNumber,
-              patientEmail: item.patientEmailId,
-              patientZipCode: item.patientFName,
-              patientCity: item.patientFName,
-              patientState: item.patientFName,
-              patientPan: item.patientFName,
-              patientAadhar: item.aadharCard,
-            };
-          });
-          return onSuccess(response, patientData);
+          return onSuccess(response.data);
         });
     } catch (error) {
       return onError(error);
     }
 
-    function onSuccess(response, patientData) {
-      dispatch({ type: TYPES.GET_PATIENT_BY_ID, payload: response.data });
+    function onSuccess(patientData) {
+      dispatch({ type: TYPES.GET_PATIENT_BY_ID, payload: patientData });
+      dispatch({ type: TYPES.CONTROL_DIALOG_BOX, payload: true });
+
       dispatch(stopLoading());
     }
     function onError(error) {
@@ -93,25 +111,25 @@ export function getPatientById(pidId, token) {
 export function getPatientListDetails(zipcode, token) {
   return async (dispatch) => {
     try {
-       if(zipcode){
-      await axios
-        .get(`${API_HOST.PATIENT_SERVICE}${zipcode}/_getPatients`, {
-          headers: getHeaders(token),
-        })
+      if (zipcode) {
+        await axios
+          .get(`${API_HOST.PATIENT_SERVICE}${zipcode}/_getPatients`, {
+            headers: getHeaders(token),
+          })
 
-        .then((response) => {
-          let patientList = response.data.map((item, k) => {
-            return {
-              id: k + 1,
-              patientId: item.patientId,
-              patientName: item.patientFirstName + " " + item.patientLastName,
-              email: item.patientEmailId,
-              contactno: item.patientContactNumber,
-              aadharCard: item.patientIdentificationDetailsResp.aadharNumber,
-            };
+          .then((response) => {
+            let patientList = response.data.map((item, k) => {
+              return {
+                id: k + 1,
+                patientId: item.patientId,
+                patientName: item.patientFirstName + " " + item.patientLastName,
+                email: item.patientEmailId,
+                contactno: item.patientContactNumber,
+                aadharCard: item.patientIdentificationDetailsResp.aadharNumber,
+              };
+            });
+            return onSuccess(patientList);
           });
-          return onSuccess(patientList);
-        });
       }
     } catch (error) {
       return onError(error);
@@ -135,7 +153,6 @@ export function getPatientListDetails(zipcode, token) {
 }
 
 export const getHeaders = (token) => {
-  //alert(token,"ggggg");
   const headers = {
     crossorigin: true,
     "Content-Type": "application/json",
