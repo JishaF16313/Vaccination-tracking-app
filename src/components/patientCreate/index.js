@@ -24,13 +24,13 @@ import {
   aadharCardValidationText,
   userPanCardValidationText,
 } from "../../utility/validationMessages";
+import { getPatientListDetails } from "../../store/actions/patientList/index";
 import {
-  getPatientListDetails,
-
-} from "../../store/actions/patientList/index";
-import { addPatient } from "../../store/actions/patientCreate/index";
+  addPatient,
+  setEditedPatientUserData,
+} from "../../store/actions/patientCreate/index";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useMemo, useCallback, useState } from "react";
+import React, { useMemo, useCallback, useState, useEffect } from "react";
 import { startLoading } from "../../store/actions/loader/index";
 import { isNull } from "lodash-es";
 
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(6),
     justifyContent: "center",
     display: "flex",
-    margin:'-10px'
+    margin: "-10px",
   },
   cancelBtn: {
     marginLeft: theme.spacing(4),
@@ -102,31 +102,79 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-around",
   },
-  left:{
-    paddingRight:"20px"
-  }
+  left: {
+    paddingRight: "20px",
+  },
 }));
 
 const PatientCreateForm = (props) => {
-  const[formvalidate,setFormValidate]=useState(false);
+  const [formvalidate, setFormValidate] = useState(false);
+  var initialValuesForAdd = {
+    firstName: "",
+    lastName: "",
+    contactNumber: "",
+    emailID: "",
+    pincode: "",
+    city: "",
+    state: "",
+    panNumber: "",
+    aadharNumber: "",
+    dob: "",
+  };
+  var initialValues = {
+    firstName: "",
 
-  const hidepopup=()=>{
-    
-    if(formvalidate){
+    lastName: "",
+    contactNumber: "",
+    emailID: "",
+    pincode: "",
+    city: "",
+    state: "",
+    panNumber: "",
+    aadharNumber: "",
+    dob: "",
+  };
+  const [getDetails, setDetails] = useState(initialValues);
 
+  const EditDetails = () => {
+    useEffect(() => {
+      setDetails({
+        ...initialValues,
+        firstName: props.pDatas.patientFirstName,
+        lastName: props.pDatas.patientLastName,
+        contactNumber: props.pDatas.patientContactNumber,
+        emailID: props.pDatas.patientEmailId,
+        pincode: props.pDatas.patientLocationDetailsResp.pinNumber,
+        city: props.pDatas.patientLocationDetailsResp.cityName,
+        state: props.pDatas.state,
+        panNumber: props.pDatas.patientIdentificationDetailsResp.panNumber,
+        aadharNumber:
+          props.pDatas.patientIdentificationDetailsResp.aadharNumber,
+        dob: props.pDatas.dateOfBirth,
+      });
+    }, [props.pDatas.patientFirstName]);
+  };
+  if (props.editMode) {
+    EditDetails();
+  }
+
+  const hidepopup = () => {
+    if (formvalidate) {
       props.actioncontrol();
     }
-  }
+  };
   const classes = useStyles();
 
   const title = addPatientText;
+
   const storeData = useSelector((store) => {
     return {
       loggedInUserData: store.auth,
       singlePatDetails: store.patientListReducer,
+      pat: store.patientListReducer,
     };
   });
-  const allSinglePatient = storeData.singlePatDetails.getSinglePatientByID; //Single patient data by Id
+
   const validate = Yup.object({
     firstName: Yup.string().max(100).required(hospitalUserNameValidationText),
     lastName: Yup.string().max(100).required(hospitalUserNameValidationText),
@@ -147,22 +195,14 @@ const PatientCreateForm = (props) => {
   });
 
   const dispatch = useDispatch();
-  const initialValues = {
-    firstName: "",
-    lastName: "",
-    contactNumber: "",
-    emailID: "",
-    city: "",
-    pincode: "",
-    state: "",
-    panNumber: "",
-    aadharNumber: "",
-  };
+
   const submitForm = (values) => {
-   // console.log("values", values);
-  //  alert('testsubmit');
-   props.actioncontrol();
-   props.controldisplay(values);
+    props.actioncontrol();
+    if (!props.editMode) {
+      props.controldisplay(values);
+    } else {
+      props.controldisplay_edit(values);
+    }
 
     let token = storeData.loggedInUserData.token;
     let zip = storeData.loggedInUserData.pinCode;
@@ -174,7 +214,8 @@ const PatientCreateForm = (props) => {
     patientDetails.patientEmailId = values.emailID;
     patientDetails.patientFirstName = values.firstName;
     patientDetails.patientIdentificationDetailsReq = {};
-    patientDetails.patientIdentificationDetailsReq.aadharNumber = values.aadharNumber;
+    patientDetails.patientIdentificationDetailsReq.aadharNumber =
+      values.aadharNumber;
     patientDetails.patientIdentificationDetailsReq.panNumber = values.panNumber;
     patientDetails.patientLastName = values.lastName;
     patientDetails.patientLocationDetailsReq = {};
@@ -182,19 +223,45 @@ const PatientCreateForm = (props) => {
     patientDetails.patientLocationDetailsReq.pinNumber = values.pincode;
     patientDetails.state = values.state;
 
+    //FOR EDIT
 
-    dispatch(addPatient(patientDetails, token));
-    dispatch(getPatientListDetails(zip,token));
+    var patientDetailsAfterEdit = {};
+    patientDetailsAfterEdit.dateOfBirth = values.dob;
+    patientDetailsAfterEdit.patientContactNumber = values.contactNumber;
+    patientDetailsAfterEdit.patientEmailId = values.emailID;
+    patientDetailsAfterEdit.patientFirstName = values.firstName;
+    patientDetailsAfterEdit.patientIdentificationDetails = {};
+    patientDetailsAfterEdit.patientIdentificationDetails.aadharNumber =
+      values.aadharNumber;
+    patientDetailsAfterEdit.patientIdentificationDetails.panNumber =
+      values.panNumber;
+    patientDetailsAfterEdit.patientLastName = values.lastName;
+    patientDetailsAfterEdit.patientLocationDetails = {};
+    patientDetailsAfterEdit.patientLocationDetails.cityName = values.city;
+    patientDetailsAfterEdit.patientLocationDetails.pinNumber = values.pincode;
+    patientDetailsAfterEdit.state = values.state;
+
+    !props.editMode
+      ? dispatch(addPatient(patientDetails, token))
+      : dispatch(
+          setEditedPatientUserData(
+            patientDetailsAfterEdit,
+            token,
+            props.pDatas.patientId
+          )
+        );
+
+    dispatch(getPatientListDetails(zip, token));
     setFormValidate(true);
   };
 
-   
-  //const rows = data;
   return (
     <div className={classes.mainDiv}>
       <h3>{!props.editMode ? "Create Patient" : "Update Patient"}</h3>
+
       <Formik
-        initialValues={initialValues}
+        enableReinitialize={true}
+        initialValues={!props.editMode ? initialValuesForAdd : getDetails}
         validationSchema={validate}
         onSubmit={(values) => submitForm(values)}
       >
@@ -337,7 +404,7 @@ const PatientCreateForm = (props) => {
                   color="primary"
                   size="medium"
                   type="submit"
-                 onClick={hidepopup}
+                  onClick={hidepopup}
                 >
                   {addPatientText}
                 </Button>
