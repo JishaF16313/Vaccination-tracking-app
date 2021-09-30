@@ -201,11 +201,12 @@ function UserDashboard() {
 
       </Tabs>
       <TabPanel value={value} index={0}>
-        <PatientList></PatientList>
+        <PatientList actions={true} ></PatientList>
       </TabPanel>
       
       <TabPanel value={value} index={1}>
-      <PatientDetailsForm></PatientDetailsForm>
+      {/* <PatientDetailsForm></PatientDetailsForm> */}
+      <PatientList actions={false} ></PatientList>
         <HospitalDataTable></HospitalDataTable>
       </TabPanel>
 

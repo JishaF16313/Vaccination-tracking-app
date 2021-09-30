@@ -17,6 +17,7 @@ export const TYPES = {
   UPDATE_PATIENTS: "UPDATE_PATIENTS",
   SET_EDITED_PATIENT_USER_DATA: "SET_EDITED_PATIENT_USER_DATA",
   ADD_UPDATE: "ADD_UPDATE",
+  SET_HOSPITAL_AVAIALBLE_BED_LIST: "SET_HOSPITAL_AVAIALBLE_BED_LIST",
 };
 
 export const updatePatientsUser = (value) => ({
@@ -90,11 +91,11 @@ export function getPatientById(pidId, token) {
 
     function onSuccess(patientData) {
       dispatch({ type: TYPES.GET_PATIENT_BY_ID, payload: patientData });
-      dispatch({ type: TYPES.CONTROL_DIALOG_BOX, payload: true });
 
       dispatch(stopLoading());
     }
     function onError(error) {
+
       dispatch(
         setAlert({
           alertType: "error",
@@ -163,4 +164,104 @@ export const getHeaders = (token) => {
     "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
   };
   return headers;
+};
+
+/***setting Available Bed Data */
+export const hospitalAvailbleBedList = (value) => ({
+  type: TYPES.SET_HOSPITAL_AVAIALBLE_BED_LIST,
+  payload: value,
+});
+//BED BOOKING
+
+export function PatientBedBookingDetails(value, token) {
+  return async (dispatch) => {
+    try {
+      await axios
+        .post(`${API_HOST.BEDBOOKING_SERVICE}_book`, value, {
+          headers: getHeaders(token),
+        })
+        .then((response) => {
+          if (response.data.message) {
+            dispatch(
+              setAlert({
+                alertType: "error",
+                alertTitle: "Error",
+                alertMessage: response.data.message,
+              })
+            );
+            dispatch(stopLoading());
+          } else {
+            let hospitalAvailableBedList = parseHospitalBedData(response);
+            return onSuccess(response, hospitalAvailableBedList);
+          }
+        });
+    } catch (error) {
+      return onError(error);
+    }
+
+    function onSuccess(response, hospitalAvailableBedList) {
+      let message =
+        "Booking for Patient Confirmed.Please check available beds below and find booking details.'Booking ID -" +
+        " " +
+        response.data.bookingId +
+        " Booking Status - " +
+        response.data.bookingStatus;
+
+      dispatch(
+        setAlert({
+          alertType: "success",
+          alertTitle: "Success",
+          alertMessage: message,
+        })
+      );
+
+      dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));
+      dispatch(stopLoading());
+    }
+    function onError(error) {
+      dispatch(
+        setAlert({
+          alertType: "error",
+          alertTitle: "Error",
+          alertMessage: error.message,
+        })
+      );
+      dispatch(stopLoading());
+    }
+  };
+}
+
+//Hospitals
+export const parseHospitalBedData = (response) => {
+  let parsedResponseArr = [];
+  if (response.data) {
+    let data = response.data;
+    let finalResponseData = [];
+    let bookingResponseData = [];
+    let parsedResponseArr = [];
+    bookingResponseData.push({
+      bookingID: data.bookingId,
+      bookingStatus: data.bookingStatus,
+      waitingNumber: data.waitingNumber,
+    });
+    for (let i = 0; i < data.Hospitals.length; i++) {
+      for (let j = 0; j < data.Hospitals[i].Branches.length; j++) {
+        for (let k = 0; k < data.Hospitals[i].Branches[j].Beds.length; k++) {
+          parsedResponseArr.push({
+            id: data.Hospitals[i].hospitalId + "-" + k, //dynamic ID
+            hospitalName: data.Hospitals[i].hospitalName,
+            hospitalId: data.Hospitals[i].hospitalId,
+            branchName: data.Hospitals[i].Branches[j].branchName,
+            branchId: data.Hospitals[i].Branches[j].branchId,
+            bedType: data.Hospitals[i].Branches[j].Beds[k]["bed-type"],
+            bedFacility: data.Hospitals[i].Branches[j].Beds[k]["bed-facility"],
+            bedId: data.Hospitals[i].Branches[j].Beds[k]["bed-id"],
+          });
+        }
+      }
+    }
+    finalResponseData.bookingResponseData = bookingResponseData;
+    finalResponseData.bedAvailabilityData = parsedResponseArr;
+    return finalResponseData;
+  }
 };

@@ -29,7 +29,7 @@ const initialState = {
   editedpatientUserData: null,
   deletingPatientUserId: null,
   openDeleteConfirmationDialog: false,
-  controldialogBox: false,
+  hospitalAvailableBedList: null,
 };
 
 const patientListReducer = (state = initialState, { type, payload }) => {
@@ -38,11 +38,15 @@ const patientListReducer = (state = initialState, { type, payload }) => {
       return { ...state, getAllPatients: payload };
 
     case actions.TYPES.GET_PATIENT_BY_ID:
+     if(payload){
       return { ...state, getSinglePatientByID: payload };
+     }
+    
 
     case actions.TYPES.SET_EDITED_PATIENT_USER_DATA:
       return { ...state, editedpatientUserData: payload };
-
+      case actions.TYPES.SET_HOSPITAL_AVAIALBLE_BED_LIST:
+        return { ...state, hospitalAvailableBedList: payload };
     case actions.TYPES.SET_DELETING_PATIENT_USER_ID:
       return { ...state, deletingPatientUserId: payload };
     case actions.TYPES.OPEN_PATIENT_USER_DELETE_DIALOG:
