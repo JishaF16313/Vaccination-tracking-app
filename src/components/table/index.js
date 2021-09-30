@@ -48,10 +48,12 @@ const styles = theme => ({
 
 function ActionableTable(props) {
 
-    const {columnMap, rows, onEdit, onDelete, onDone, rowIdField } = props
+    const {columnMap, rows, onEdit, onDelete, onDone, rowIdField} = props
 
     const classes = useStyles()
     const [selectedID, setSelectedID] = useState(0);
+    const [selectedRow,setSelectedRow]=useState([]);
+    localStorage.setItem("PatientDetails", JSON.stringify(selectedRow))
     const [page, setPage] =useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     // Flag to show/hide the actions column
@@ -65,6 +67,14 @@ function ActionableTable(props) {
     
     // Row done handler
     const handleRowDone = React.useCallback((row) => () => onDone(row), [onDone]) 
+
+
+   
+
+
+  
+
+    
     
 
     //Row Click Handler
@@ -124,8 +134,10 @@ const handleChangeRowsPerPage = (event) => {
             <TableRow key={`row-${index}`} hover
             key={row[rowID]}
             onClick={() => {
-              setSelectedID(row[rowID])
+              setSelectedID(row[rowID]);
+              setSelectedRow(row);
             }}
+
             selected={selectedID === row[rowID]}
             classes={{ hover: classes.hover, selected: classes.selected }}
             className={classes.tableRow}>

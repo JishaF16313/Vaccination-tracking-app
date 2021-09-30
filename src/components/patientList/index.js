@@ -14,6 +14,7 @@ import {
   setOpenPatientUserDeleteDialog,
   deleteSelectedPatientUser,
   getPatientById,
+  PatientBedBookingDetails,
 } from "../../store/actions/patientList/index";
 import { Button } from "@material-ui/core";
 import {
@@ -56,7 +57,7 @@ const useStyles = makeStyles({
   },
 });
 
-function PatientList() {
+function PatientList(props) {
   const [open, setOpen] = React.useState(false);
   const [openEdit, setEditOpen] = React.useState(false);
   const [sdeltid, setSDeltId] = React.useState("");
@@ -73,6 +74,46 @@ function PatientList() {
 
   const allPatients = storeData.pat.getAllPatients;
   const getPatientByIDDetails = storeData.pat.getSinglePatientByID;
+  const getPatientByIDForBedBook = storeData.pat.getSinglePatientByID;
+
+  /*******For Bed Booking start********/
+  // This useEffect is for retriving patient data from Patient bed booking
+  useEffect(() => {
+    getPatientForBedBook();
+  }, [getPatientByIDForBedBook.patientId]);
+
+  const getPatientForBedBook = () => {
+    const identifationD =
+      getPatientByIDForBedBook.patientIdentificationDetailsResp;
+    const locations = getPatientByIDForBedBook.patientLocationDetailsResp;
+    if (getPatientByIDForBedBook.patientId) {
+      var patientDetailsForBedBooking = {};
+
+      patientDetailsForBedBooking.patient_Id =
+        getPatientByIDForBedBook.patientId;
+      patientDetailsForBedBooking.patient_first_name =
+        getPatientByIDForBedBook.patientFirstName;
+      patientDetailsForBedBooking.patient_last_name =
+        getPatientByIDForBedBook.patientLastName;
+      patientDetailsForBedBooking.patient_contact_number =
+        getPatientByIDForBedBook.patientContactNumber;
+      patientDetailsForBedBooking.patient_email_id =
+        getPatientByIDForBedBook.patientEmailId;
+      patientDetailsForBedBooking.patient_LocationDetails = {};
+      patientDetailsForBedBooking.patient_LocationDetails.city_name =
+        locations.cityName;
+      patientDetailsForBedBooking.patient_LocationDetails.pin_number =
+        locations.pinNumber;
+      patientDetailsForBedBooking.patient_IdentificationDetail = {};
+      patientDetailsForBedBooking.patient_IdentificationDetail.pan_number =
+        identifationD.panNumber;
+      patientDetailsForBedBooking.patient_IdentificationDetail.aadhar_card =
+        identifationD.aadharNumber;
+      dispatch(PatientBedBookingDetails(patientDetailsForBedBooking, token));
+    }
+  };
+
+  /*******For Bed Booking end********/
 
   const controldisplay = (values) => {
     setPatienLength(values);
@@ -149,6 +190,15 @@ function PatientList() {
     setEditOpen(false);
   };
 
+  const handleBookABedBtnClick = () => {
+    let patientIDForBooking = JSON.parse(
+      localStorage.getItem("PatientDetails")
+    ).patientId;
+
+    dispatch(getPatientById(patientIDForBooking, token));
+    const hdata = storeData.pat.hospitalAvailableBedList;
+  };
+
   return (
     <div className={classes.root}>
       <h3>{patientList}</h3>
@@ -156,16 +206,29 @@ function PatientList() {
       <div className={classes.gridroot}>
         <div style={{ height: "auto", width: "100%" }}>
           <div>
-            <Button
-              onClick={handleAddPatientBtnClick}
-              className={classes.addUserButton}
-              variant="contained"
-              color="primary"
-              size="medium"
-              type="button"
-            >
-              Add Patient
-            </Button>
+            {props.actions ? (
+              <Button
+                onClick={handleAddPatientBtnClick}
+                className={classes.addUserButton}
+                variant="contained"
+                color="primary"
+                size="medium"
+                type="button"
+              >
+                Add Patient
+              </Button>
+            ) : (
+              <Button
+                onClick={handleBookABedBtnClick}
+                className={classes.addUserButton}
+                variant="contained"
+                color="primary"
+                size="medium"
+                type="button"
+              >
+                Book A Bed
+              </Button>
+            )}
             <Dialog
               open={open}
               onClose={handleClose}
@@ -199,12 +262,20 @@ function PatientList() {
             )}
           </div>
           <div className={classes.tableContainer}>
-            <Table
-              columnMap={columnMap}
-              rows={allPatients}
-              onEdit={handlePatientEdit}
-              onDelete={handlePatientDelete}
-            />
+            {props.actions ? (
+              <Table
+                columnMap={columnMap}
+                rows={allPatients}
+                onEdit={handlePatientEdit}
+                onDelete={handlePatientDelete}
+              />
+            ) : (
+              <Table
+                columnMap={columnMap}
+                rows={allPatients}
+                rowIdField={"patientId"}
+              />
+            )}
           </div>
 
           <ConfirmationDialogue
