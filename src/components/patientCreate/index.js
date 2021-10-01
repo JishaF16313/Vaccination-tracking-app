@@ -198,11 +198,7 @@ const PatientCreateForm = (props) => {
 
   const submitForm = (values) => {
     props.actioncontrol();
-    if (!props.editMode) {
-      props.controldisplay(values);
-    } else {
-      props.controldisplay_edit(values);
-    }
+    
 
     let token = storeData.loggedInUserData.token;
     let zip = storeData.loggedInUserData.pinCode;
@@ -241,6 +237,11 @@ const PatientCreateForm = (props) => {
     patientDetailsAfterEdit.patientLocationDetails.pinNumber = values.pincode;
     patientDetailsAfterEdit.state = values.state;
 
+    if (!props.editMode) {
+      props.controldisplay(patientDetails);
+    } else {
+      props.controldisplay_edit(patientDetailsAfterEdit);
+    }
     !props.editMode
       ? dispatch(addPatient(patientDetails, token))
       : dispatch(
@@ -422,6 +423,10 @@ const PatientCreateForm = (props) => {
             {props.editMode && (
               <div className={classes.btnDiv}>
                 <Button
+                onClick={()=>{
+                 console.log(props)
+                 props.controldisplay_edit()
+                }}
                   variant="contained"
                   color="primary"
                   size="medium"

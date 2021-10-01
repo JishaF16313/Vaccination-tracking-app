@@ -75,12 +75,21 @@ function PatientList(props) {
   const allPatients = storeData.pat.getAllPatients;
   const getPatientByIDDetails = storeData.pat.getSinglePatientByID;
   const getPatientByIDForBedBook = storeData.pat.getSinglePatientByID;
-
+  const [bookBtnClick,setBookBtnClick]=useState(false);
   /*******For Bed Booking start********/
   // This useEffect is for retriving patient data from Patient bed booking
   useEffect(() => {
+    if(!props.actions && bookBtnClick){
     getPatientForBedBook();
+    }
   }, [getPatientByIDForBedBook.patientId]);
+
+  useEffect(() => {
+    if(bookBtnClick){
+    getPatientForBedBook();
+    }
+  }, [bookBtnClick]);
+
 
   const getPatientForBedBook = () => {
     const identifationD =
@@ -116,6 +125,8 @@ function PatientList(props) {
   /*******For Bed Booking end********/
 
   const controldisplay = (values) => {
+    // console.clear();
+    console.log(values)
     setPatienLength(values);
   };
   let token = storeData.loggedInUserData.token;
@@ -190,7 +201,9 @@ function PatientList(props) {
     setEditOpen(false);
   };
 
+  
   const handleBookABedBtnClick = () => {
+    setBookBtnClick(true)
     let patientIDForBooking = JSON.parse(
       localStorage.getItem("PatientDetails")
     ).patientId;
