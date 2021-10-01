@@ -28,7 +28,7 @@ import AssessmentIcon from '@material-ui/icons/Assessment';
 import PDFReports from '../reports/pdfReports';
 import PatientCreateForm from "../patientCreate/index";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-
+import BedTwoToneIcon from '@material-ui/icons/KingBedOutlined';
 //import logo from "./logo192.png";
 
 const useStyles = makeStyles((theme) => ({
@@ -193,8 +193,7 @@ function UserDashboard() {
         centered
       >
          <Tab className="customStyle" label="Patients" icon={<AddCircleOutlineIcon />} />
-
-        <Tab className="customStyle" label="Book A Bed" icon={<AddToQueueIcon />} />
+        <Tab className="customStyle" label="Book A Bed" icon={<BedTwoToneIcon />} />
         <Tab className="customStyle" label="Schedule Vaccine" icon={<CalendarTodayIcon />} />
         <Tab className="customStyle" label="Booking Status" icon={<CheckCircleIcon />} />
         <Tab className="customStyle" label="Reports" icon={<AssessmentIcon />} />
