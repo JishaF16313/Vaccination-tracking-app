@@ -18,7 +18,14 @@ export const TYPES = {
   SET_EDITED_PATIENT_USER_DATA: "SET_EDITED_PATIENT_USER_DATA",
   ADD_UPDATE: "ADD_UPDATE",
   SET_HOSPITAL_AVAIALBLE_BED_LIST: "SET_HOSPITAL_AVAIALBLE_BED_LIST",
+
+  TABLE_RAW: "TABLE_RAW",
 };
+
+export const getTableRaw = (value) => ({
+  type: TYPES.TABLE_RAW,
+  payload: value,
+});
 
 export const updatePatientsUser = (value) => ({
   type: TYPES.UPDATE_PATIENTS,
@@ -95,7 +102,6 @@ export function getPatientById(pidId, token) {
       dispatch(stopLoading());
     }
     function onError(error) {
-
       dispatch(
         setAlert({
           alertType: "error",
@@ -182,6 +188,7 @@ export function PatientBedBookingDetails(value, token) {
         })
         .then((response) => {
           if (response.data.message) {
+
             dispatch(
               setAlert({
                 alertType: "error",
@@ -219,8 +226,10 @@ export function PatientBedBookingDetails(value, token) {
       dispatch(stopLoading());
     }
     function onError(error) {
+ 
       dispatch(
         setAlert({
+
           alertType: "error",
           alertTitle: "Error",
           alertMessage: error.message,

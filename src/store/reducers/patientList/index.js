@@ -1,6 +1,7 @@
 import * as actions from "../../actions/patientList";
 import { removeObjectFromArray } from "../../../utility/commonFunctions";
 
+
 const initialState = {
   getAllPatients: [
     {
@@ -30,10 +31,14 @@ const initialState = {
   deletingPatientUserId: null,
   openDeleteConfirmationDialog: false,
   hospitalAvailableBedList: null,
+  patientDetalsFromRaw:[]
 };
 
 const patientListReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case actions.TYPES.TABLE_RAW:
+      return { ...state, patientDetalsFromRaw: payload };
+
     case actions.TYPES.POPULATE_PATIENTS:
       return { ...state, getAllPatients: payload };
 

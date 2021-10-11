@@ -49,9 +49,10 @@ export function getAvailableVaccineByDate(selectedDate, token) {
 };
 
 export function scheduleVaccination(bodyObject, token, selectedDate) {
+
     return async dispatch => {
         try {
-            await axios.post(`${API_HOST.VACCINATION_SERVICE}/bookVaccine`, bodyObject, { headers: getHeaders(token) })
+            await axios.post(`${API_HOST.VACCINATION_SERVICE}bookVaccine`, bodyObject, { headers: getHeaders(token) })
                 .then((response) => {
                     if(response.data.message){
                         dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: response.data.message }));
@@ -65,6 +66,7 @@ export function scheduleVaccination(bodyObject, token, selectedDate) {
         }
 
         function onSuccess(response, selectedDate) {
+           
             dispatch({ type: TYPES.SCHEDULE_VACCINATION, payload: response.data });
             dispatch(setVaccinationSuccessModalState(true));
             dispatch(stopLoading());
