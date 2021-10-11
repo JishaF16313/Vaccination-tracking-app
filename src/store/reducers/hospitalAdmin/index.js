@@ -17,7 +17,7 @@ const initialState = {
 }
 
 const patientReducer = ( state= initialState, {type, payload}) => {
-    console.log(state);
+
     switch(type)
     {
         case actions.TYPES.ADD_BED :

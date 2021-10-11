@@ -67,11 +67,12 @@ function ScheduleVaccination() {
         return {
             data: store.schedulevaccination,
             loggedInUserData: store.auth,
+            pat: store.patientListReducer,
         }
     });
 
     const dispatch = useDispatch();
-
+    const PBookVaccine=storeData.pat.patientDetalsFromRaw;
     useEffect(() => {
         dispatch(startLoading('Please wait...'));
         let date = dateNow();
@@ -140,7 +141,7 @@ function ScheduleVaccination() {
                 "city": userInfo.cityName,
                 "pincode": userInfo.pinCode,
                 "branch_id": selectedRow["branch-id"],
-                "adhar": userInfo.sub,
+                "adhar": PBookVaccine.aadharCard,
                 "vaccination-type": selectedRow["vaccine-type"],
                 "firstDoseDate": (doseValue === "first" ? (selectedDate ? selectedDate : dateNow()) : ""),
                 "date": selectedDate ? selectedDate : dateNow(),
@@ -170,7 +171,7 @@ function ScheduleVaccination() {
     const handleScheduleClick = (event) => {
         if (selectedRow) {
             dispatch(startLoading('Please wait...'));
-            let token = storeData.loggedInUserData.token;
+            let token = storeData.loggedInUserData.token; 
             dispatch(scheduleVaccination(selectedRow, token, selectedDate));
         } else {
             dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: "Please select a row from the list of available slots." }));

@@ -4,6 +4,7 @@ import { DataGrid } from "@material-ui/data-grid";
 import Table from "../table/index";
 import { startLoading } from "../../store/actions/loader/index";
 
+
 import { useSelector, useDispatch } from "react-redux";
 import {
   getPatientListDetails,
@@ -69,27 +70,29 @@ function PatientList(props) {
     return {
       pat: store.patientListReducer,
       loggedInUserData: store.auth,
+      data: store.patientdetails,
     };
   });
+ 
 
   const allPatients = storeData.pat.getAllPatients;
+ 
   const getPatientByIDDetails = storeData.pat.getSinglePatientByID;
   const getPatientByIDForBedBook = storeData.pat.getSinglePatientByID;
-  const [bookBtnClick,setBookBtnClick]=useState(false);
+  const [bookBtnClick, setBookBtnClick] = useState(false);
   /*******For Bed Booking start********/
   // This useEffect is for retriving patient data from Patient bed booking
   useEffect(() => {
-    if(!props.actions && bookBtnClick){
-    getPatientForBedBook();
+    if (!props.actions && bookBtnClick) {
+      getPatientForBedBook();
     }
   }, [getPatientByIDForBedBook.patientId]);
 
   useEffect(() => {
-    if(bookBtnClick){
-    getPatientForBedBook();
+    if (bookBtnClick) {
+      getPatientForBedBook();
     }
   }, [bookBtnClick]);
-
 
   const getPatientForBedBook = () => {
     const identifationD =
@@ -121,20 +124,24 @@ function PatientList(props) {
       dispatch(PatientBedBookingDetails(patientDetailsForBedBooking, token));
     }
   };
-
+ 
   /*******For Bed Booking end********/
 
   const controldisplay = (values) => {
-    // console.clear();
-    console.log(values)
+  
     setPatienLength(values);
   };
   let token = storeData.loggedInUserData.token;
   let zip = storeData.loggedInUserData.pinCode;
   const [patientLength, setPatienLength] = useState(allPatients.length);
 
+ 
+
+
   useEffect(() => {
     dispatch(getPatientListDetails(zip, token));
+ 
+
   }, [token == null]);
 
   let currentLength = 0;
@@ -201,16 +208,68 @@ function PatientList(props) {
     setEditOpen(false);
   };
 
-  
+  let rawS = storeData.pat.patientDetalsFromRaw;
+
   const handleBookABedBtnClick = () => {
-    setBookBtnClick(true)
     let patientIDForBooking = JSON.parse(
       localStorage.getItem("PatientDetails")
     ).patientId;
+    setBookBtnClick(patientIDForBooking);
 
     dispatch(getPatientById(patientIDForBooking, token));
     const hdata = storeData.pat.hospitalAvailableBedList;
   };
+  let btnPactient = "";
+  let tableForList = "";
+  if (props.actions && props.actions != "notneeded") {
+    tableForList = (
+      <Table
+        columnMap={columnMap}
+        rows={allPatients}
+        onEdit={handlePatientEdit}
+        onDelete={handlePatientDelete}
+      />
+    );
+  } else {
+    tableForList = (
+      <Table
+        columnMap={columnMap}
+        rows={allPatients}
+        rowIdField={"patientId"}
+      />
+    );
+  }
+
+  if (props.actions != "notneeded") {
+    if (props.actions) {
+      btnPactient = (
+        <Button
+          onClick={handleAddPatientBtnClick}
+          className={classes.addUserButton}
+          variant="contained"
+          color="primary"
+          size="medium"
+          type="button"
+        >
+          Add Patient
+        </Button>
+      );
+    } else {
+      btnPactient = (
+        <Button
+          onClick={handleBookABedBtnClick}
+          className={classes.addUserButton}
+          variant="contained"
+          color="primary"
+          size="medium"
+          type="button"
+          disabled={rawS.patientId == null ? true : false}
+        >
+          Book A Bed
+        </Button>
+      );
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -219,29 +278,7 @@ function PatientList(props) {
       <div className={classes.gridroot}>
         <div style={{ height: "auto", width: "100%" }}>
           <div>
-            {props.actions ? (
-              <Button
-                onClick={handleAddPatientBtnClick}
-                className={classes.addUserButton}
-                variant="contained"
-                color="primary"
-                size="medium"
-                type="button"
-              >
-                Add Patient
-              </Button>
-            ) : (
-              <Button
-                onClick={handleBookABedBtnClick}
-                className={classes.addUserButton}
-                variant="contained"
-                color="primary"
-                size="medium"
-                type="button"
-              >
-                Book A Bed
-              </Button>
-            )}
+            {btnPactient}
             <Dialog
               open={open}
               onClose={handleClose}
@@ -274,22 +311,7 @@ function PatientList(props) {
               </Dialog>
             )}
           </div>
-          <div className={classes.tableContainer}>
-            {props.actions ? (
-              <Table
-                columnMap={columnMap}
-                rows={allPatients}
-                onEdit={handlePatientEdit}
-                onDelete={handlePatientDelete}
-              />
-            ) : (
-              <Table
-                columnMap={columnMap}
-                rows={allPatients}
-                rowIdField={"patientId"}
-              />
-            )}
-          </div>
+          <div className={classes.tableContainer}>{tableForList}</div>
 
           <ConfirmationDialogue
             open={storeData.pat.openDeleteConfirmationDialog}

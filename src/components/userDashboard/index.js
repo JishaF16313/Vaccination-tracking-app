@@ -81,18 +81,21 @@ function UserDashboard() {
   const storeData = useSelector((store) => {
     return {
       loggedInUserData: store.auth,
-      data: store.patientdetails
+      data: store.patientdetails,
+      pat: store.patientListReducer,
     }
   });
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
+  const getPatientforBookVaccine=storeData.pat.patientDetalsFromRaw;
+ 
+const PID=getPatientforBookVaccine.patientId;
   const submitForm = (values) => {
-    console.log("values", values);
+  
     let token = storeData.loggedInUserData.token;
     dispatch(startLoading('Please wait...'));
     dispatch(GetBookingStatus(values, token));
-      // console.log("store",storeData);
-    // handleConfirmBedBooking(data);
+
   };
 
   const handleChange = (event, newValue) => {
@@ -181,7 +184,7 @@ function UserDashboard() {
     { id: 1, branchName: 'K R Puram', hospitalName: 'MaxCure', vaccineType: 'Covishield', slots: 10 },
     { id: 2, branchName: 'KukatPally', hospitalName: 'Care Hospital', vaccineType: 'Covaxin', slots: 20 }
   ];
- 
+
 
   return (
     <Paper className={classes.root}>
@@ -210,32 +213,9 @@ function UserDashboard() {
       </TabPanel>
 
       <TabPanel value={value} index={2}>
-        <ScheduleVaccination />
-              {/* <Typography component="h4" variant="h5" className={classes.title}> Vaccine Slots:</Typography>
-        <form className={classes.container} noValidate>
-          <TextField
-            id="datetime-local"
-            label="Date of Booking"
-            type="datetime-local"
-            defaultValue="2021-08-06T17:30"
-            className={classes.textField}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-
-          <div className={classes.divStyle} style={{ height: 250, width: '100%' }}>
-            <DataGrid
-              rows={rows1}
-              columns={columns}
-              pageSize={5}
-              checkboxSelection
-            />
-          </div>
-          <Box className={classes.BtnHolder}>
-            <Button variant="contained" color="primary" className={classes.cnfrmBtn}>Schedule</Button>
-          </Box>
-        </form> */}
+      <PatientList actions={"notneeded"} ></PatientList>
+  {PID?<ScheduleVaccination />:""} 
+             
               </TabPanel>
 
       <TabPanel value={value} index={3}>

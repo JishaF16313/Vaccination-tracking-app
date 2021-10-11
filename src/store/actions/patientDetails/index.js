@@ -16,8 +16,7 @@ export const TYPES = {
 /**Patient Booking */
 export function SetPatientDetails(value, token) {
 
-  // token = token ? token : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTYiLCJyb2xlIjpbeyJhdXRob3JpdHkiOiJDSVRJWkVOIn1dLCJjaXR5TmFtZSI6IlB1bmUiLCJob3NwaXRhbElkIjpudWxsLCJwaW5Db2RlIjoiMTIzNDU2IiwiaG9zcGl0YWxCcmFuY2hJZCI6bnVsbCwiZXhwIjoxNjI5NDQ1OTM2LCJpYXQiOjE2Mjk0Mzg3MzZ9.ov4xVtCcR4xhoooYbHblykKimiNrVPq-pUn4uvZ32Fk";
-  return async dispatch => {
+    return async dispatch => {
     try {
       await axios.post(`${API_HOST.BEDBOOKING_SERVICE}_book`, value, { headers: getHeaders(token) })
       .then((response) => {
@@ -37,16 +36,12 @@ export function SetPatientDetails(value, token) {
 
     function onSuccess(response, hospitalAvailableBedList) {
       let message = "Booking for Patient Confirmed.Please check available beds below and find booking details.'Booking ID -" + " " + response.data.bookingId + " Booking Status - " + response.data.bookingStatus;
-      // let message = "Booking for Patient Confirmed.Please check available beds and find booking details.'Booking ID -"+ " "+ response.bookingId + " Booking Status - " + response.bookingStatus;
       dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: message }));
       dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));
       dispatch(stopLoading());
-      // history.push('/userDashboard');
-    }
+      }
     function onError(error) {
-     // let message = "Something Went Wrong."
-     // dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
-       dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+         dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
       dispatch(stopLoading());
 
     }
@@ -62,48 +57,7 @@ export const getHeaders = (token) => {
 }
 
 export const parseHospitalBedData = (response) => {
-  //dummy data
-  // let dummyData={
-  //   "bookingId": "6bd02a27-7fc9-4046-91c4-5020354d9e85",
-  //   "bookingStatus": "pending",
-  //   "waitingNumber": "18",
-  //   "Hospitals": [
-  //     {
-  //         "hospitalName": "Appollo",
-  //       "hospitalId": "9f3c716d-6efc-43a7-9752-616d9f65bfca",
-  //       "Branches": [
-  //         {
-  //           "branchName": "Indira Nagar",
-  //           "branchId": "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
-  //           "Beds": [
-  //             {
-  //               "bed-type": "Single",
-  //               "bed-facility": "Oxygen",
-  //               "bed-id": "244fec7a-474b-484e-baa7-69867a7b2324"
-  //             }
-  //           ]
-  //         }
-  //       ]
-  //     },
-  //     {
-  //      "hospitalName": "Appollo",
-  //    "hospitalId": "9f3c716d-6efc-43a7-9752-616d9f65bfca",
-  //    "Branches": [
-  //      {
-  //        "branchName": "Indira Nagar",
-  //        "branchId": "a01bb58a-bd2c-43e5-aca8-826e5dc7524b",
-  //        "Beds": [
-  //          {
-  //            "bed-type": "Single",
-  //            "bed-facility": "Oxygen",
-  //            "bed-id": "244fec7a-474b-484e-baa7-69867a7b2324"
-  //          }
-  //        ]
-  //      }
-  //    ]
-  //  }
-  //   ]
-  // }
+ 
   let parsedResponseArr = [];
   if (response.data) {
     let data = response.data;
@@ -143,14 +97,12 @@ export const hospitalAvailbleBedList = (value) => ({
 });
 /**Confirm Bed Booking of Patient */
 export function SetPatientBedBookingDetails(value, token) {
-  // console.log("Hitting API");
-  //  token = token ? token : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTYiLCJyb2xlIjpbeyJhdXRob3JpdHkiOiJDSVRJWkVOIn1dLCJjaXR5TmFtZSI6IlB1bmUiLCJob3NwaXRhbElkIjpudWxsLCJwaW5Db2RlIjoiMTIzNDU2IiwiaG9zcGl0YWxCcmFuY2hJZCI6bnVsbCwiZXhwIjoxNjI5NDQ1OTM2LCJpYXQiOjE2Mjk0Mzg3MzZ9.ov4xVtCcR4xhoooYbHblykKimiNrVPq-pUn4uvZ32Fk";
-  let bookingId = value.bookingId;
+   let bookingId = value.bookingId;
   let requestData = value.bookingData;
   console.log("request data--", bookingId);
   return async dispatch => {
     try {
-      await axios.put(`${API_HOST.BEDBOOKING_SERVICE}/` + bookingId + `/_confirm`, requestData, { headers: getHeaders(token) })
+      await axios.put(`${API_HOST.BEDBOOKING_SERVICE}` + bookingId + `/_confirm`, requestData, { headers: getHeaders(token) })
         .then((response) => {
           if(response.data.message){
             dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: response.data.message }));
@@ -164,17 +116,14 @@ export function SetPatientBedBookingDetails(value, token) {
     }
 
     function onSuccess(response) {
-      // console.log("response==",response);
-      let message = "Booking for Patient Confirmed.Booking ID : " + response.data.bookingId + "Bed Booking Status is : " + response.data.bookingStatus;
+         let message = "Booking for Patient Confirmed.Booking ID : " + response.data.bookingId + "Bed Booking Status is : " + response.data.bookingStatus;
       dispatch(confirmBedBooking(response.data));
       dispatch(setAlert({ alertType: 'success', alertTitle: 'Success', alertMessage: message }));
       dispatch(stopLoading());
       dispatch(setModalState(true));
     }
     function onError(error) {
-      //let message = "Something Went Wrong."
-      //dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
-       dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+        dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
       dispatch(stopLoading());
     }
   }
@@ -182,9 +131,7 @@ export function SetPatientBedBookingDetails(value, token) {
 
 export function GetBookingStatus(value, token) {
   var bookingID = value.bookingStatus;
-  // console.log("bookingID==",bookingID)
-  // token = token ? token : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTYiLCJyb2xlIjpbeyJhdXRob3JpdHkiOiJDSVRJWkVOIn1dLCJjaXR5TmFtZSI6IlB1bmUiLCJob3NwaXRhbElkIjpudWxsLCJwaW5Db2RlIjoiMTIzNDU2IiwiaG9zcGl0YWxCcmFuY2hJZCI6bnVsbCwiZXhwIjoxNjI5NDQ1OTM2LCJpYXQiOjE2Mjk0Mzg3MzZ9.ov4xVtCcR4xhoooYbHblykKimiNrVPq-pUn4uvZ32Fk";
-  return async dispatch => {
+   return async dispatch => {
     try {
       await axios.get(`${API_HOST.BEDBOOKING_SERVICE}${bookingID}/_status/`, { headers: getHeaders(token) })
         .then((response) => {
@@ -207,9 +154,7 @@ export function GetBookingStatus(value, token) {
       dispatch(setModalState(true));
     }
     function onError(error) {
-     // let message = "Something Went Wrong."
-     // dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: message }));
-      dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
+        dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
       dispatch(stopLoading());
     }
   }
@@ -235,8 +180,7 @@ export function hospitalAvailbleBedListFilter(value, token) {
       await axios.post(`${API_HOST.BED_AVAILABILITY_SERVICE}/getBedDetailsByCityOrHospital`, value, { headers: getHeaders(token) })
         .then((response) => {
           let hospitalAvailableBedList = parseHospitalBedData(response);
-          console.log(hospitalAvailableBedList,"ddddddddddddd");
-          dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));
+           dispatch(hospitalAvailbleBedList(hospitalAvailableBedList));
         });
     } catch (error) {
       dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: error.message }));
