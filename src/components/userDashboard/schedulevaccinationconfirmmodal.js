@@ -46,6 +46,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ScheduleVaccinationConfirmModal({ data, open }) {
+    console.log("GOOOOOOOOO",data);
+
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -94,6 +96,16 @@ function ScheduleVaccinationConfirmModal({ data, open }) {
                             <div className={classes.labelDiv}>Dose Date</div>
                             <div className={classes.dataDiv}>{data.dose[0] ? (data.dose[0]["date"] ? data.dose[0]["date"] : null) : null}</div>
                         </div>
+                        {/* FOR TIME START*/}
+                        {/* <div className={classes.rowItemDiv}>
+                            <div className={classes.labelDiv}>Start Time</div>
+                            <div className={classes.dataDiv}>{data["Slot-Start-Time"] ? data["Slot-Start-Time"] : null}</div>
+                        </div>
+                        <div className={classes.rowItemDiv}>
+                            <div className={classes.labelDiv}>End Time</div>
+                            <div className={classes.dataDiv}>{data["Slot-End-Time"] ? data["Slot-End-Time"] : null}</div>
+                        </div> */}
+                        {/* FOR TIME END*/}
                         <div className={classes.rowItemDiv}>
                             <div className={classes.labelDiv}>Status</div>
                             <div className={classes.dataDiv}>{data.dose[0] ? (data.dose[0]["status"] ? data.dose[0]["status"] : null) : null}</div>

@@ -6,7 +6,10 @@ import {
     DELETE_VACCINATION_APPOINTMENT,
     GET_VACCINATION_UPLOAD_HISTORY_INIT,
     GET_VACCINATION_UPLOAD_HISTORY_SUCCESS,
-    GET_VACCINATION_UPLOAD_HISTORY_FAIL
+    GET_VACCINATION_UPLOAD_HISTORY_FAIL,
+    SET_VACCINATION_SLOT_COUNT,
+    SET_V_TIME_S_COUNT
+
 } from "../../actions/vaccination"
 import { removeObjectFromArray } from '../../../utility/commonFunctions';
 
@@ -14,7 +17,8 @@ const initialState = {
     vaccinationList: [],
     vaccinationUploadHistory: [],
     loading: false,
-    error: null
+    error: null,
+    vaccineTimeSlotCount:0
 }
 
 const vaccinationReducer = ( state= initialState, {type, payload}) => {
@@ -50,7 +54,11 @@ const vaccinationReducer = ( state= initialState, {type, payload}) => {
     
         case GET_VACCINATION_UPLOAD_HISTORY_FAIL:
                 return {...state, error: payload, loading: false}
+        case SET_VACCINATION_SLOT_COUNT:
+            return {...state, vaccineSlotCount:payload}
+        case SET_V_TIME_S_COUNT:
 
+                return {...state, vaccineTimeSlotCount:payload}
 
         default:
             return state

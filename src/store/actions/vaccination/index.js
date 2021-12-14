@@ -7,6 +7,21 @@ import * as API_HOST from '../../../env-config';
 export const GET_VACCINATION_LIST_INIT = "GET_VACCINATION_LIST_INIT"
 export const GET_VACCINATION_LIST_SUCCESS = "GET_VACCINATION_LIST_SUCCESS"
 export const GET_VACCINATION_LIST_FAIL = "GET_VACCINATION_LIST_FAIL"
+export const SET_VACCINATION_SLOT_COUNT = "SET_VACCINATION_SLOT_COUNT"
+export const SET_V_TIME_S_COUNT="SET_V_TIME_S_COUNT"
+//Store the slotCount
+
+export const setSlotTimeCount = (response) => ({
+  type: SET_V_TIME_S_COUNT,
+  payload: response
+})
+
+
+export const setSlotCount = (response) => ({
+
+  type: SET_VACCINATION_SLOT_COUNT,
+  payload: response
+})
 
 export const getVaccinationList = () => async(dispatch, getState) => {
   dispatch(getVaccinationListInit())
@@ -86,6 +101,8 @@ const deleteVaccinationAppointmentSuccess = response => ({
 // Vaccination Data Upload
 export const uploadVaccinationData = (reqBody) => async(dispatch, getState) => {
   const token = getState().auth.token
+
+  console.log("FROM ACTION TOP",JSON.stringify(reqBody));
   dispatch(startLoading("Uploading vaccination data"))
     try{
         const response = await API.API_POST_SERVICE(`${API_HOST.VACCINATION_SERVICE}uploadVaccinAvailablity`, reqBody, {headers: {"X-Token-ID" : token}})

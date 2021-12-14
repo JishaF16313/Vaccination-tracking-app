@@ -79,7 +79,7 @@ function InputField({ label, classes, ...props }) {
 
     return (
         <div>
-            {(props.type === 'text' || props.type === 'password' || props.type === 'number' || props.type === "date") && (
+            {(props.type === 'text' || props.type === 'password' || props.type === 'number' || props.type === "date" || props.type === "time") && (
                textBoxField()
             )}
             {props.type === 'textarea' && (

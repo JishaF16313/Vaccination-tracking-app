@@ -19,16 +19,23 @@ export function getAvailableVaccineByDate(selectedDate, token) {
         try {
             await axios.get(`${API_HOST.VACCINATION_SERVICE}${data.cityName}/${selectedDate}/_getVaccineAvailableInformation`, { headers: getHeaders(token) })
                 .then((response) => {
+                  //  console.log("VVVVVVVVVVVVVVVVVVVVVVVVV",response);
                     let modifiedData = [];
                     for (let i = 0; i < response.data.Hospital.length; i++) {
                         let item = response.data.Hospital[i];
+                            console.log("VVVVVVVVVVVVVVVVVVVVVVVVV",item);
                         let obj = {
                             "id": Number(i) + 1,
                             "branch-id": item["branch-id"],
                             "hospitalName": item["hospitalName"],
                             "branch-name": item["branch-name"],
                             "vaccine-type": item["vaccine-type"],
-                            "no-of-slot-available": item["no-of-slot-available"]
+                            "no-of-slot-available": item["no-of-slot-available"],
+                            "timeSlotAvailable": item["slot-info"],
+
+                            // "timeSlotAvailable":[{"Slot-Start-Time":"02:12:54","Slot-End-Time":"01:12:56"},
+                            //                      {"Slot-Start-Time":"03:12:54","Slot-End-Time":"04:12:56"}
+                            //                     ]
                         }
                         modifiedData.push(obj);
                     }
@@ -49,15 +56,20 @@ export function getAvailableVaccineByDate(selectedDate, token) {
 };
 
 export function scheduleVaccination(bodyObject, token, selectedDate) {
-
+console.log("testtttt");
+console.log(bodyObject,"bodyObject");
+console.log(selectedDate,"selectedDate");
     return async dispatch => {
+        console.log("fff");
         try {
             await axios.post(`${API_HOST.VACCINATION_SERVICE}bookVaccine`, bodyObject, { headers: getHeaders(token) })
                 .then((response) => {
+                    console.log("sss");
                     if(response.data.message){
                         dispatch(setAlert({ alertType: 'error', alertTitle: 'Error', alertMessage: response.data.message }));
                         dispatch(stopLoading());
                     }else{
+                        console.log("zzz",response);
                         return onSuccess(response, selectedDate);
                     }                    
                 })
@@ -66,7 +78,7 @@ export function scheduleVaccination(bodyObject, token, selectedDate) {
         }
 
         function onSuccess(response, selectedDate) {
-           
+            console.log("ggggg",response.data);
             dispatch({ type: TYPES.SCHEDULE_VACCINATION, payload: response.data });
             dispatch(setVaccinationSuccessModalState(true));
             dispatch(stopLoading());

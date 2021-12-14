@@ -152,7 +152,16 @@ function VaccinationDashboard() {
     },{
         title: "Booked On",
         field: "vaccine_booked_date",
-    },{
+    },
+    // {
+    //     title: "Start Time",
+    //     field: "Slot-Start-Time",
+    // },
+    // {
+    //     title: "End Time",
+    //     field: "Slot-End-Time",
+    // },
+    {
         title: "Vaccine",
         field: "dose[0].vaccine-type",
     },{
